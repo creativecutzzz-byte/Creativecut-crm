@@ -684,11 +684,11 @@
             var holder = c.layers.addNull(); holder.name = "ITEM " + (k + 1);
             tr(holder, "pos").setValue([x, y]);
             var dot = addShape(c, "Item " + (k + 1) + " circle", "ellipse", [50, 50], 0, CFG.MAGENTA, [0, 0], "Brand Magenta");
-            dot.parent = holder; tr(dot, "pos").setValue([0, 0]);
+            dot.parent = holder; tr(dot, "pos").setValue([50, 50]);   // null anchor is [50,50]
             var num = addText(c, "Item " + (k + 1) + " number", String(k + 1), { size: 28, color: CFG.WHITE, pos: [0, 0] });
-            num.parent = holder; tr(num, "pos").setValue([0, 0]);
+            num.parent = holder; tr(num, "pos").setValue([50, 50]);
             var lab = addText(c, "Item " + (k + 1) + " label", items[k], { size: 36, color: CFG.WHITE, left: true, pos: [0, 0], font: CFG.FONT_SEMI });
-            lab.parent = holder; tr(lab, "pos").setValue([58, 0]);
+            lab.parent = holder; tr(lab, "pos").setValue([108, 50]);
             if (blurs[k] > 0) { blur(dot, blurs[k]); blur(num, blurs[k]); blur(lab, blurs[k]); }
             kf(tr(holder, "pos"), [[at, [x - 70, y]], [at + 0.4, [x, y]]], 85);
             var layersK = [dot, num, lab];

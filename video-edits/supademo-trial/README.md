@@ -13,6 +13,31 @@ YouTube video *"I Studied 1000 SaaS Demo Videos, Here's Why Most Fail"*
 | `previews/reference_vs_edit.png` | Top: this edit at 0, 6, 12 … 48s. Bottom: the reference at the same timestamps. |
 | `previews/render_animatic.py` | Script that renders the animatic. |
 
+## Second version: "viral Instagram talking head" style
+
+`Reel_Style_Build.jsx` cuts the same footage in the style of
+[How to Edit VIRAL Instagram Talking Head Videos](https://www.youtube.com/watch?v=Qbntd8yud0o).
+It builds `REEL_30s_A (0-00 to 0-30)`, `REEL_30s_B (0-10 to 0-40)` and `REEL_MASTER`, at 1080×1920.
+Set `CFG.VERTICAL = false` at the top of the script for a 16:9 version.
+It needs **Montserrat ExtraBold and Black Italic** (free on Google Fonts).
+
+What it recreates from the reference (from its storyboard frames and the AE timeline shown in the video):
+
+| Element | How it's built |
+|---|---|
+| Kinetic captions | One text layer per word (the reference's own setup), each popping on its spoken word: scale 0→116→100%, a 40px rise and a quick fade. 2–5 word chunks, white ExtraBold. |
+| Red keyword | `*word*` in the data becomes big red **Black Italic CAPS** that twists in from −9°, with a Glow and drop shadow (like "WAFFLERS"). |
+| Hook title | "WE STUDIED / 1,000 DEMOS", with a CC Light Sweep across the red line and a glass **UI pill bar** (record / search / chat / user icons) that swipes open under it. |
+| Glass icon cards | Frosted rounded squares beside the head: a green user icon, company initials (swap in logos), "?" and "7". They pop and twist in, float, and pop out. |
+| Big-word hits | ONE THING, BEAUTIFUL, EXPENSIVE, USELESS and 200,000 as giant glowing words with a light sweep, twinkling sparkles and a camera-shake hit. |
+| Camera | Punch-in zoom on every cut, slow push while talking, and a `CAMERA shake` adjustment layer (Transform effect with motion blur) keyed to every hit. |
+| Look | Darker exposure, heavy vignette, bottom shade behind the captions, plus a Lumetri layer for your grade. |
+
+Controls in `REEL_MASTER > CONTROLS`: **Accent** (red), **Accent 2** (blue big words), **Card Icon** (green) and **Shake Amount**.
+Captions are data at the top of the script (`CHUNKS`), so you can re-word, re-time or move a keyword and re-run.
+`previews/reel30_A_preview.mp4` is a half-resolution render of the same layout and timing, for reference.
+It uses Inter as a stand-in for Montserrat and has no shake or punch animation.
+
 ## Open it in After Effects
 
 1. Put `Supademo_Trial_Build.jsx` in the same folder as `Halva Editor Trial - Raw footage.mp4`. If it can't find the file, it asks you to pick it.
