@@ -1,0 +1,10 @@
+{
+  "name": "creativecut-crm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lightweight sales CRM and playbook for Creativecut, a podcast-to-short-form video editing agency.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 -m http.server 8080"
+  }
+}

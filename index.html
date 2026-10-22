@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creativecut CRM</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Creativecut <span>CRM</span></div>
+    <nav id="tabs" role="tablist">
+      <button data-view="dashboard" class="active">Dashboard</button>
+      <button data-view="pipeline">Pipeline</button>
+      <button data-view="leads">Leads</button>
+      <button data-view="tasks">Follow-ups <span id="taskBadge" class="badge" hidden></span></button>
+      <button data-view="clients">Clients</button>
+      <button data-view="playbook">Sales kit</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+  </header>
+
+  <main id="view"></main>
+
+  <dialog id="modal">
+    <form method="dialog" id="modalForm">
+      <div id="modalBody"></div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/logic.js"></script>
+  <script src="assets/content.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
