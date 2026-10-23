@@ -17,6 +17,7 @@ import type {
   TeamMember,
   Workflow,
 } from "@/lib/types";
+import { ensureMonthlyReportTasks } from "@/lib/automation";
 import * as demo from "./demo";
 
 // Data access layer. Every page reads through these functions so the UI never
@@ -27,6 +28,9 @@ export interface Viewer {
   userId: string | null;
   orgId: string | null;
   orgName: string;
+  orgSlug: string | null;
+  bookingUrl: string | null;
+  portfolioUrl: string | null;
   fullName: string;
   email: string;
   role: MemberRole;
@@ -37,20 +41,20 @@ export const getViewer = cache(async (): Promise<Viewer> => {
     // Render per request so demo dates stay relative to "now".
     await connection();
     const owner = demo.demoTeam[0]!;
-    return { mode: "demo", userId: owner.user_id, orgId: null, orgName: "Creative Cut", fullName: owner.full_name, email: owner.email, role: owner.role };
+    return { mode: "demo", userId: owner.user_id, orgId: null, orgName: "Creative Cut", orgSlug: null, bookingUrl: null, portfolioUrl: null, fullName: owner.full_name, email: owner.email, role: owner.role };
   }
 
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   const user = auth.user;
   if (!user) {
-    return { mode: "live", userId: null, orgId: null, orgName: "Creative Cut", fullName: "", email: "", role: "member" };
+    return { mode: "live", userId: null, orgId: null, orgName: "Creative Cut", orgSlug: null, bookingUrl: null, portfolioUrl: null, fullName: "", email: "", role: "member" };
   }
 
   const loadMembership = () =>
     supabase
       .from("team_members")
-      .select("org_id, role, organizations(name)")
+      .select("org_id, role, organizations(name, slug, booking_url, portfolio_url)")
       .eq("user_id", user.id)
       .eq("status", "active")
       .order("created_at")
@@ -64,14 +68,18 @@ export const getViewer = cache(async (): Promise<Viewer> => {
     if (accepted) ({ data: membership } = await loadMembership());
   }
 
-  const org = membership?.organizations as { name: string } | { name: string }[] | null | undefined;
-  const orgName = Array.isArray(org) ? org[0]?.name : org?.name;
+  type OrgRow = { name: string; slug: string; booking_url: string | null; portfolio_url: string | null };
+  const orgRaw = membership?.organizations as OrgRow | OrgRow[] | null | undefined;
+  const org = Array.isArray(orgRaw) ? orgRaw[0] : orgRaw;
 
   return {
     mode: "live",
     userId: user.id,
     orgId: membership?.org_id ?? null,
-    orgName: orgName ?? "Creative Cut",
+    orgName: org?.name ?? "Creative Cut",
+    orgSlug: org?.slug ?? null,
+    bookingUrl: org?.booking_url ?? null,
+    portfolioUrl: org?.portfolio_url ?? null,
     fullName: (user.user_metadata?.full_name as string | undefined) || user.email || "",
     email: user.email ?? "",
     role: (membership?.role as MemberRole | undefined) ?? "member",
@@ -122,6 +130,8 @@ export async function getTimeline(target: { leadId?: string; clientId?: string }
 
 export const getTasks = cache(async (): Promise<Task[]> => {
   if (!isSupabaseConfigured) return demo.demoTasks;
+  const viewer = await getViewer();
+  if (viewer.orgId) await ensureMonthlyReportTasks(await createClient(), viewer.orgId);
   return liveQuery<Task>("tasks", (q) => q.select("*").neq("status", "cancelled").order("due_at", { ascending: true, nullsFirst: false }).limit(500));
 });
 

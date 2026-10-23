@@ -5,6 +5,7 @@ import type { Task, TeamMember } from "@/lib/types";
 import { cn, formatRelative } from "@/lib/utils";
 import { Check, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { CopyButton } from "./copy-button";
 
 const priorityVariant = { high: "danger", medium: "warning", low: "neutral" } as const;
 
@@ -49,7 +50,18 @@ export function TaskList({
             </form>
             <div className="min-w-0 flex-1">
               <p className={cn("text-sm", done ? "text-subtle line-through" : "text-fg")}>{task.title}</p>
-              {task.description && <p className="mt-0.5 text-xs text-muted">{task.description}</p>}
+              {task.description &&
+                (task.sequence ? (
+                  <details className="mt-1 text-xs" open={!done && task.due_at !== null && new Date(task.due_at).getTime() <= now + 86_400_000}>
+                    <summary className="cursor-pointer text-muted hover:text-fg">Message</summary>
+                    <p className="mt-1.5 rounded-lg border border-line bg-surface-2/60 p-3 leading-relaxed whitespace-pre-line text-fg/90">{task.description}</p>
+                    <div className="mt-1.5">
+                      <CopyButton text={task.description} />
+                    </div>
+                  </details>
+                ) : (
+                  <p className="mt-0.5 text-xs whitespace-pre-line text-muted">{task.description}</p>
+                ))}
               <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-subtle">
                 <Badge variant={priorityVariant[task.priority]}>{task.priority}</Badge>
                 {task.due_at && <span className={overdue ? "text-rose-300" : undefined}>Due {formatRelative(task.due_at, new Date(now))}</span>}

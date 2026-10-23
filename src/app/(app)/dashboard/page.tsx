@@ -4,6 +4,7 @@ import { sourcePalette } from "@/components/charts/theme";
 import { InsightsPanel } from "@/components/dashboard/insights-panel";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { FollowUps } from "@/components/dashboard/follow-ups";
+import { FunnelCard } from "@/components/dashboard/funnel-card";
 import { PipelineBars } from "@/components/dashboard/pipeline-bars";
 import { buttonClasses } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
@@ -12,7 +13,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { generateInsights } from "@/lib/ai/insights";
 import { periodDelta, totals } from "@/lib/analytics";
 import { LEAD_SOURCES, OPEN_STAGES } from "@/lib/constants";
-import { getActivities, getAdData, getClients, getLeads, getRevenueTrend, getTeam, getViewer } from "@/lib/data";
+import { getActivities, getAdData, getClients, getLeads, getRequestTime, getRevenueTrend, getTeam, getViewer } from "@/lib/data";
 import { formatCompact, formatCurrency, formatPercent } from "@/lib/utils";
 import { Briefcase, Megaphone, Plus, Target, Wallet } from "lucide-react";
 import type { Metadata } from "next";
@@ -110,7 +111,12 @@ export default async function DashboardPage() {
         <FollowUps leads={open} team={team} className="lg:col-span-2 xl:col-span-1" />
       </div>
 
-      <ActivityFeed activities={activities} team={team} />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <FunnelCard leads={leads} now={getRequestTime()} />
+        <div className="xl:col-span-2">
+          <ActivityFeed activities={activities} team={team} />
+        </div>
+      </div>
     </div>
   );
 }

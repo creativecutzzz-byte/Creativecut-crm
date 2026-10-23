@@ -2,6 +2,7 @@ import { LogActivityForm } from "@/components/activity/log-activity-form";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
 import { LeadActions } from "@/components/leads/lead-actions";
+import { SequenceControls } from "@/components/leads/sequence-controls";
 import { StageForm } from "@/components/leads/stage-form";
 import { NewTaskButton } from "@/components/tasks/new-task-button";
 import { TaskList } from "@/components/tasks/task-list";
@@ -16,7 +17,7 @@ import { LEAD_SOURCES } from "@/lib/constants";
 import { getLead, getRequestTime, getTasks, getTeam, getTimeline, getViewer } from "@/lib/data";
 import { formatCurrency, formatDate, formatRelative } from "@/lib/utils";
 import { memberByUserId } from "@/lib/team";
-import { ArrowLeft, Globe, Mail, Phone, Sparkles } from "lucide-react";
+import { ArrowLeft, Globe, Mail, Phone, Send, Sparkles, Target } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,6 +32,7 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
   const [lead, timeline, team, tasks, viewer] = await Promise.all([getLead(id), getTimeline({ leadId: id }), getTeam(), getTasks(), getViewer()]);
   if (!lead) notFound();
   const leadTasks = tasks.filter((t) => t.lead_id === lead.id);
+  const activeSequence = leadTasks.find((t) => t.sequence && t.status === "open")?.sequence ?? null;
   const members = team.map((m) => ({ user_id: m.user_id, full_name: m.full_name, status: m.status }));
 
   const owner = memberByUserId(team, lead.owner_id);
@@ -41,7 +43,8 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
     { icon: Phone, label: "Phone", value: lead.phone },
     { icon: WhatsAppIcon, label: "WhatsApp", value: lead.whatsapp_number },
     { icon: InstagramIcon, label: "Instagram", value: lead.instagram_handle && `@${lead.instagram_handle}` },
-    { icon: Globe, label: "Source", value: LEAD_SOURCES[lead.source] },
+    { icon: Globe, label: "Website", value: lead.website },
+    { icon: Target, label: "Source", value: LEAD_SOURCES[lead.source] },
   ];
 
   return (
@@ -139,6 +142,27 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               )}
             </CardBody>
           </Card>
+
+          {viewer.mode === "live" && (
+            <Card>
+              <CardHeader
+                title={
+                  <span className="flex items-center gap-2">
+                    <Send className="size-4 text-accent-strong" /> Outreach sequence
+                  </span>
+                }
+                description="Creates a dated task per step with the message filled in"
+              />
+              <CardBody className="space-y-3">
+                {lead.personalization ? (
+                  <p className="rounded-lg border border-line bg-surface-2/60 p-3 text-xs leading-relaxed text-fg/90">{lead.personalization}</p>
+                ) : (
+                  <p className="text-xs text-amber-300">Add a personalisation line (Edit) before starting cold outreach.</p>
+                )}
+                <SequenceControls leadId={lead.id} activeSequence={activeSequence} closed={lead.stage === "won" || lead.stage === "lost"} />
+              </CardBody>
+            </Card>
+          )}
 
           <Card>
             <CardHeader title="Tasks" action={<NewTaskButton team={members} leadId={lead.id} size="sm" variant="secondary" />} />

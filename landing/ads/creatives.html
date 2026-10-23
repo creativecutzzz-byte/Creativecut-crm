@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creative Cut ad creatives</title>
+<!-- Source for the PNGs in this folder. Each .ad element is rendered at its
+     exact pixel size (1080×1080 feed, 1080×1920 story); edit the copy here
+     and re-render. Copy comes from playbook/09-marketing-content-and-ads.md. -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0a0a0c; --char:#121612; --char-2:#181d19; --forest:#1d4228; --lime:#c8f53c; --mute:#a7a7a7; --paper:#f4f4f2; --line:rgba(244,244,242,.12); }
+  body { margin: 0; background: #333; font-family: "Satoshi", system-ui, sans-serif; display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; }
+  .ad { position: relative; overflow: hidden; background: var(--ink); color: var(--paper); display: flex; flex-direction: column; padding: 84px; box-sizing: border-box; }
+  .feed { width: 1080px; height: 1080px; }
+  .story { width: 1080px; height: 1920px; padding: 120px 84px; }
+  .glow { position: absolute; width: 900px; height: 900px; right: -300px; top: -300px; background: radial-gradient(circle, rgba(200,245,60,.18), transparent 65%); }
+  .brand { font-family: "Bebas Neue"; font-size: 44px; letter-spacing: .02em; position: relative; }
+  .brand span { color: var(--lime); }
+  .display { font-family: "Bebas Neue"; text-transform: uppercase; line-height: .93; margin: 0; position: relative; }
+  .lime { color: var(--lime); }
+  .body { font-size: 34px; line-height: 1.4; color: #d9d9d6; margin: 0; position: relative; }
+  .cta { align-self: flex-start; background: var(--lime); color: var(--ink); font-weight: 700; font-size: 34px; padding: 22px 40px; border-radius: 999px; position: relative; }
+  .foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; position: relative; }
+  .url { font-size: 28px; color: var(--mute); }
+
+  /* A: screenshot vs launch video */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; position: relative; }
+  .panel { border-radius: 28px; border: 2px solid var(--line); background: var(--char); padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .panel.live { border-color: var(--lime); background: linear-gradient(160deg, var(--forest), var(--char-2)); }
+  .label { font-size: 22px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+  .live .label { color: var(--lime); }
+  .ui { flex: 1; border-radius: 16px; background: var(--ink); border: 1px solid var(--line); padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .bar { height: 18px; border-radius: 9px; background: rgba(244,244,242,.12); }
+  .live .bar:nth-child(1) { width: 70%; background: var(--lime); }
+  .live .bar:nth-child(2) { width: 90%; background: rgba(200,245,60,.55); }
+  .live .bar:nth-child(3) { width: 55%; background: rgba(200,245,60,.35); }
+  .static .bar:nth-child(1) { width: 70%; } .static .bar:nth-child(2) { width: 90%; } .static .bar:nth-child(3) { width: 55%; }
+  .play { margin-top: auto; align-self: center; width: 88px; height: 88px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; }
+  .play::after { content: ""; border-left: 30px solid var(--ink); border-top: 18px solid transparent; border-bottom: 18px solid transparent; margin-left: 8px; }
+  .motion { position: absolute; right: 24px; top: 24px; display: flex; gap: 6px; }
+  .motion i { width: 10px; height: 10px; border-radius: 50%; background: var(--lime); opacity: .4; } .motion i:last-child { opacity: 1; }
+
+  /* B: price anchor */
+  .compare { display: grid; gap: 24px; position: relative; }
+  .row { border-radius: 26px; padding: 34px 38px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+  .row.old { background: var(--char); border: 2px solid var(--line); color: var(--mute); }
+  .row.old .what { text-decoration: line-through; text-decoration-color: #ff6568; text-decoration-thickness: 4px; }
+  .row.new { background: linear-gradient(160deg, var(--forest), var(--char-2)); border: 2px solid var(--lime); }
+  .what { font-size: 34px; font-weight: 700; line-height: 1.3; }
+  .row.new ul { margin: 12px 0 0; padding: 0; list-style: none; font-size: 30px; font-weight: 500; color: #dcdcd8; display: grid; gap: 6px; }
+  .row.new li::before { content: "✓  "; color: var(--lime); font-weight: 700; }
+  .price { font-family: "Bebas Neue"; font-size: 72px; line-height: 1; white-space: nowrap; }
+  .row.new .price { color: var(--lime); }
+  .small { font-size: 26px; color: var(--mute); position: relative; }
+
+  /* C: free teaser */
+  .phone { position: relative; align-self: center; width: 360px; height: 640px; border-radius: 52px; border: 10px solid #26302a; background: var(--char); padding: 26px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
+  .story .phone { width: 480px; height: 800px; }
+  .badge { position: absolute; right: -40px; top: 60px; z-index: 1; background: var(--lime); color: var(--ink); font-family: "Satoshi"; font-weight: 700; font-size: 46px; width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; transform: rotate(-10deg); }
+  .screen { flex: 1; border-radius: 26px; background: var(--ink); border: 1px solid var(--line); padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+  .chart { flex: 1; display: flex; align-items: flex-end; gap: 12px; }
+  .chart i { flex: 1; border-radius: 10px 10px 4px 4px; background: rgba(200,245,60,.3); }
+  .chart i:nth-child(1){height:30%} .chart i:nth-child(2){height:48%} .chart i:nth-child(3){height:40%} .chart i:nth-child(4){height:66%;background:rgba(200,245,60,.6)} .chart i:nth-child(5){height:88%;background:var(--lime)}
+  .scrub { height: 8px; border-radius: 4px; background: rgba(244,244,242,.15); position: relative; }
+  .scrub::after { content: ""; position: absolute; inset: 0 40% 0 0; border-radius: 4px; background: var(--lime); }
+</style>
+</head>
+<body>
+
+<!-- A · Screenshot vs launch video · feed -->
+<div class="ad feed" id="a-feed">
+  <div class="glow"></div>
+  <div class="brand">Creative<span>Cut</span></div>
+  <h1 class="display" style="font-size:118px;margin:44px 0 40px">Your feature deserves more than <span class="lime">a screenshot.</span></h1>
+  <div class="split" style="height:330px">
+    <div class="panel static"><span class="label">Your launch</span><div class="ui"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+    <div class="panel live"><span class="label">As a launch video</span><div class="ui" style="position:relative"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="motion"><i></i><i></i><i></i></div><div class="play"></div></div></div>
+  </div>
+  <div class="foot"><span class="cta">Get a free teaser</span><span class="url">From ₹55,000/mo + GST</span></div>
+</div>
+
+<!-- A · story -->
+<div class="ad story" id="a-story">
+  <div class="glow"></div>
+  <div class="brand">Creative<span>Cut</span></div>
+  <h1 class="display" style="font-size:150px;margin:80px 0 48px">Your feature deserves more than <span class="lime">a screenshot.</span></h1>
+  <div class="split" style="grid-template-columns:1fr;height:720px">
+    <div class="panel static"><span class="label">Your launch</span><div class="ui"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+    <div class="panel live"><span class="label">As a launch video</span><div class="ui" style="position:relative"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="motion"><i></i><i></i><i></i></div><div class="play"></div></div></div>
+  </div>
+  <p class="body" style="margin-top:56px">Product explainers, UI animation and launch cut-downs every month, from one team that knows your product. From ₹55,000/month + GST.</p>
+  <div class="foot"><span class="cta">Get a free teaser</span><span class="url">creativecut.in</span></div>
+</div>
+
+<!-- B · Price anchor · feed -->
+<div class="ad feed" id="b-feed">
+  <div class="glow"></div>
+  <div class="brand">Creative<span>Cut</span></div>
+  <h1 class="display" style="font-size:92px;margin:32px 0 36px">One studio explainer, or <span class="lime">a whole month of launch content?</span></h1>
+  <div class="compare" style="gap:20px">
+    <div class="row old"><div class="what">1 explainer · 3–6 weeks</div><div class="price">₹50k–₹1L</div></div>
+    <div class="row new"><div><div class="what">Creative Cut Growth, every month</div><ul><li>1 explainer</li><li>12 short videos</li><li>4 ad variants</li></ul></div><div class="price">₹95,000</div></div>
+  </div>
+  <div class="foot"><span class="cta">See plans</span><span class="small">+ GST · 3-month minimum</span></div>
+</div>
+
+<!-- B · story -->
+<div class="ad story" id="b-story">
+  <div class="glow"></div>
+  <div class="brand">Creative<span>Cut</span></div>
+  <h1 class="display" style="font-size:138px;margin:80px 0 70px">One studio explainer, or <span class="lime">a whole month of launch content?</span></h1>
+  <div class="compare" style="gap:36px">
+    <div class="row old" style="flex-direction:column;align-items:flex-start"><div class="what">1 explainer · 3–6 weeks</div><div class="price">₹50k–₹1L</div></div>
+    <div class="row new" style="flex-direction:column;align-items:flex-start"><div><div class="what">Creative Cut Growth, every month</div><ul><li>1 explainer or feature video</li><li>12 short-form videos</li><li>4 ad creative variants</li></ul></div><div class="price">₹95,000/mo</div></div>
+  </div>
+  <p class="small" style="margin-top:40px">+ 18% GST · 3-month minimum, then month-to-month</p>
+  <div class="foot"><span class="cta">See plans</span><span class="url">creativecut.in</span></div>
+</div>
+
+<!-- C · Free teaser · feed -->
+<div class="ad feed" id="c-feed" style="flex-direction:row;gap:56px;align-items:center">
+  <div class="glow"></div>
+  <div style="flex:1;display:flex;flex-direction:column;height:100%;position:relative">
+    <div class="brand">Creative<span>Cut</span></div>
+    <h1 class="display" style="font-size:112px;margin:56px 0 32px">We'll animate one of your product screens. <span class="lime">Free.</span></h1>
+    <p class="body" style="font-size:30px">Send your product link. Get a 15-second motion teaser, yours to keep.</p>
+    <div class="foot"><span class="cta">Send my product</span></div>
+  </div>
+  <div class="phone"><div class="badge">15s</div><div class="screen"><div class="bar" style="width:60%;height:16px;border-radius:8px;background:rgba(244,244,242,.2)"></div><div class="chart"><i></i><i></i><i></i><i></i><i></i></div><div class="scrub"></div></div></div>
+</div>
+
+<!-- C · story -->
+<div class="ad story" id="c-story">
+  <div class="glow"></div>
+  <div class="brand">Creative<span>Cut</span></div>
+  <h1 class="display" style="font-size:150px;margin:72px 0 40px">We'll animate one of your product screens. <span class="lime">Free.</span></h1>
+  <div class="phone"><div class="badge">15s</div><div class="screen"><div class="bar" style="width:60%;height:18px;border-radius:9px;background:rgba(244,244,242,.2)"></div><div class="chart"><i></i><i></i><i></i><i></i><i></i></div><div class="scrub"></div></div></div>
+  <p class="body" style="margin:48px 0 56px">Send your product link. You'll get a 15-second motion teaser, yours to keep, whether or not we work together.</p>
+  <div class="foot"><span class="cta">Send my product</span><span class="url">creativecut.in</span></div>
+</div>
+
+</body>
+</html>

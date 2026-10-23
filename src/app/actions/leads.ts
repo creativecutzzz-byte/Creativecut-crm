@@ -1,6 +1,7 @@
 "use server";
 
 import { scoreLead } from "@/lib/ai/lead-scoring";
+import { createOnboardingTasks, hasOpenSequence, startSequence, stopSequences } from "@/lib/automation";
 import { firstIssue, optionalDateTime, optionalEmail, optionalText, optionalUuid, requireWorkspace, type ActionState } from "@/lib/actions";
 import { LEAD_SOURCES, LEAD_STAGES } from "@/lib/constants";
 import type { ActivityType, LeadSource, LeadStage } from "@/lib/types";
@@ -23,6 +24,13 @@ const leadSchema = z.object({
   marketing_consent: z.boolean(),
   owner_id: optionalUuid,
   next_follow_up_at: optionalDateTime,
+  website: optionalText,
+  personalization: z
+    .string()
+    .trim()
+    .max(600, "Keep the personalisation line under 600 characters")
+    .optional()
+    .transform((v) => v || null),
 });
 
 function parseLead(formData: FormData) {
@@ -124,8 +132,24 @@ export async function updateLeadStage(_: ActionState, formData: FormData): Promi
     body: `Moved to ${LEAD_STAGES.find((s) => s.id === parsed.data.stage)?.label}`,
   });
 
+  // Automation: a proposal replaces earlier outreach with the proposal follow-up; closing a deal ends all sequences.
+  let message = "Stage updated";
+  if (parsed.data.stage === "proposal") {
+    await stopSequences(supabase, parsed.data.id, ["cold_saas", "inbound", "no_show", "reengage"]);
+    if (!(await hasOpenSequence(supabase, parsed.data.id, "proposal"))) {
+      const { data: lead } = await supabase.from("leads").select("id, name, company, personalization, owner_id").eq("id", parsed.data.id).single();
+      if (lead) {
+        await startSequence(supabase, viewer, lead, "proposal");
+        message = "Stage updated · proposal follow-ups scheduled";
+      }
+    }
+  } else if (closed) {
+    await stopSequences(supabase, parsed.data.id);
+  }
+
   revalidateLeads(parsed.data.id);
-  return { ok: true, message: "Stage updated" };
+  revalidatePath("/tasks");
+  return { ok: true, message };
 }
 
 const LOGGABLE = ["note", "call", "email", "whatsapp", "instagram", "meeting"] as const satisfies ActivityType[];
@@ -204,6 +228,8 @@ export async function convertLead(_: ActionState, formData: FormData): Promise<A
   if (error) return { error: error.message };
 
   await supabase.from("leads").update({ stage: "won", converted_client_id: client.id, next_follow_up_at: null }).eq("id", lead.id);
+  await stopSequences(supabase, lead.id);
+  await createOnboardingTasks(supabase, viewer, client.id, lead.owner_id ?? viewer.userId);
   await supabase.from("activities").insert([
     { org_id: viewer.orgId, lead_id: lead.id, actor_id: viewer.userId, type: "stage_change", body: "Won — converted to client" },
     { org_id: viewer.orgId, client_id: client.id, actor_id: viewer.userId, type: "system", body: `Client created from lead ${lead.company ?? lead.name}` },
@@ -211,5 +237,6 @@ export async function convertLead(_: ActionState, formData: FormData): Promise<A
 
   revalidateLeads(lead.id);
   revalidatePath("/clients");
+  revalidatePath("/tasks");
   redirect(`/clients/${client.id}`);
 }

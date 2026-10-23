@@ -1,5 +1,6 @@
 "use server";
 
+import { createOnboardingTasks } from "@/lib/automation";
 import { firstIssue, optionalDateTime, optionalEmail, optionalText, optionalUuid, requireWorkspace, type ActionState } from "@/lib/actions";
 import { CLIENT_STATUS } from "@/lib/constants";
 import type { ClientStatus } from "@/lib/types";
@@ -46,7 +47,9 @@ export async function createClientRecord(_: ActionState, formData: FormData): Pr
   if (error) return { error: error.message };
 
   await supabase.from("activities").insert({ org_id: viewer.orgId, client_id: data.id, actor_id: viewer.userId, type: "system", body: "Client added" });
+  if (parsed.data.status === "onboarding") await createOnboardingTasks(supabase, viewer, data.id, parsed.data.owner_id ?? viewer.userId);
   revalidatePath("/clients");
+  revalidatePath("/tasks");
   revalidatePath("/dashboard");
   return { ok: true, message: "Client added" };
 }

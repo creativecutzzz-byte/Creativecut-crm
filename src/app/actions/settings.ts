@@ -28,3 +28,20 @@ export async function updateProfile(_: ActionState, formData: FormData): Promise
   revalidatePath("/", "layout");
   return { ok: true, message: "Profile updated" };
 }
+
+const urlField = z
+  .union([z.literal(""), z.url("Enter a full link starting with https://")])
+  .optional()
+  .transform((v) => v || null);
+
+export async function updateOutreachLinks(_: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = z.object({ booking_url: urlField, portfolio_url: urlField }).safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: firstIssue(parsed.error) };
+  const ws = await requireWorkspace(["owner", "admin"]);
+  if ("error" in ws) return ws;
+
+  const { error } = await ws.supabase.from("organizations").update(parsed.data).eq("id", ws.viewer.orgId);
+  if (error) return { error: error.message };
+  revalidatePath("/", "layout");
+  return { ok: true, message: "Links saved. New sequence messages will use them." };
+}

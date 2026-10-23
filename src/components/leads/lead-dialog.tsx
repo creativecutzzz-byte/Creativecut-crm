@@ -2,7 +2,7 @@
 
 import { createLead, updateLead, type ActionState } from "@/app/actions/leads";
 import { Button } from "@/components/ui/button";
-import { Input, Label, Select } from "@/components/ui/input";
+import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { Modal, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { LEAD_SOURCES, SERVICES } from "@/lib/constants";
 import { assignableMembers, toDateTimeLocal } from "@/lib/form-utils";
@@ -84,6 +84,21 @@ function LeadForm({ lead, team, onDone }: { lead?: Lead; team: Member[]; onDone:
         <div>
           <Label htmlFor="next_follow_up_at">Next follow-up</Label>
           <Input id="next_follow_up_at" name="next_follow_up_at" type="datetime-local" defaultValue={toDateTimeLocal(lead?.next_follow_up_at)} />
+        </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor="website">Website</Label>
+          <Input id="website" name="website" placeholder="https://" defaultValue={lead?.website ?? ""} />
+        </div>
+        <div className="sm:col-span-2">
+          <Label htmlFor="personalization">Personalisation line (used in outreach sequences)</Label>
+          <Textarea
+            id="personalization"
+            name="personalization"
+            maxLength={600}
+            className="min-h-16"
+            placeholder="Observation + why it matters + bridge to video. See playbook section 05."
+            defaultValue={lead?.personalization ?? ""}
+          />
         </div>
         <fieldset className="sm:col-span-2">
           <legend className="mb-2 text-xs font-medium text-muted">Services of interest</legend>

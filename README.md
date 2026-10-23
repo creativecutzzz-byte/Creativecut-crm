@@ -1,5 +1,7 @@
 # Creative Cut CRM
 
+> **Start here:** [`playbook/00-start-here.md`](playbook/00-start-here.md) is the go-to-market plan this CRM runs: niche, offer and pricing, prospects, outreach sequences, sales script, proposal, landing page, content and ads, onboarding, retention and KPIs.
+
 A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4** and **Supabase**.
 
 > **Safe by design:** WhatsApp and Instagram integrations are dry-run placeholders (nothing is ever sent), and Meta Ads is read-only analytics (nothing can be created or launched). No credentials are hardcoded.
@@ -11,7 +13,8 @@ A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 
 | CRM dashboard | `/dashboard` | KPIs, revenue vs pipeline trend, AI insights, pipeline by stage, lead sources, follow-ups, activity feed |
 | Lead management | `/leads`, `/leads/[id]` | Table + kanban views, quick filters, create / edit / delete, owner & follow-up date, stage changes, activity log (calls, meetings, notes), lead tasks, convert to client, AI score with explainable factors |
 | Client management | `/clients`, `/clients/[id]` | Create / edit / delete, retainers, MRR, account health, services, owners, activity log and tasks |
-| Tasks | `/tasks` | My / everyone's tasks, overdue & upcoming, create (linked to a lead or client), complete, delete |
+| Tasks | `/tasks` | My / everyone's tasks, overdue & upcoming, create (linked to a lead or client), complete, delete. Sequence steps show the ready-to-send message with a copy button. |
+| Sales automation | lead page, `/settings` | Outreach sequences (cold, inbound, proposal, no-show, re-engage) as dated tasks with messages filled in; proposal follow-ups start automatically; onboarding checklist on conversion; monthly report tasks; CSV import; website lead capture (`/api/lead-capture`); conversion funnel on the dashboard |
 | Search | `/search` | Leads and clients by name, company, email, phone or Instagram handle |
 | WhatsApp Business | `/whatsapp` | Template composer with **simulated** send, connection checklist, create / delete templates |
 | Instagram | `/instagram` | DM reply composer (**simulated**), Instagram-sourced leads, quick replies |
@@ -43,6 +46,11 @@ npm run dev                  # http://localhost:3000
 ### Local development with a real database
 
 With Docker running: `npx supabase start`, then copy the printed API URL and anon key into `.env.local`. Migrations in `supabase/migrations/` are applied automatically.
+
+### Landing page and ads
+
+- `landing/index.html`: the SaaS landing page, a single static file. Set `CRM_ENDPOINT` and `WORKSPACE_KEY` at the bottom (the values are on the CRM's Settings page) and host it anywhere.
+- `landing/ads/`: rendered ad creatives (1080×1080 and 1080×1920) and their HTML source (`creatives.html`).
 
 ### Deploying
 

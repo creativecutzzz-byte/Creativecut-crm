@@ -35,4 +35,5 @@ export const ROLE_LABELS: Record<MemberRole, string> = {
   member: "Member",
 };
 
-export const SERVICES = ["Branding", "Video production", "Social media", "Paid ads", "Web design", "Photography"];
+// Creative Cut's offer (playbook/03-offer-and-pricing.md).
+export const SERVICES = ["Feature launch video", "Motion explainer", "UI animation", "Short-form video", "Founder content", "Ad creatives"];

@@ -51,6 +51,8 @@ export interface Lead {
   next_follow_up_at: string | null;
   marketing_consent: boolean;
   converted_client_id?: string | null;
+  website?: string | null;
+  personalization?: string | null;
   tags: string[];
   created_at: string;
 }
@@ -96,6 +98,7 @@ export interface Task {
   assignee_id: string | null;
   lead_id: string | null;
   client_id: string | null;
+  sequence?: string | null;
   created_at: string;
 }
 

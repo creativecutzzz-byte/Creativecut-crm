@@ -34,7 +34,7 @@ export function ActivityFeed({ activities, team, title = "Recent activity" }: { 
                 <Icon className="size-3.5" />
               </span>
               <div className="min-w-0 pt-1">
-                <p className="text-sm text-fg">{activity.body}</p>
+                <p className="text-sm whitespace-pre-line text-fg">{activity.body}</p>
                 <p className="mt-0.5 text-[11px] text-subtle">
                   {actor ? actor.full_name : "Automation"} · {formatRelative(activity.created_at)}
                 </p>

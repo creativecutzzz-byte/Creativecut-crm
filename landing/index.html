@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creative Cut for SaaS | Launch videos your buyers watch</title>
+<meta name="description" content="Product explainers, UI animation, founder content and ad creatives every month, from one team that learns your product once. A creative subscription for Indian SaaS and AI startups, priced in rupees.">
+<meta name="theme-color" content="#0a0a0c">
+<link rel="icon" href="https://www.creativecut.in/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0c; --char: #121612; --char-2: #181d19; --forest: #1d4228;
+    --lime: #c8f53c; --mute: #a7a7a7; --paper: #f4f4f2; --line: rgba(244, 244, 242, .1);
+    --display: "Bebas Neue", "Arial Narrow", sans-serif;
+    --sans: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--ink); color: var(--paper); font-family: var(--sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+  .display { font-family: var(--display); font-weight: 400; letter-spacing: .01em; line-height: .95; text-transform: uppercase; margin: 0; }
+  .eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+  .muted { color: var(--mute); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; font: 700 15px var(--sans); text-decoration: none; border: 1px solid transparent; cursor: pointer; transition: transform .15s, background .15s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-lime { background: var(--lime); color: var(--ink); }
+  .btn-ghost { border-color: var(--line); color: var(--paper); background: transparent; }
+  .btn-ghost:hover { background: rgba(244, 244, 242, .06); }
+  :focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+
+  header.top { position: sticky; top: 0; z-index: 10; background: rgba(10, 10, 12, .85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-family: var(--display); font-size: 26px; text-decoration: none; letter-spacing: .02em; }
+  .logo span { color: var(--lime); }
+  nav a { color: var(--mute); text-decoration: none; font-size: 15px; margin-left: 24px; }
+  nav a:hover { color: var(--paper); }
+  @media (max-width: 720px) { nav a:not(.btn) { display: none; } }
+  nav .btn { min-height: 40px; padding: 0 16px; font-size: 14px; margin-left: 0; color: var(--ink); }
+
+  .hero { padding: 88px 0 72px; position: relative; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; inset: -40% -10% auto auto; width: 620px; height: 620px; background: radial-gradient(circle, rgba(200, 245, 60, .16), transparent 65%); pointer-events: none; }
+  .hero h1 { font-size: clamp(56px, 9vw, 116px); margin: 20px 0 24px; max-width: 12ch; }
+  .hero h1 em { font-style: normal; color: var(--lime); }
+  .hero p.lead { font-size: clamp(18px, 2.2vw, 21px); max-width: 640px; color: #d9d9d6; margin: 0 0 32px; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .proof { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 10px 28px; font-size: 14px; color: var(--mute); }
+  .proof b { color: var(--paper); font-weight: 700; }
+
+  section { padding: 80px 0; border-top: 1px solid var(--line); }
+  section h2 { font-size: clamp(40px, 6vw, 68px); margin: 14px 0 16px; }
+  .intro { max-width: 640px; margin-bottom: 40px; }
+  .grid { display: grid; gap: 16px; }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .card { background: var(--char); border: 1px solid var(--line); border-radius: 20px; padding: 26px; }
+  .card h3 { margin: 0 0 8px; font-size: 19px; }
+  .card p { margin: 0; color: var(--mute); font-size: 15.5px; }
+  .card .k { font-family: var(--display); font-size: 36px; color: var(--lime); line-height: 1; margin-bottom: 14px; }
+
+  .steps { counter-reset: s; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  .steps li { list-style: none; background: var(--char); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+  .steps li::before { counter-increment: s; content: "0" counter(s); font-family: var(--display); font-size: 30px; color: var(--lime); display: block; margin-bottom: 8px; }
+  .steps strong { display: block; margin-bottom: 4px; }
+  .steps span { color: var(--mute); font-size: 15px; }
+  ol.steps { padding: 0; margin: 0; }
+
+  .plans { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: stretch; }
+  .plan { background: var(--char); border: 1px solid var(--line); border-radius: 22px; padding: 26px; display: flex; flex-direction: column; }
+  .plan.featured { background: linear-gradient(180deg, var(--forest), var(--char-2)); border-color: rgba(200, 245, 60, .5); }
+  .plan .tag { align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: var(--lime); color: var(--ink); padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; }
+  .plan h3 { margin: 0; font-size: 20px; }
+  .plan .price { font-family: var(--display); font-size: 52px; line-height: 1; margin: 14px 0 2px; }
+  .plan .per { color: var(--mute); font-size: 14px; margin-bottom: 18px; }
+  .plan ul { padding: 0; margin: 0 0 24px; list-style: none; display: grid; gap: 9px; font-size: 15px; }
+  .plan li { padding-left: 24px; position: relative; color: #dcdcd8; }
+  .plan li::before { content: ""; position: absolute; left: 0; top: .5em; width: 12px; height: 7px; border-left: 2px solid var(--lime); border-bottom: 2px solid var(--lime); transform: rotate(-45deg); }
+  .plan .btn { margin-top: auto; }
+  .note { margin-top: 18px; font-size: 14px; color: var(--mute); }
+
+  details { background: var(--char); border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px; }
+  details + details { margin-top: 10px; }
+  summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::after { content: "+"; color: var(--lime); font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 12px 0 0; color: var(--mute); }
+
+  .form-wrap { display: grid; gap: 40px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 860px) { .form-wrap { grid-template-columns: 1fr; } }
+  form.lead { background: var(--char); border: 1px solid var(--line); border-radius: 24px; padding: 28px; display: grid; gap: 16px; }
+  label { display: grid; gap: 6px; font-size: 14px; font-weight: 500; color: #dcdcd8; }
+  input, textarea { width: 100%; background: var(--ink); color: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; font: 16px var(--sans); }
+  input:focus, textarea:focus { outline: none; border-color: var(--lime); }
+  textarea { min-height: 96px; resize: vertical; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .status { min-height: 22px; font-size: 15px; margin: 0; }
+  .status.ok { color: var(--lime); }
+  .status.err { color: #ffa3a3; }
+  .small { font-size: 13px; color: var(--mute); margin: 0; }
+
+  footer { border-top: 1px solid var(--line); padding: 36px 0 48px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; }
+  footer a { color: var(--mute); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="https://www.creativecut.in">Creative<span>Cut</span></a>
+    <nav>
+      <a href="#what">What you get</a>
+      <a href="#plans">Plans</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-lime" href="#teaser" style="margin-left:24px">Free teaser</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Creative subscription for SaaS &amp; AI teams</span>
+      <h1 class="display">Launch videos your buyers <em>actually watch.</em></h1>
+      <p class="lead">Product explainers, UI animation, founder content and ad creatives every month, from one team that learns your product once. Priced in rupees.</p>
+      <div class="ctas">
+        <a class="btn btn-lime" href="#teaser">Get a free 15-second teaser</a>
+        <a class="btn btn-ghost" href="#plans">See plans</a>
+      </div>
+      <div class="proof"><span><b>25+</b> brands &amp; creators</span><span><b>43</b> projects</span><span><b>17</b> motion &amp; SaaS explainer projects</span></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="intro">
+        <span class="eyebrow">The problem</span>
+        <h2 class="display">Great features. Forgettable launches.</h2>
+      </div>
+      <div class="grid g3">
+        <div class="card"><h3>Features ship with a screenshot</h3><p>A static image on LinkedIn won't explain what your product does, especially if it's AI.</p></div>
+        <div class="card"><h3>Studios are slow and priced per minute</h3><p>₹50k–₹1L for one explainer, 3–6 weeks, then you brief someone new for the next launch.</p></div>
+        <div class="card"><h3>Freelancers need managing</h3><p>Missed deadlines, uneven quality, and re-explaining your product every single time.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="intro">
+        <span class="eyebrow">What you get</span>
+        <h2 class="display">One team. Every launch covered.</h2>
+        <p class="muted">We learn your product, buyers and brand once. Every request after that builds on it, so there's no re-briefing.</p>
+      </div>
+      <div class="grid g4">
+        <div class="card"><div class="k">01</div><h3>Motion explainers</h3><p>45–60 second videos that make your product click for buyers, investors and your sales team.</p></div>
+        <div class="card"><div class="k">02</div><h3>UI animation</h3><p>Feature walkthroughs and launch teasers built from your real product screens.</p></div>
+        <div class="card"><div class="k">03</div><h3>Founder content</h3><p>Talking-head reels and LinkedIn clips edited with captions, hooks and your brand style.</p></div>
+        <div class="card"><div class="k">04</div><h3>Ad creatives</h3><p>Video cut-downs and static variants for LinkedIn and Meta, so you can test messages quickly.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="intro">
+        <span class="eyebrow">How it works</span>
+        <h2 class="display">From brief to launch-ready.</h2>
+      </div>
+      <ol class="steps">
+        <li><strong>Understand</strong><span>Your product, buyers, tone and references.</span></li>
+        <li><strong>Plan</strong><span>A monthly content plan mapped to your launches.</span></li>
+        <li><strong>Create</strong><span>Script, style frames, animation, edit, sound and captions.</span></li>
+        <li><strong>Review</strong><span>Two rounds of feedback on every asset.</span></li>
+        <li><strong>Deliver</strong><span>9:16, 1:1 and 16:9 files, organised and platform-ready.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="plans">
+    <div class="wrap">
+      <div class="intro">
+        <span class="eyebrow">Plans</span>
+        <h2 class="display">About the price of one studio explainer.</h2>
+        <p class="muted">All prices + 18% GST. Plans have a 3-month minimum, then continue month-to-month.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Feature Launch Video</h3>
+          <div class="price">₹45,000</div><div class="per">one-off pilot</div>
+          <ul><li>One 45–60s motion video</li><li>9:16 and 1:1 cut-downs</li><li>10 working days</li><li>Fully credited if you start a plan within 30 days</li></ul>
+          <a class="btn btn-ghost" href="#teaser">Start with a pilot</a>
+        </div>
+        <div class="plan">
+          <h3>Starter</h3>
+          <div class="price">₹55,000</div><div class="per">per month</div>
+          <ul><li>8 short-form videos</li><li>1 motion piece (≤30s)</li><li>72-hour short-form turnaround</li><li>1 active request</li></ul>
+          <a class="btn btn-ghost" href="#teaser">Choose Starter</a>
+        </div>
+        <div class="plan featured">
+          <span class="tag">Most popular</span>
+          <h3>Growth</h3>
+          <div class="price">₹95,000</div><div class="per">per month</div>
+          <ul><li>12 short-form videos</li><li>1 explainer or feature video (≤60s)</li><li>4 ad creative variants</li><li>48-hour short-form turnaround</li><li>Monthly content planning call</li></ul>
+          <a class="btn btn-lime" href="#teaser">Choose Growth</a>
+        </div>
+        <div class="plan">
+          <h3>Scale</h3>
+          <div class="price">₹1,60,000</div><div class="per">per month</div>
+          <ul><li>20 short-form videos</li><li>2 motion pieces (≤60s each)</li><li>10 ad creative variants</li><li>Dedicated creative lead</li><li>Weekly sync</li></ul>
+          <a class="btn btn-ghost" href="#teaser">Choose Scale</a>
+        </div>
+      </div>
+      <p class="note">Every asset includes captions, thumbnails and platform formats, with two revision rounds.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap" style="max-width:820px">
+      <div class="intro">
+        <span class="eyebrow">FAQ</span>
+        <h2 class="display">Questions founders ask.</h2>
+      </div>
+      <details><summary>Can't AI tools do this now?</summary><p>For quick walkthroughs, often yes, and we use AI where it genuinely helps. What they can't do is decide the story: what to show, in what order, for which buyer. That's what makes a launch video work.</p></details>
+      <details><summary>How fast is delivery?</summary><p>Short-form in 48–72 hours depending on your plan. Motion pieces in about 10 working days, from an approved script. Rush delivery is available.</p></details>
+      <details><summary>What do you need from us?</summary><p>Product access or screenshots, brand assets, footage for founder content (we'll send a recording guide), and one person who approves within 3 working days.</p></details>
+      <details><summary>Do you write the scripts?</summary><p>Yes. Every motion piece starts with a script and style frames you approve before animation begins.</p></details>
+      <details><summary>Is there a lock-in?</summary><p>Plans have a 3-month minimum, because the first month is mostly learning your product. After that it's month-to-month with 15 days' notice. The pilot has no commitment.</p></details>
+      <details><summary>Do you invoice with GST?</summary><p>Yes. All prices are in INR plus 18% GST, and invoiced monthly in advance.</p></details>
+    </div>
+  </section>
+
+  <section id="teaser">
+    <div class="wrap form-wrap">
+      <div>
+        <span class="eyebrow">Free teaser</span>
+        <h2 class="display">We'll animate one of your product screens. Free.</h2>
+        <p class="muted">Tell us about your product and we'll send back a 15-second motion teaser of one screen. It's yours to keep, whether or not we work together.</p>
+        <p class="small" style="margin-top:20px">Prefer to chat? <a href="https://www.creativecut.in/#contact">Contact us on creativecut.in</a></p>
+      </div>
+      <form class="lead" id="lead-form" novalidate>
+        <label>Your name<input name="name" autocomplete="name" required maxlength="120"></label>
+        <label>Work email<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+        <label>Company<input name="company" autocomplete="organization" maxlength="160"></label>
+        <label>Product website<input name="website" type="url" inputmode="url" placeholder="https://" maxlength="300"></label>
+        <label>What are you launching next? <span class="muted" style="font-weight:400">(optional)</span><textarea name="message" maxlength="2000"></textarea></label>
+        <div class="hp" aria-hidden="true"><label>Fax<input name="fax" tabindex="-1" autocomplete="off"></label></div>
+        <button class="btn btn-lime" type="submit">Send me my teaser</button>
+        <p class="status" id="form-status" role="status" aria-live="polite"></p>
+        <p class="small">We'll reply within one working day. No spam; we only use your details to reply.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Creative Cut · Your creative subscription</span>
+    <span><a href="https://www.creativecut.in">creativecut.in</a> · <a href="https://www.creativecut.in/privacy">Privacy policy</a></span>
+  </div>
+</footer>
+
+<script>
+  // ── Settings: copy both values from the CRM (Settings → Website lead capture) ──
+  const CRM_ENDPOINT = "https://crm.creativecut.in/api/lead-capture";
+  const WORKSPACE_KEY = "PASTE-WORKSPACE-KEY-HERE";
+
+  const form = document.getElementById("lead-form");
+  const status = document.getElementById("form-status");
+  const button = form.querySelector("button[type=submit]");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    status.className = "status";
+    const data = Object.fromEntries(new FormData(form));
+    if (!data.name || data.name.trim().length < 2) return show("Please enter your name.", true);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email || "")) return show("Please enter a valid work email.", true);
+    if (data.website && !/^https?:\/\//i.test(data.website)) data.website = "https://" + data.website;
+
+    button.disabled = true;
+    button.textContent = "Sending…";
+    try {
+      const response = await fetch(CRM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, workspace: WORKSPACE_KEY }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Something went wrong.");
+      form.reset();
+      show("Thanks! We'll be in touch within one working day.", false);
+    } catch (error) {
+      show((error && error.message) || "Something went wrong. Please email us instead.", true);
+    } finally {
+      button.disabled = false;
+      button.textContent = "Send me my teaser";
+    }
+  });
+
+  function show(message, isError) {
+    status.textContent = message;
+    status.className = "status " + (isError ? "err" : "ok");
+  }
+</script>
+</body>
+</html>

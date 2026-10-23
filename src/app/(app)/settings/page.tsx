@@ -1,5 +1,5 @@
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
-import { ProfileForm, WorkspaceNameForm } from "@/components/settings/settings-forms";
+import { OutreachLinksForm, ProfileForm, WorkspaceNameForm } from "@/components/settings/settings-forms";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
@@ -10,12 +10,15 @@ import { DRY_RUN, integrationEnvStatus } from "@/lib/integrations";
 import { CURRENCY } from "@/lib/utils";
 import { Database, Megaphone, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Settings" };
 
 export default async function SettingsPage() {
-  const viewer = await getViewer();
+  const [viewer, headerList] = await Promise.all([getViewer(), headers()]);
+  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "";
+  const siteUrl = `${headerList.get("x-forwarded-proto") ?? "https"}://${host}`;
   const env = integrationEnvStatus();
 
   const integrations = [
@@ -68,6 +71,29 @@ export default async function SettingsPage() {
           </CardBody>
         </Card>
       </div>
+
+      {viewer.mode === "live" && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <Card>
+            <CardHeader title="Outreach links" description="Filled into every sequence message" />
+            <CardBody>
+              <OutreachLinksForm bookingUrl={viewer.bookingUrl} portfolioUrl={viewer.portfolioUrl} canEdit={viewer.role === "owner" || viewer.role === "admin"} />
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader title="Website lead capture" description="Forms that post here create a lead plus a reply-within-1-hour task" />
+            <CardBody className="space-y-3 text-sm">
+              <Row label="Endpoint" value={<code className="text-xs">{`${siteUrl}/api/lead-capture`}</code>} />
+              <Row label="Workspace key" value={<code className="text-xs">{viewer.orgSlug}</code>} />
+              <p className="text-xs leading-relaxed text-subtle">
+                Send <code>workspace</code>, <code>name</code>, <code>email</code> and optionally <code>company</code>, <code>website</code>,{" "}
+                <code>message</code> as JSON or form data. The landing page in <code>landing/index.html</code> is already set up for this; put these two values
+                at the top of its script.
+              </p>
+            </CardBody>
+          </Card>
+        </div>
+      )}
 
       <Card>
         <CardHeader title="Integrations" description="Placeholders — each shows whether server credentials are present" />
