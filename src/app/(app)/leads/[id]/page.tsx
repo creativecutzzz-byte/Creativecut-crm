@@ -1,6 +1,10 @@
+import { LogActivityForm } from "@/components/activity/log-activity-form";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
+import { LeadActions } from "@/components/leads/lead-actions";
 import { StageForm } from "@/components/leads/stage-form";
+import { NewTaskButton } from "@/components/tasks/new-task-button";
+import { TaskList } from "@/components/tasks/task-list";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
@@ -9,7 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { ScorePill } from "@/components/ui/score-pill";
 import { scoreLead } from "@/lib/ai/lead-scoring";
 import { LEAD_SOURCES } from "@/lib/constants";
-import { getActivities, getLead, getTeam } from "@/lib/data";
+import { getLead, getRequestTime, getTasks, getTeam, getTimeline, getViewer } from "@/lib/data";
 import { formatCurrency, formatDate, formatRelative } from "@/lib/utils";
 import { memberByUserId } from "@/lib/team";
 import { ArrowLeft, Globe, Mail, Phone, Sparkles } from "lucide-react";
@@ -24,12 +28,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function LeadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [lead, activities, team] = await Promise.all([getLead(id), getActivities(), getTeam()]);
+  const [lead, timeline, team, tasks, viewer] = await Promise.all([getLead(id), getTimeline({ leadId: id }), getTeam(), getTasks(), getViewer()]);
   if (!lead) notFound();
+  const leadTasks = tasks.filter((t) => t.lead_id === lead.id);
+  const members = team.map((m) => ({ user_id: m.user_id, full_name: m.full_name, status: m.status }));
 
   const owner = memberByUserId(team, lead.owner_id);
   const { factors } = scoreLead(lead);
-  const timeline = activities.filter((a) => a.lead_id === lead.id);
 
   const contact = [
     { icon: Mail, label: "Email", value: lead.email },
@@ -67,6 +72,7 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
             </Link>
           )}
           <StageForm id={lead.id} stage={lead.stage} />
+          {viewer.mode === "live" && <LeadActions lead={lead} team={members} />}
         </div>
       </div>
 
@@ -90,6 +96,13 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
                   <p className="mt-1 text-sm text-fg">{lead.ai_next_action}</p>
                 </div>
               )}
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardHeader title="Log activity" description="Calls, meetings and notes update the timeline and last-contact date" />
+            <CardBody>
+              <LogActivityForm leadId={lead.id} />
             </CardBody>
           </Card>
 
@@ -125,6 +138,13 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
                 </div>
               )}
             </CardBody>
+          </Card>
+
+          <Card>
+            <CardHeader title="Tasks" action={<NewTaskButton team={members} leadId={lead.id} size="sm" variant="secondary" />} />
+            <div className="mt-2">
+              <TaskList tasks={leadTasks} team={team} now={getRequestTime()} empty="No tasks for this lead." />
+            </div>
           </Card>
 
           <Card>

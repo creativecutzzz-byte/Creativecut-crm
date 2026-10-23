@@ -5,14 +5,14 @@ import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { templateVars } from "@/lib/channel-vars";
-import { getIntegrations, getLeads, getTeam, getTemplates } from "@/lib/data";
+import { getIntegrations, getLeads, getTeam, getTemplates, getViewer } from "@/lib/data";
 import { integrationEnvStatus } from "@/lib/integrations";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "WhatsApp" };
 
 export default async function WhatsAppPage({ searchParams }: { searchParams: Promise<{ lead?: string }> }) {
-  const [{ lead }, leads, team, templates, integrations] = await Promise.all([searchParams, getLeads(), getTeam(), getTemplates(), getIntegrations()]);
+  const [{ lead }, leads, team, templates, integrations, viewer] = await Promise.all([searchParams, getLeads(), getTeam(), getTemplates(), getIntegrations(), getViewer()]);
   const reachable = leads.filter((l) => l.whatsapp_number);
   const channelTemplates = templates.filter((t) => t.channel === "whatsapp");
 
@@ -50,7 +50,7 @@ export default async function WhatsAppPage({ searchParams }: { searchParams: Pro
         />
       </div>
 
-      <TemplatesCard templates={channelTemplates} note="Business-initiated WhatsApp messages must use a Meta-approved template." />
+      <TemplatesCard channel="whatsapp" editable={viewer.mode === "live"} templates={channelTemplates} note="Business-initiated WhatsApp messages must use a Meta-approved template." />
     </div>
   );
 }

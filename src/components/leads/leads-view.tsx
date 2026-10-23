@@ -11,8 +11,8 @@ import { cn, formatCurrency, formatRelative } from "@/lib/utils";
 import { memberByUserId } from "@/lib/team";
 import { Kanban, List, Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { NewLeadDialog } from "./new-lead-dialog";
+import { useCallback, useMemo, useState } from "react";
+import { LeadDialog } from "./lead-dialog";
 
 type QuickFilter = "all" | "open" | "overdue" | "unassigned" | "hot";
 
@@ -24,7 +24,7 @@ export function LeadsView({
   now,
 }: {
   leads: Lead[];
-  team: { user_id: string | null; full_name: string }[];
+  team: { user_id: string | null; full_name: string; status?: string }[];
   initialFilter?: QuickFilter;
   openNew?: boolean;
   now: number;
@@ -36,6 +36,7 @@ export function LeadsView({
   const [quick, setQuick] = useState<QuickFilter>(initialFilter ?? "open");
   const [dialogOpen, setDialogOpen] = useState(Boolean(openNew));
 
+  const closeDialog = useCallback(() => setDialogOpen(false), []);
   const ownerName = (id: string | null) => memberByUserId(team, id)?.full_name;
 
   const filtered = useMemo(() => {
@@ -127,7 +128,7 @@ export function LeadsView({
 
       {view === "table" ? <LeadsTable leads={filtered} ownerName={ownerName} now={now} /> : <LeadsBoard leads={filtered} />}
 
-      <NewLeadDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      <LeadDialog open={dialogOpen} onClose={closeDialog} team={team} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
-import { Briefcase, LayoutDashboard, Megaphone, Settings, Target, Users, Workflow } from "lucide-react";
+import { Briefcase, ListChecks, LayoutDashboard, Megaphone, Settings, Target, Users, Workflow } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 export interface NavItem {
@@ -15,6 +15,7 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/leads", label: "Leads", icon: Target },
       { href: "/clients", label: "Clients", icon: Briefcase },
+      { href: "/tasks", label: "Tasks", icon: ListChecks },
     ],
   },
   {

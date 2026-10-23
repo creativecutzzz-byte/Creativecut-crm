@@ -1,8 +1,6 @@
 "use server";
 
-import { getViewer } from "@/lib/data";
-import { isSupabaseConfigured } from "@/lib/env";
-import { createClient } from "@/lib/supabase/server";
+import { firstIssue, requireWorkspace } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -24,13 +22,11 @@ const inviteSchema = z.object({
  */
 export async function inviteMember(_: InviteState, formData: FormData): Promise<InviteState> {
   const parsed = inviteSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  if (!isSupabaseConfigured) return { error: "Demo mode — connect Supabase to invite teammates." };
+  if (!parsed.success) return { error: firstIssue(parsed.error) };
+  const ws = await requireWorkspace(["owner", "admin"]);
+  if ("error" in ws) return ws;
+  const { supabase, viewer } = ws;
 
-  const viewer = await getViewer();
-  if (!viewer.orgId || !["owner", "admin"].includes(viewer.role)) return { error: "Only owners and admins can invite teammates." };
-
-  const supabase = await createClient();
   const { error } = await supabase.from("team_members").insert({
     org_id: viewer.orgId,
     invite_email: parsed.data.email.toLowerCase(),
@@ -41,5 +37,44 @@ export async function inviteMember(_: InviteState, formData: FormData): Promise<
   if (error) return { error: error.code === "23505" ? "That email is already on the team." : error.message };
 
   revalidatePath("/team");
-  return { ok: true, message: `Invitation recorded for ${parsed.data.email}. Ask them to sign up with that address.` };
+  return { ok: true, message: `Invitation recorded for ${parsed.data.email}. Ask them to create an account at /signup with that address.` };
+}
+
+const memberSchema = z.object({
+  id: z.uuid(),
+  role: z.enum(["admin", "manager", "member"]).optional(),
+});
+
+async function loadManageableMember(formData: FormData) {
+  const parsed = memberSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { error: "Invalid member" } as const;
+  const ws = await requireWorkspace(["owner", "admin"]);
+  if ("error" in ws) return ws;
+
+  const { data: member, error } = await ws.supabase.from("team_members").select("id, user_id, role").eq("id", parsed.data.id).single();
+  if (error) return { error: error.message } as const;
+  if (member.user_id === ws.viewer.userId) return { error: "You can't change your own membership." } as const;
+  if (member.role === "owner") return { error: "The workspace owner can't be changed here." } as const;
+  return { ws, member, role: parsed.data.role };
+}
+
+export async function updateMemberRole(_: InviteState, formData: FormData): Promise<InviteState> {
+  const result = await loadManageableMember(formData);
+  if ("error" in result) return { error: result.error };
+  if (!result.role) return { error: "Choose a role" };
+
+  const { error } = await result.ws.supabase.from("team_members").update({ role: result.role }).eq("id", result.member.id);
+  if (error) return { error: error.message };
+  revalidatePath("/team");
+  return { ok: true };
+}
+
+export async function removeMember(_: InviteState, formData: FormData): Promise<InviteState> {
+  const result = await loadManageableMember(formData);
+  if ("error" in result) return { error: result.error };
+
+  const { error } = await result.ws.supabase.from("team_members").delete().eq("id", result.member.id);
+  if (error) return { error: error.message };
+  revalidatePath("/team");
+  return { ok: true };
 }

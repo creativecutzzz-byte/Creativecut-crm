@@ -1,10 +1,11 @@
 import { InviteForm } from "@/components/team/invite-form";
+import { MemberControls } from "@/components/team/member-controls";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { ROLE_LABELS } from "@/lib/constants";
-import { getTeam } from "@/lib/data";
+import { getTeam, getViewer } from "@/lib/data";
 import type { MemberRole } from "@/lib/types";
 import { Check, Minus } from "lucide-react";
 import type { Metadata } from "next";
@@ -28,7 +29,8 @@ const permissions: { label: string; roles: MemberRole[] }[] = [
 ];
 
 export default async function TeamPage() {
-  const team = await getTeam();
+  const [team, viewer] = await Promise.all([getTeam(), getViewer()]);
+  const canManage = viewer.mode === "live" && (viewer.role === "owner" || viewer.role === "admin");
   const maxLoad = Math.max(1, ...team.map((m) => m.open_leads + m.clients));
 
   return (
@@ -66,7 +68,11 @@ export default async function TeamPage() {
                         </div>
                       </td>
                       <td className="px-3 py-3">
-                        <Badge variant={roleVariant[m.role]}>{ROLE_LABELS[m.role]}</Badge>
+                        {canManage && m.role !== "owner" && m.user_id !== viewer.userId ? (
+                          <MemberControls id={m.id} role={m.role} name={m.full_name} invited={m.status === "invited"} />
+                        ) : (
+                          <Badge variant={roleVariant[m.role]}>{ROLE_LABELS[m.role]}</Badge>
+                        )}
                       </td>
                       <td className="px-3 py-3 text-muted">{m.department ?? "—"}</td>
                       <td className="px-5 py-3">
@@ -88,12 +94,14 @@ export default async function TeamPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card>
-            <CardHeader title="Invite a teammate" description="They join when they sign up with this email" />
-            <CardBody>
-              <InviteForm />
-            </CardBody>
-          </Card>
+          {(viewer.mode === "demo" || canManage) && (
+            <Card>
+              <CardHeader title="Invite a teammate" description="They join when they create an account with this email" />
+              <CardBody>
+                <InviteForm />
+              </CardBody>
+            </Card>
+          )}
           <Card>
             <CardHeader title="Role permissions" description="Enforced by database row-level security" />
             <CardBody className="overflow-x-auto">

@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured, supabaseAnonKey, supabaseUrl } from "@/lib/env";
 
-const PUBLIC_PATHS = ["/login", "/auth"];
+const PUBLIC_PATHS = ["/login", "/signup", "/auth"];
 
 /** Refreshes the Supabase session cookie and gates app routes behind sign-in. */
 export async function updateSession(request: NextRequest) {
@@ -26,6 +26,13 @@ export async function updateSession(request: NextRequest) {
 
   const { data } = await supabase.auth.getClaims();
   const isPublic = PUBLIC_PATHS.some((path) => request.nextUrl.pathname.startsWith(path));
+
+  if (data?.claims && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
 
   if (!data?.claims && !isPublic) {
     const url = request.nextUrl.clone();

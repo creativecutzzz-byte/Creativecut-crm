@@ -8,7 +8,7 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { ScorePill } from "@/components/ui/score-pill";
 import { templateVars } from "@/lib/channel-vars";
-import { getIntegrations, getLeads, getTeam, getTemplates } from "@/lib/data";
+import { getIntegrations, getLeads, getTeam, getTemplates, getViewer } from "@/lib/data";
 import { integrationEnvStatus } from "@/lib/integrations";
 import { formatRelative } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -17,7 +17,7 @@ import Link from "next/link";
 export const metadata: Metadata = { title: "Instagram" };
 
 export default async function InstagramPage({ searchParams }: { searchParams: Promise<{ lead?: string }> }) {
-  const [{ lead }, leads, team, templates, integrations] = await Promise.all([searchParams, getLeads(), getTeam(), getTemplates(), getIntegrations()]);
+  const [{ lead }, leads, team, templates, integrations, viewer] = await Promise.all([searchParams, getLeads(), getTeam(), getTemplates(), getIntegrations(), getViewer()]);
   const reachable = leads.filter((l) => l.instagram_handle);
   const fromInstagram = leads.filter((l) => l.source === "instagram");
   const channelTemplates = templates.filter((t) => t.channel === "instagram");
@@ -79,7 +79,7 @@ export default async function InstagramPage({ searchParams }: { searchParams: Pr
             {fromInstagram.length === 0 && <li className="py-6 text-center text-xs text-subtle">No Instagram leads yet.</li>}
           </ul>
         </Card>
-        <TemplatesCard templates={channelTemplates} note="Quick replies for common DMs" />
+        <TemplatesCard channel="instagram" editable={viewer.mode === "live"} templates={channelTemplates} note="Quick replies for common DMs" />
       </div>
     </div>
   );

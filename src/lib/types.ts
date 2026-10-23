@@ -50,6 +50,7 @@ export interface Lead {
   last_contacted_at: string | null;
   next_follow_up_at: string | null;
   marketing_consent: boolean;
+  converted_client_id?: string | null;
   tags: string[];
   created_at: string;
 }
@@ -61,6 +62,7 @@ export interface Client {
   industry: string | null;
   email: string | null;
   phone: string | null;
+  whatsapp_number?: string | null;
   instagram_handle: string | null;
   website: string | null;
   status: ClientStatus;
@@ -78,6 +80,22 @@ export interface Activity {
   lead_id: string | null;
   client_id: string | null;
   actor_id: string | null;
+  created_at: string;
+}
+
+export type TaskStatus = "open" | "done" | "cancelled";
+export type TaskPriority = "low" | "medium" | "high";
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  due_at: string | null;
+  assignee_id: string | null;
+  lead_id: string | null;
+  client_id: string | null;
   created_at: string;
 }
 

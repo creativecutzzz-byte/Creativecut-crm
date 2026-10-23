@@ -19,7 +19,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
       />
       <LeadsView
         leads={leads}
-        team={team.map((m) => ({ user_id: m.user_id, full_name: m.full_name }))}
+        team={team.map((m) => ({ user_id: m.user_id, full_name: m.full_name, status: m.status }))}
         initialFilter={filter === "overdue" || filter === "unassigned" ? filter : undefined}
         openNew={openNew === "1"}
         now={getRequestTime()}

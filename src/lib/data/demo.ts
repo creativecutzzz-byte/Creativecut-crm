@@ -8,6 +8,7 @@ import type {
   Integration,
   Lead,
   MessageTemplate,
+  Task,
   TeamMember,
   Workflow,
 } from "@/lib/types";
@@ -191,3 +192,11 @@ export function demoRevenueTrend() {
     };
   });
 }
+
+export const demoTasks: Task[] = [
+  { id: "task-1", title: "Call Ethan about the Gym Growth ad form", description: null, status: "open", priority: "high", due_at: daysAgo(0, 1), assignee_id: "u-2", lead_id: "l-6", client_id: null, created_at: daysAgo(0, 5) },
+  { id: "task-2", title: "Send revised proposal with reels add-on", description: "Include the 3-reel monthly bundle.", status: "open", priority: "high", due_at: daysAhead(1), assignee_id: "u-2", lead_id: "l-1", client_id: null, created_at: daysAgo(1) },
+  { id: "task-3", title: "Kick-off call — Helio Solar", description: null, status: "open", priority: "medium", due_at: daysAhead(2), assignee_id: "u-1", lead_id: null, client_id: "c-4", created_at: daysAgo(2) },
+  { id: "task-4", title: "Monthly report for Lumen Skincare", description: null, status: "open", priority: "low", due_at: daysAhead(5), assignee_id: "u-3", lead_id: null, client_id: "c-1", created_at: daysAgo(3) },
+  { id: "task-5", title: "Share Fjord case study with Kora Wellness", description: null, status: "done", priority: "medium", due_at: daysAgo(1), assignee_id: "u-1", lead_id: "l-3", client_id: null, created_at: daysAgo(4) },
+];

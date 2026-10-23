@@ -1,4 +1,5 @@
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
+import { ProfileForm, WorkspaceNameForm } from "@/components/settings/settings-forms";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { getViewer } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/env";
 import { DRY_RUN, integrationEnvStatus } from "@/lib/integrations";
+import { CURRENCY } from "@/lib/utils";
 import { Database, Megaphone, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -30,7 +32,16 @@ export default async function SettingsPage() {
         <Card>
           <CardHeader title="Workspace" />
           <CardBody className="space-y-3 text-sm">
-            <Row label="Name" value={viewer.orgName} />
+            {viewer.mode === "live" ? (
+              <div className="space-y-4 pb-2">
+                <WorkspaceNameForm name={viewer.orgName} canEdit={viewer.role === "owner" || viewer.role === "admin"} />
+                <ProfileForm fullName={viewer.fullName === viewer.email ? "" : viewer.fullName} />
+              </div>
+            ) : (
+              <Row label="Name" value={viewer.orgName} />
+            )}
+            <Row label="Signed in as" value={viewer.email} />
+            <Row label="Currency" value={CURRENCY} />
             <Row label="Your role" value={<Badge variant="accent">{viewer.role}</Badge>} />
             <Row
               label="Database"

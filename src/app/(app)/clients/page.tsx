@@ -1,3 +1,4 @@
+import { NewClientButton } from "@/components/clients/client-dialog";
 import { InstagramIcon } from "@/components/icons";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -5,11 +6,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Progress } from "@/components/ui/progress";
 import { StatCard } from "@/components/ui/stat-card";
 import { CLIENT_STATUS } from "@/lib/constants";
-import { getClients, getTeam } from "@/lib/data";
+import { getClients, getTeam, getViewer } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { memberByUserId } from "@/lib/team";
 import { Briefcase, HeartPulse, Repeat, Wallet } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = { title: "Clients" };
 
@@ -20,7 +22,7 @@ function healthTone(score: number) {
 }
 
 export default async function ClientsPage() {
-  const [clients, team] = await Promise.all([getClients(), getTeam()]);
+  const [clients, team, viewer] = await Promise.all([getClients(), getTeam(), getViewer()]);
   const live = clients.filter((c) => c.status === "active" || c.status === "onboarding");
   const mrr = live.reduce((s, c) => s + c.monthly_retainer, 0);
   const scored = live.filter((c) => c.health_score !== null);
@@ -32,7 +34,15 @@ export default async function ClientsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Clients" description="Retainers, services and account health across the agency." />
+      <PageHeader
+        title="Clients"
+        description="Retainers, services and account health across the agency."
+        actions={viewer.mode === "live" && <NewClientButton team={team.map((m) => ({ user_id: m.user_id, full_name: m.full_name, status: m.status }))} />}
+      />
+
+      {clients.length === 0 && (
+        <div className="card p-8 text-center text-sm text-muted">No clients yet. Add one, or convert a won lead from its page.</div>
+      )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Active clients" value={String(live.length)} hint={`${clients.length} all-time`} icon={Briefcase} />
@@ -46,7 +56,7 @@ export default async function ClientsPage() {
           const owner = memberByUserId(team, client.owner_id);
           const status = CLIENT_STATUS[client.status];
           return (
-            <article key={client.id} className="card flex flex-col p-5 transition-colors hover:border-line-strong">
+            <Link key={client.id} href={`/clients/${client.id}`} className="card flex flex-col p-5 transition-colors hover:border-line-strong">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <Avatar name={client.company ?? client.name} />
@@ -98,7 +108,7 @@ export default async function ClientsPage() {
                   </span>
                 )}
               </div>
-            </article>
+            </Link>
           );
         })}
       </div>

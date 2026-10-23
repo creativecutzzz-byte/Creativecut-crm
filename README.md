@@ -9,14 +9,17 @@ A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 
 | Area | Route | What's there |
 | --- | --- | --- |
 | CRM dashboard | `/dashboard` | KPIs, revenue vs pipeline trend, AI insights, pipeline by stage, lead sources, follow-ups, activity feed |
-| Lead management | `/leads`, `/leads/[id]` | Table + kanban views, quick filters (hot / overdue / unassigned), search, create lead, stage changes, AI score with explainable factors |
-| Client management | `/clients` | Retainers, MRR, account health, services, owners |
-| WhatsApp Business | `/whatsapp` | Template composer with **simulated** send, connection checklist, templates |
+| Lead management | `/leads`, `/leads/[id]` | Table + kanban views, quick filters, create / edit / delete, owner & follow-up date, stage changes, activity log (calls, meetings, notes), lead tasks, convert to client, AI score with explainable factors |
+| Client management | `/clients`, `/clients/[id]` | Create / edit / delete, retainers, MRR, account health, services, owners, activity log and tasks |
+| Tasks | `/tasks` | My / everyone's tasks, overdue & upcoming, create (linked to a lead or client), complete, delete |
+| Search | `/search` | Leads and clients by name, company, email, phone or Instagram handle |
+| WhatsApp Business | `/whatsapp` | Template composer with **simulated** send, connection checklist, create / delete templates |
 | Instagram | `/instagram` | DM reply composer (**simulated**), Instagram-sourced leads, quick replies |
 | Meta Ads analytics | `/ads` | Spend, ROAS, CPL, CTR, daily chart, per-campaign table (read-only) |
 | Follow-up workflows | `/workflows` | Trigger → step sequences, activate/pause, dry-run test run against a real lead |
-| Team management | `/team` | Members, roles, workload, invitations, permission matrix |
-| Settings | `/settings` | Workspace, safety status, integration credential status |
+| Team management | `/team` | Members, roles, workload, invitations, change role / remove member, permission matrix |
+| Settings | `/settings` | Rename workspace, your name, safety status, integration credential status |
+| Accounts | `/signup`, `/login` | Sign up, password or magic-link sign-in, create a workspace in-app, invitations accepted automatically |
 
 ## Getting started
 
@@ -30,12 +33,20 @@ npm run dev                  # http://localhost:3000
 
 ### Connecting Supabase
 
-1. Create a Supabase project and set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`.
-2. Apply the schema: `supabase link --project-ref <ref> && supabase db push` (or paste `supabase/migrations/*.sql` into the SQL editor).
-3. Keep **email confirmation enabled** in Auth settings (invitations are matched by email).
-4. Sign up, then create the workspace as that user: `select create_organization('Creative Cut', 'creative-cut');`
-5. Invite teammates from `/team`; they join automatically when they sign up with the invited email.
+1. Create a Supabase project and set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Project Settings → API) in `.env.local` — or in your host's environment variables. Set `NEXT_PUBLIC_CURRENCY=INR` for rupees.
+2. Apply the schema: `supabase link --project-ref <ref> && supabase db push` (or paste each file in `supabase/migrations/`, in order, into the SQL editor).
+3. In Auth → URL Configuration, set the **Site URL** to your domain (e.g. `https://crm.creativecut.in`) and add `https://crm.creativecut.in/auth/callback` to the redirect URLs. Keep **email confirmation enabled** (invitations are matched by email).
+4. Open `/signup`, create your account, then name your workspace — it's created with starter templates and workflows.
+5. Invite teammates from `/team`; they join automatically when they sign up (or sign in) with the invited email.
 6. Optional: `supabase gen types typescript --linked > src/lib/database.types.ts` for fully typed queries.
+
+### Local development with a real database
+
+With Docker running: `npx supabase start`, then copy the printed API URL and anon key into `.env.local`. Migrations in `supabase/migrations/` are applied automatically.
+
+### Deploying
+
+Any Next.js host works (Vercel is the simplest): import the repo, add the environment variables from step 1, deploy, then point `crm.creativecut.in` at it with a CNAME record and update the Supabase Site URL.
 
 ## Database schema
 

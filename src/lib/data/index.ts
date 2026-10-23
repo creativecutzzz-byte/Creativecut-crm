@@ -13,6 +13,7 @@ import type {
   Lead,
   MemberRole,
   MessageTemplate,
+  Task,
   TeamMember,
   Workflow,
 } from "@/lib/types";
@@ -46,14 +47,22 @@ export const getViewer = cache(async (): Promise<Viewer> => {
     return { mode: "live", userId: null, orgId: null, orgName: "Creative Cut", fullName: "", email: "", role: "member" };
   }
 
-  const { data: membership } = await supabase
-    .from("team_members")
-    .select("org_id, role, organizations(name)")
-    .eq("user_id", user.id)
-    .eq("status", "active")
-    .order("created_at")
-    .limit(1)
-    .maybeSingle();
+  const loadMembership = () =>
+    supabase
+      .from("team_members")
+      .select("org_id, role, organizations(name)")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .order("created_at")
+      .limit(1)
+      .maybeSingle();
+
+  let { data: membership } = await loadMembership();
+  if (!membership) {
+    // Picks up invitations sent to this email after the account was created.
+    const { data: accepted } = await supabase.rpc("accept_invitations");
+    if (accepted) ({ data: membership } = await loadMembership());
+  }
 
   const org = membership?.organizations as { name: string } | { name: string }[] | null | undefined;
   const orgName = Array.isArray(org) ? org[0]?.name : org?.name;
@@ -63,7 +72,7 @@ export const getViewer = cache(async (): Promise<Viewer> => {
     userId: user.id,
     orgId: membership?.org_id ?? null,
     orgName: orgName ?? "Creative Cut",
-    fullName: (user.user_metadata?.full_name as string | undefined) ?? user.email ?? "",
+    fullName: (user.user_metadata?.full_name as string | undefined) || user.email || "",
     email: user.email ?? "",
     role: (membership?.role as MemberRole | undefined) ?? "member",
   };
@@ -93,6 +102,27 @@ export async function getLead(id: string): Promise<Lead | null> {
 export const getClients = cache(async (): Promise<Client[]> => {
   if (!isSupabaseConfigured) return demo.demoClients;
   return liveQuery<Client>("clients", (q) => q.select("*").order("name"));
+});
+
+export async function getClient(id: string): Promise<Client | null> {
+  const clients = await getClients();
+  return clients.find((client) => client.id === id) ?? null;
+}
+
+/** Full timeline for one lead or client (the org-wide feed is capped). */
+export async function getTimeline(target: { leadId?: string; clientId?: string }): Promise<Activity[]> {
+  if (!isSupabaseConfigured) {
+    return demo.demoActivities.filter((a) => (target.leadId && a.lead_id === target.leadId) || (target.clientId && a.client_id === target.clientId));
+  }
+  return liveQuery<Activity>("activities", (q) => {
+    const scoped = q.select("*").order("created_at", { ascending: false }).limit(200);
+    return target.leadId ? scoped.eq("lead_id", target.leadId) : scoped.eq("client_id", target.clientId!);
+  });
+}
+
+export const getTasks = cache(async (): Promise<Task[]> => {
+  if (!isSupabaseConfigured) return demo.demoTasks;
+  return liveQuery<Task>("tasks", (q) => q.select("*").neq("status", "cancelled").order("due_at", { ascending: true, nullsFirst: false }).limit(500));
 });
 
 export const getActivities = cache(async (): Promise<Activity[]> => {

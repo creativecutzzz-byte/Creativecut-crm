@@ -3,10 +3,26 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Menu, Search, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { SidebarContent } from "./sidebar";
 
-export function Topbar({ orgName, userName, email, mode, signOut }: { orgName: string; userName: string; email: string; mode: "demo" | "live"; signOut?: () => Promise<void> }) {
+export function Topbar({
+  orgName,
+  userName,
+  email,
+  mode,
+  signOut,
+  openTasks = 0,
+}: {
+  orgName: string;
+  userName: string;
+  email: string;
+  mode: "demo" | "live";
+  signOut?: () => Promise<void>;
+  /** Open tasks due now or earlier for the viewer; lights the bell. */
+  openTasks?: number;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,15 +32,16 @@ export function Topbar({ orgName, userName, email, mode, signOut }: { orgName: s
           <Menu className="size-5" />
         </button>
 
-        <div className="relative hidden max-w-md flex-1 sm:block">
+        <form action="/search" role="search" className="relative hidden max-w-md flex-1 sm:block">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-subtle" />
           <input
             type="search"
-            placeholder="Search leads, clients, campaigns…"
-            className="h-9 w-full rounded-lg border border-line bg-surface-2/70 pr-12 pl-9 text-sm text-fg placeholder:text-subtle focus:border-accent/40 focus:outline-none"
+            name="q"
+            placeholder="Search leads and clients…"
+            aria-label="Search leads and clients"
+            className="h-9 w-full rounded-lg border border-line bg-surface-2/70 pr-3 pl-9 text-sm text-fg placeholder:text-subtle focus:border-accent/40 focus:outline-none"
           />
-          <kbd className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 rounded border border-line px-1.5 text-[10px] text-subtle">⌘K</kbd>
-        </div>
+        </form>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
           {mode === "demo" && (
@@ -32,10 +49,13 @@ export function Topbar({ orgName, userName, email, mode, signOut }: { orgName: s
               Demo data
             </Badge>
           )}
-          <button className="relative grid size-9 place-items-center rounded-lg text-muted hover:bg-white/5 hover:text-fg" aria-label="Notifications">
+          <Link href="/search" className="grid size-9 place-items-center rounded-lg text-muted hover:bg-white/5 hover:text-fg sm:hidden" aria-label="Search">
+            <Search className="size-4" />
+          </Link>
+          <Link href="/tasks" className="relative grid size-9 place-items-center rounded-lg text-muted hover:bg-white/5 hover:text-fg" aria-label={openTasks ? `My tasks (${openTasks} due)` : "My tasks"}>
             <Bell className="size-4" />
-            <span className="absolute top-2 right-2 size-1.5 rounded-full bg-accent" />
-          </button>
+            {openTasks > 0 && <span className="absolute top-2 right-2 size-1.5 rounded-full bg-accent" />}
+          </Link>
           <div className="flex items-center gap-2.5 border-l border-line pl-3">
             <Avatar name={userName || email || "User"} />
             <div className="hidden leading-tight md:block">

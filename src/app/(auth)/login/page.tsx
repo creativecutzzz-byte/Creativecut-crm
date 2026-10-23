@@ -1,6 +1,7 @@
 import { LogoMark } from "@/components/icons";
 import { isSupabaseConfigured } from "@/lib/env";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -32,6 +33,14 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             </div>
           )}
         </div>
+        {isSupabaseConfigured && (
+          <p className="mt-4 text-center text-xs text-muted">
+            New here?{" "}
+            <Link href="/signup" className="text-fg hover:underline">
+              Create an account
+            </Link>
+          </p>
+        )}
       </div>
     </main>
   );

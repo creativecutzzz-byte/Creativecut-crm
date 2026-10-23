@@ -5,9 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
+/** ISO currency code for all money in the CRM, e.g. INR. Set NEXT_PUBLIC_CURRENCY; defaults to USD. */
+export const CURRENCY = (process.env.NEXT_PUBLIC_CURRENCY || "USD").toUpperCase();
+
+const currencyFormatter = new Intl.NumberFormat(CURRENCY === "INR" ? "en-IN" : "en-US", {
   style: "currency",
-  currency: "USD",
+  currency: CURRENCY,
   maximumFractionDigits: 0,
 });
 
