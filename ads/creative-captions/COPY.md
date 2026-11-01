@@ -12,7 +12,7 @@ Shared facts used in copy:
 - ₹299 Basic / ₹599 Pro for 31 days (one-time payments, no auto-renewal); ₹2,999 Lifetime ("Launch price for the first 100 buyers").
 
 What the copy deliberately leaves out:
-- **CREATIVE20.** The live page doesn't mention it, and the brief says it applies to Pro only. A trial offer is the better lead for a cold audience. Use it only in a retargeting ad, and only after you confirm the code still works.
+- **CREATIVE20** is now verified live (20% off Pro only, ₹599 → ₹479.20; rejected on Basic and Lifetime). It stays out of the cold ads, which lead with the trial. Use it in the retargeting variant at the end of this file.
 - **Speed numbers.** The site says "about a minute" for the three steps, but nobody has measured that. Don't put any timing claim in an ad.
 - **"Translate."** The product transcribes speech in the spoken language. It does not translate.
 - **Lifetime scarcity.** "First 100 buyers" is a real site term. It stays out of cold ads so nothing reads as pressure. Use it in retargeting only, while it's true.
@@ -82,7 +82,7 @@ What the copy deliberately leaves out:
 >
 > Same footage, same words, three looks: Viral Bold, Red Box Italic and Golden Script. They're three of the 37 caption styles inside Creative Captions for After Effects.
 >
-> Every caption lands as an editable text layer, timed word by word. Add synced sound effects from 24 included sounds.
+> Tap a style, press "Apply to comp", and the captions rebuild from the same transcript. No re-transcribing. Every caption stays an editable text layer, and you can add synced sound effects from 24 included sounds.
 >
 > Try all 37 styles free for 7 days with the Pro trial. No card needed. Needs After Effects 2022+.
 
@@ -143,6 +143,15 @@ All three point to the product page, which has the download buttons and the tria
 Optional: to split Facebook from Instagram placements, add `&utm_term={{site_source_name}}` in Meta's **URL parameters** field. Meta fills it in at click time, and it doesn't change the base links above.
 
 Before launch, check that the site's analytics keeps the UTM parameters through the download step. The page currently has no UTM tags of its own.
+
+## Retargeting variant (trial users or site visitors, not cold traffic)
+Use this only for people who already visited or downloaded. The code is verified live for Pro only.
+
+**Primary text**
+> Liked the trial? Keep Pro for ₹479.20 for 31 days with code CREATIVE20 (20% off Pro). It's a one-time ₹ payment with no auto-renewal, and first purchases come with a 14-day money-back guarantee.
+
+**Headline:** 20% off Pro with CREATIVE20 · **CTA button:** Shop now
+**Link:** `https://tools.creativecut.in/pricing?code=CREATIVE20&utm_source=meta&utm_medium=paid_social&utm_campaign=cc_trial_in_2026_11&utm_content=rt_creative20`
 
 ## Suggested ₹4,000 test (for your decision; nothing is launched)
 - One campaign, objective Traffic or Leads. With zero customers there are no purchase events for Meta to optimise for yet.

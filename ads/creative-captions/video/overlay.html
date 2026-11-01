@@ -83,7 +83,7 @@ window.setup = function (TL) {
   // 6–12 product + steps
   add(6.0, 12.0, `<div style="display:flex;align-items:center;gap:18px"><img src="../assets/brand/creative-cut-tools-mark-256.png" style="width:78px;height:78px"><div><div style="font-weight:800;font-size:46px">Creative Captions</div><div style="font-size:26px;color:var(--muted);font-weight:600">inside After Effects</div></div></div>`,
     { left: L + "px", top: "290px" }, "up");
-  const steps = [["1", "Pick footage", 6.2, 7.0], ["2", "Language + style", 7.0, 7.6], ["3", "Generate", 7.6, 9.0]];
+  const steps = [["1", "Select your layer", 6.2, 7.0], ["2", "Language + style", 7.0, 7.6], ["3", "Generate captions", 7.6, 9.0]];
   steps.forEach(([n, label, a, b], i) => {
     const pos = { left: L + "px", top: (392 + i * 64) + "px" };
     add(a, 12.0, `<span class="chip sm"><small>${n}</small>${label}</span>`, pos, "pop");
@@ -93,6 +93,7 @@ window.setup = function (TL) {
     { left: L + "px", top: "1258px", width: "960px" }, "up");
   // 12–18 styles
   add(12.0, 18.0, `<div class="anton shadow" style="font-size:96px">Same clip.<br><span class="lime">Three styles.</span></div>`, { left: L + "px", top: "300px" }, "up");
+  add(12.3, 18.0, `<span class="chip sm">Tap a style → <span class="lime">&nbsp;Apply to comp</span></span>`, { left: L + "px", top: "505px" }, "pop");
   // 18–24 correction
   add(18.0, 21.2, `<div class="anton shadow" style="font-size:120px">Client<br>revision?</div>`, { left: L + "px", top: "300px" }, "slam");
   add(21.2, 24.0, `<div class="anton lime shadow" style="font-size:120px">Keep<br>editing.</div>`, { left: L + "px", top: "300px" }, "slam");

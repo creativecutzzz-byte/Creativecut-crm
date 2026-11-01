@@ -18,7 +18,16 @@ Not acceptable as product footage: redrawn or imitation AE UI, website previews 
 5. **Cursor:** move slowly and pause about 0.5 s on each control before clicking. No circling.
 6. Recorder: OBS (or similar) at 60 fps, MKV/MOV, CRF ≤ 18. Re-mux to `.mp4` or `.mov`.
 
-> Before recording, check: the actual control names in the panel, how the style is changed on captions that already exist (re-generate, or a one-click swap), and whether any of the three chosen styles needs AE 24.3+. Write those down in `captures/NOTES.md` so the on-screen labels match the real UI exactly.
+> **Real panel workflow (read from the plugin source, v0.9.8):**
+> - **Footage:** select the footage layer in the Timeline. There's no layer dropdown. The panel's footage card shows its name, duration, size and fps.
+> - **Language:** the LANGUAGE dropdown reads "EN English". Leave the quality toggle on "Fast" or "Best accuracy", whichever you normally use.
+> - **Style:** tap a tile under **LOOK**. The tiles preview live on your own frame.
+> - **Generate:** the big bottom button. Its label changes from **"Generate captions"** to **"Transcribing… NN%"** to **"Captions are in your comp"**.
+> - **Restyle:** tap a different style tile and the button changes to **"Apply to comp"**. That rebuilds the captions from the same transcript, with no re-transcribing.
+> - **Timeline result:** one text layer per caption group, named `CC 001 <text>`, `CC 002 …`, with a green label.
+> - **Fixing a word:** edit that layer's text in the comp, or edit the line in the panel's TRANSCRIPT list and press "Apply to comp". The ad shows the **AE text-layer** route.
+> - **Golden Script** needs **After Effects 24.3 or newer** for its script line. Record on AE 2024 (24.3)+, or the second line won't render as intended. Viral Bold and Red Box Italic work on AE 2022+.
+> - Hide the LICENSE section and any banners (update, trial, fonts) before recording.
 
 ---
 
@@ -30,10 +39,10 @@ Put these in `ads/creative-captions/captures/`. Names must match.
 | File | Length | What to capture |
 |---|---|---|
 | `v01-before.mp4` | 6 s | The uncaptioned clip **playing in the Comp viewer**, then the Timeline showing only the footage layer (no captions yet). |
-| `v02-setup.mp4` | 6–10 s | In the Creative Captions panel: select the footage layer, choose **English**, pick **Viral Bold**, move to **Generate** and click. |
-| `v03-generate.mp4` | real time | From the Generate click until captions appear on the Timeline as text layers, then about 2 s of playback. **Keep it unedited:** the build speeds it up and adds the label "Processing sped up". |
-| `v04-styles.mp4` | 10–15 s | On the same frame, change the style to **Red Box Italic**, then **Golden Script**, using the panel's real control. Hold each result about 2 s with the caption visible in the Comp viewer. |
-| `v05-correction.mp4` | 8–12 s | Select the caption text layer containing SUNDAY in the Timeline. Double-click it in the Comp viewer, type **SATURDAY**, press Enter or Esc to commit, then scrub or play so the corrected word is visible. |
+| `v02-setup.mp4` | 6–10 s | Click the footage layer in the Timeline (the panel's footage card updates). Set LANGUAGE to **EN English**, tap the **Viral Bold** tile under LOOK, move to **Generate captions** and click. |
+| `v03-generate.mp4` | real time | From the click, through "Transcribing… NN%", until the button reads "Captions are in your comp" and the `CC 001…` text layers appear in the Timeline. Then about 2 s of playback. **Keep it unedited:** the build speeds it up and adds the label "Processing sped up". |
+| `v04-styles.mp4` | 10–15 s | With the playhead on the same frame, tap **Red Box Italic** and press **Apply to comp**. Hold about 2 s. Then tap **Golden Script** and press **Apply to comp**. Hold about 2 s. Keep the caption visible in the Comp viewer. |
+| `v05-correction.mp4` | 8–12 s | Select the `CC 00x` text layer containing SUNDAY in the Timeline. Double-click it in the Comp viewer, select SUNDAY, type **SATURDAY**, and press Esc to commit. Then scrub or play so the corrected word is visible. |
 | `v06-final.mp4` | 6 s | The finished reel **rendered out of AE** (1080×1920 export) in Viral Bold with SATURDAY, so the close shows the real output full-screen. |
 
 ### Stills (static ads)
@@ -42,11 +51,11 @@ Export these from AE (File → Export → Save Frame As) or grab them from the r
 |---|---|
 | `c1-before.png` | Comp viewer: the caption showing **SUNDAY** (same frame as the after shot). |
 | `c1-after.png` | Same frame: the caption showing **SATURDAY**. |
-| `c1-timeline.png` | Timeline crop with the caption **text layer selected** (layer name readable), ideally with the text cursor active in the comp. |
+| `c1-timeline.png` | Timeline crop with the `CC 00x` caption **text layer selected** (layer name readable). |
 | `c2-style-1.png` | One frame of the comp with **Viral Bold** captions. |
 | `c2-style-2.png` | **Same frame and words** with **Red Box Italic**. |
 | `c2-style-3.png` | **Same frame and words** with **Golden Script**. |
-| `c2-panel.png` | Crop of the Creative Captions panel showing the style selector (and language), readable at 100%. |
+| `c2-panel.png` | Crop of the panel's **LOOK** section (filter chips and style tiles, with the selected tile visible), readable at 100%. |
 
 To grab a still from a recording:
 

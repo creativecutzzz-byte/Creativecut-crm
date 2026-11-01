@@ -13,15 +13,17 @@ I read https://tools.creativecut.in/captions in a headless browser with the ₹ 
 | 24 sound effects | Pricing: "24 sounds synced to your captions" (hero shows "24+") | ✅ Verified |
 | English, Hindi, Hinglish | "Basic covers English, Hindi and Hinglish" | ✅ Verified |
 | Transcription runs locally | "Transcription runs locally inside After Effects. Your client footage never leaves your computer." | ✅ Verified |
-| AE 2022+ on Windows/Mac | "After Effects 2022 or newer on Windows and macOS" | ✅ Verified. Some per-word typography needs AE 24.3+ (check the three chosen styles) |
+| AE 2022+ on Windows/Mac | "After Effects 2022 or newer on Windows and macOS" | ✅ Verified. Golden Script (and Big Word Stack) need AE 24.3+ for full styling |
 | ₹299 Basic / ₹599 Pro (31 days) / ₹2,999 Lifetime | Shown with "31 days · one-time payment · no auto-renewal" | ✅ Verified. Not used in the ads themselves |
-| CREATIVE20 = 20% off Pro | **Not shown on the page** (only a "Have a discount code?" field) | ⚠️ Unverified, so left out of all creatives |
+| CREATIVE20 = 20% off Pro | Live coupon API: `{"ok":true,"percent":20}` for Pro; "That code works on Pro only." for Basic and Lifetime | ✅ Verified 2026-11-01. Used only in the retargeting variant |
 | Lifetime "first 100 buyers" | "Launch price for the first 100 buyers" | ✅ True today, but left out of cold ads |
-| Style names Viral Bold, Red Box Italic, Golden Script | All three appear in the gallery | ✅ Names verified · ⚠️ appearance in AE not yet captured |
+| Style names Viral Bold, Red Box Italic, Golden Script | All three appear in the gallery and the plugin source | ✅ Names verified · Golden Script's script line needs AE 24.3+ · ⚠️ appearance in AE not yet captured |
+| Panel controls: "Generate captions", "Apply to comp", LOOK tiles, EN English, `CC 001` layers | Read from the plugin source (creative-cut-website, panel v0.9.8) by the plugin session | ✅ From source · ⚠️ confirm in the recording |
+| Restyle without re-transcribing | Source: "Apply to comp" rebuilds from the same transcript | ✅ From source · ⚠️ confirm in the recording |
+| 14-day money-back on first purchases | Site: "14-day money-back on first purchases." | ✅ Verified (retargeting copy only) |
 
 ## Not verified (needs you, in After Effects)
-- The exact panel control names (the site only mentions "Generate") and how the style is changed on captions that already exist.
-- Whether any of the three chosen styles needs AE 24.3+ on your machine.
+- That the panel looks and behaves as the source describes on your machine. The control names above came from the code, not from a recording.
 - Every visual in all three creatives. No AE capture exists yet, so **all renders in `out/` are `-PLACEHOLDER` layouts, not finished ads.**
 - Any speed or timing claim. None is made in the ads. The video labels sped-up processing with its real speed factor.
 

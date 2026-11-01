@@ -6,18 +6,18 @@
   "segments": [
     { "id": "hook",      "t0": 0,  "t1": 3,  "src": "v01-before.mp4",     "srcIn": 0,  "speed": 1,      "crop": null, "need": "Uncaptioned clip playing in the Comp viewer" },
     { "id": "pain",      "t0": 3,  "t1": 6,  "src": "v01-before.mp4",     "srcIn": 3,  "speed": 1,      "crop": null, "need": "Timeline: footage layer only, no captions yet" },
-    { "id": "setup",     "t0": 6,  "t1": 9,  "src": "v02-setup.mp4",      "srcIn": 0,  "speed": "auto", "crop": null, "need": "Panel: select layer, English, Viral Bold, click Generate" },
-    { "id": "generate",  "t0": 9,  "t1": 12, "src": "v03-generate.mp4",   "srcIn": 0,  "speed": "auto", "crop": null, "need": "Generate to captions on the Timeline (real time)" },
+    { "id": "setup",     "t0": 6,  "t1": 9,  "src": "v02-setup.mp4",      "srcIn": 0,  "speed": "auto", "crop": null, "need": "Select layer, EN English, Viral Bold tile, click Generate captions" },
+    { "id": "generate",  "t0": 9,  "t1": 12, "src": "v03-generate.mp4",   "srcIn": 0,  "speed": "auto", "crop": null, "need": "Transcribing to CC 001... text layers on the Timeline (real time)" },
     { "id": "style1",    "t0": 12, "t1": 14, "src": "v03-generate.mp4",   "srcIn": -2, "speed": 1,      "crop": null, "style": "Viral Bold",     "need": "Comp viewer: Viral Bold result" },
-    { "id": "style2",    "t0": 14, "t1": 16, "src": "v04-styles.mp4",     "srcIn": 2,  "speed": 1,      "crop": null, "style": "Red Box Italic", "need": "Same frame: Red Box Italic" },
-    { "id": "style3",    "t0": 16, "t1": 18, "src": "v04-styles.mp4",     "srcIn": 7,  "speed": 1,      "crop": null, "style": "Golden Script",  "need": "Same frame: Golden Script" },
+    { "id": "style2",    "t0": 14, "t1": 16, "src": "v04-styles.mp4",     "srcIn": 2,  "speed": 1,      "crop": null, "style": "Red Box Italic", "need": "Same frame: Red Box Italic (Apply to comp)" },
+    { "id": "style3",    "t0": 16, "t1": 18, "src": "v04-styles.mp4",     "srcIn": 7,  "speed": 1,      "crop": null, "style": "Golden Script",  "need": "Same frame: Golden Script (Apply to comp, AE 24.3+)" },
     { "id": "revise",    "t0": 18, "t1": 21, "src": "v05-correction.mp4", "srcIn": 0,  "speed": 1,      "crop": null, "need": "Select the SUNDAY text layer, start editing" },
     { "id": "fixed",     "t0": 21, "t1": 24, "src": "v05-correction.mp4", "srcIn": -3, "speed": 1,      "crop": null, "need": "Comp viewer showing SATURDAY" },
     { "id": "final",     "t0": 24, "t1": 30, "src": "v06-final.mp4",      "srcIn": 0,  "speed": 1,      "crop": null, "box": [0, 0, 1080, 1920], "need": "Finished 1080x1920 reel rendered from AE" }
   ],
   "callouts": [
-    { "t0": 7.6,  "t1": 9.0,  "at": [860, 1080], "r": 70, "label": "Generate" },
-    { "t0": 19.0, "t1": 21.0, "at": [540, 900],  "r": 90, "label": "Text layer" },
+    { "t0": 7.6,  "t1": 9.0,  "at": [860, 1080], "r": 70, "label": "Generate captions" },
+    { "t0": 19.0, "t1": 21.0, "at": [540, 900],  "r": 90, "label": "CC text layer" },
     { "t0": 21.3, "t1": 23.8, "at": [540, 980],  "r": 110, "label": "SATURDAY" }
   ],
   "sfx": [
