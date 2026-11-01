@@ -27,6 +27,7 @@ Indian SaaS and AI startups ship a feature most months, and each launch needs a 
 | 12 | [Case studies](12-case-studies.md) | How to turn the 43 existing projects into proof, with a template |
 | 13 | [KPIs and conversion](13-kpis-and-conversion.md) | Weekly scorecard, targets, and what to fix when a number drops |
 | 14 | [Automating repetitive work](14-automation-sops.md) | SOPs, templates and tools that remove busywork |
+| 15 | [Lead magnet: Feature Launch Video Kit](15-lead-magnet.md) | A free PDF for SaaS teams that brings in inbound leads, with validation, distribution and CRM wiring (draft) |
 
 ## First 30 days
 | Week | Do this | Docs |
