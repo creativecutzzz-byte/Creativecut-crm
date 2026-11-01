@@ -18,7 +18,7 @@ I read https://tools.creativecut.in/captions in a headless browser with the ₹ 
 | CREATIVE20 = 20% off Pro | Live coupon API: `{"ok":true,"percent":20}` for Pro; "That code works on Pro only." for Basic and Lifetime | ✅ Verified 2026-11-01. Used only in the retargeting variant |
 | Lifetime "first 100 buyers" | "Launch price for the first 100 buyers" | ✅ True today, but left out of cold ads |
 | Style names Viral Bold, Red Box Italic, Golden Script | All three appear in the gallery and the plugin source | ✅ Names verified · Golden Script's script line needs AE 24.3+ · ⚠️ appearance in AE not yet captured |
-| Panel controls: "Generate captions", "Apply to comp", LOOK tiles, EN English, `CC 001` layers | Read from the plugin source (creative-cut-website, panel v0.9.8) by the plugin session | ✅ From source · ⚠️ confirm in the recording |
+| Panel controls: "Generate captions", "Apply to comp", LOOK tiles, EN English, `CC 001` layers | Read from the plugin source by the plugin session, then confirmed by me in the shipped installer `CreativeCaptions-0.9.8.zxp` (index.html/js: "Generate captions", "Apply to comp", "Captions are in your comp", "Tap a style · it plays on your footage"; manifest: AEFT 22.0+) | ✅ Verified in the v0.9.8 build · ⚠️ appearance still needs a real AE recording |
 | Restyle without re-transcribing | Source: "Apply to comp" rebuilds from the same transcript | ✅ From source · ⚠️ confirm in the recording |
 | 14-day money-back on first purchases | Site: "14-day money-back on first purchases." | ✅ Verified (retargeting copy only) |
 
