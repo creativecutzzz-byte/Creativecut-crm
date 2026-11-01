@@ -1,0 +1,4 @@
+video/build/
+captures/*.mp4
+captures/*.mov
+captures/*.mkv

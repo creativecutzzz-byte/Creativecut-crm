@@ -1,0 +1,87 @@
+@font-face { font-family: "Anton"; src: url("../assets/fonts/Anton-Regular.ttf"); }
+@font-face { font-family: "InterAd"; src: url("../assets/fonts/Inter-Medium.otf"); font-weight: 500; }
+@font-face { font-family: "InterAd"; src: url("../assets/fonts/Inter-SemiBold.otf"); font-weight: 600; }
+@font-face { font-family: "InterAd"; src: url("../assets/fonts/Inter-Bold.otf"); font-weight: 700; }
+@font-face { font-family: "InterAd"; src: url("../assets/fonts/Inter-ExtraBold.otf"); font-weight: 800; }
+
+:root {
+  --ink: #0a0d0b;        /* near-black */
+  --forest: #0f2a1b;     /* dark forest green */
+  --forest-2: #163a26;
+  --lime: #c8f53c;
+  --paper: #f3f2ea;      /* off-white */
+  --muted: #a9b3a6;
+  --line: rgba(200, 245, 60, .28);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1350px; overflow: hidden; }
+body {
+  position: relative;
+  background:
+    radial-gradient(900px 700px at 85% 8%, rgba(22, 58, 38, .95), transparent 70%),
+    radial-gradient(700px 600px at 0% 100%, rgba(15, 42, 27, .9), transparent 70%),
+    var(--ink);
+  color: var(--paper);
+  font-family: "InterAd", system-ui, sans-serif;
+  padding: 52px 56px 0;
+}
+.top { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand img { width: 64px; height: 64px; }
+.brand b { display: block; font-weight: 800; font-size: 30px; letter-spacing: -.01em; }
+.brand small { display: block; font-size: 19px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+.url { font-weight: 600; font-size: 24px; color: var(--paper); opacity: .85; }
+
+h1 {
+  font-family: "Anton", Impact, sans-serif; font-weight: 400;
+  font-size: 112px; line-height: 1.0; letter-spacing: .005em; text-transform: uppercase;
+  margin-top: 30px;
+}
+h1 .l2 { color: var(--lime); display: block; }
+.support { font-size: 36px; font-weight: 600; margin-top: 16px; color: var(--paper); }
+.support em { font-style: normal; color: var(--lime); }
+
+.cta {
+  position: absolute; left: 56px; right: 56px; bottom: 112px; height: 104px;
+  background: var(--lime); color: var(--ink); border-radius: 18px;
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+  font-family: "Anton", Impact, sans-serif; font-size: 52px; letter-spacing: .01em;
+}
+.cta .arrow { font-family: "InterAd"; font-weight: 800; font-size: 46px; }
+.sub {
+  position: absolute; left: 0; right: 0; bottom: 52px; text-align: center;
+  font-size: 28px; font-weight: 600; color: var(--paper);
+}
+.sub span { color: var(--muted); font-weight: 500; }
+
+/* proof frames */
+.frame { position: relative; border-radius: 16px; overflow: hidden; background: #050605; border: 2px solid rgba(243,242,234,.12); }
+.frame img { width: 100%; height: 100%; display: block; }
+.frame img.contain { object-fit: contain; }
+.frame img.cover { object-fit: cover; }
+.tag {
+  position: absolute; left: 14px; top: 14px; z-index: 2;
+  font-weight: 800; font-size: 20px; letter-spacing: .08em; padding: 7px 12px; border-radius: 8px;
+  background: rgba(10,13,11,.85); color: var(--paper); border: 1px solid rgba(243,242,234,.25);
+}
+.tag.lime { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+.caption-note { font-size: 19px; color: var(--muted); font-weight: 500; }
+
+/* placeholder slate when a real capture is missing */
+.slate {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; gap: 10px; padding: 18px;
+  background: repeating-linear-gradient(135deg, #0d120e 0 18px, #101710 18px 36px);
+  border: 3px dashed var(--line); border-radius: 14px;
+}
+.tag ~ .slate { padding-top: 58px; }
+.slate b { font-family: "Anton"; font-weight: 400; font-size: 26px; color: var(--lime); letter-spacing: .03em; }
+.slate code { font-size: 18px; color: var(--paper); background: rgba(0,0,0,.4); padding: 3px 8px; border-radius: 6px; }
+.slate span { font-size: 17px; color: var(--muted); line-height: 1.3; max-width: 90%; }
+
+.draft-banner { display: none; }
+body.draft .draft-banner {
+  display: block; position: absolute; z-index: 50; left: -200px; right: -200px; top: 46%;
+  transform: rotate(-24deg); text-align: center; padding: 14px 0; white-space: nowrap;
+  background: rgba(255, 70, 70, .88); color: #fff; font-weight: 800; font-size: 30px; letter-spacing: .12em;
+}

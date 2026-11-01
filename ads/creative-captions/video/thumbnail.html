@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creative Captions · Video Thumbnail</title>
+<link rel="stylesheet" href="../static/ad.css">
+<style>
+  html, body { width: 1080px; height: 1920px; padding: 0; }
+  .bg { position: absolute; inset: 0; border: 0; border-radius: 0; }
+  .bg img { object-fit: cover; }
+  .shade { position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,13,11,.92) 0%, rgba(10,13,11,.55) 34%, rgba(10,13,11,.15) 55%, rgba(10,13,11,.85) 100%); }
+  /* text stays inside the 4:5 centre crop (y 285–1635) and clear of Reels UI */
+  .hook { position: absolute; left: 60px; right: 60px; top: 420px; }
+  .hook h1 { font-size: 220px; line-height: .92; margin: 0; }
+  .hook p { font-size: 54px; font-weight: 800; margin-top: 26px; line-height: 1.12; }
+  .hook p em { font-style: normal; color: var(--lime); }
+  .badge { position: absolute; left: 60px; top: 1430px; display: flex; gap: 18px; align-items: center; }
+  .badge img { width: 84px; height: 84px; }
+  .badge b { font-size: 40px; font-weight: 800; display: block; }
+  .badge small { font-size: 28px; color: var(--muted); font-weight: 600; }
+  body.draft .draft-banner { top: 50%; }
+</style>
+</head>
+<body>
+  <div class="frame bg"><img data-capture="c3-thumb.png" alt="Frame from the finished captioned reel (auto-extracted from v06-final.mp4)"></div>
+  <div class="shade"></div>
+  <div class="hook">
+    <h1>Never<br><span style="color:var(--lime)">ever</span></h1>
+    <p>let captions become<br><em>a second edit.</em></p>
+  </div>
+  <div class="badge">
+    <img src="../assets/brand/creative-cut-tools-mark-256.png" alt="Creative Cut Tools logo">
+    <div><b>Creative Captions</b><small>for After Effects · 7-day Pro trial</small></div>
+  </div>
+  <div class="draft-banner">PLACEHOLDER LAYOUT · AWAITING REAL AE CAPTURES · NOT FOR PUBLISHING</div>
+  <script src="../static/placeholder.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creative Captions · Client Revision</title>
+<link rel="stylesheet" href="ad.css">
+<style>
+  h1 { font-size: 86px; white-space: nowrap; }
+  .proof { position: absolute; left: 56px; right: 56px; top: 452px; height: 656px; }
+  .pair { display: grid; grid-template-columns: 1fr 64px 1fr; height: 440px; align-items: center; }
+  .pair .frame { height: 440px; }
+  .swap { text-align: center; font-family: "Anton"; font-size: 54px; color: var(--lime); }
+  .before img { filter: saturate(.85) brightness(.9); }
+  .after { border-color: var(--lime); box-shadow: 0 0 0 4px rgba(200,245,60,.22); }
+  .tl { margin-top: 18px; height: 140px; }
+  .tl .frame { height: 140px; border-color: rgba(200,245,60,.45); }
+  .note { margin-top: 14px; display: flex; justify-content: space-between; align-items: baseline; }
+  .note b { font-size: 28px; font-weight: 800; color: var(--paper); }
+  .note b em { font-style: normal; color: var(--lime); }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">
+      <img src="../assets/brand/creative-cut-tools-mark-256.png" alt="Creative Cut Tools logo">
+      <div><b>Creative Captions</b><small>for After Effects</small></div>
+    </div>
+    <div class="url">tools.creativecut.in</div>
+  </div>
+
+  <h1>Client changed one word?<span class="l2">Keep editing.</span></h1>
+  <p class="support">Generate captions. <em>Keep the text editable.</em></p>
+
+  <div class="proof">
+    <div class="pair">
+      <div class="frame before"><span class="tag">BEFORE</span>
+        <img class="contain" data-capture="c1-before.png" alt="Comp viewer: caption reads SUNDAY">
+      </div>
+      <div class="swap">→</div>
+      <div class="frame after"><span class="tag lime">AFTER</span>
+        <img class="contain" data-capture="c1-after.png" alt="Same frame: caption reads SATURDAY">
+      </div>
+    </div>
+    <div class="tl"><div class="frame"><span class="tag">AE TIMELINE · TEXT LAYER</span>
+      <img class="contain" data-capture="c1-timeline.png" alt="Timeline crop with the caption text layer selected">
+    </div></div>
+    <div class="note"><b>One text layer. One word. <em>Done.</em></b><span class="caption-note">Real After Effects captures</span></div>
+  </div>
+
+  <div class="cta">START YOUR 7-DAY PRO TRIAL <span class="arrow">→</span></div>
+  <p class="sub">No card needed. <span>After Effects required.</span></p>
+
+  <div class="draft-banner">PLACEHOLDER LAYOUT · AWAITING REAL AE CAPTURES · NOT FOR PUBLISHING</div>
+  <script src="placeholder.js"></script>
+</body>
+</html>
