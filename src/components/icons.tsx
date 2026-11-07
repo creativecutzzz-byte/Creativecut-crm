@@ -30,18 +30,8 @@ export function WhatsAppIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function LogoMark(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" {...props}>
-      <defs>
-        <linearGradient id="cc-g" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#a597ff" />
-          <stop offset="1" stopColor="#6d5ce8" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="9" fill="url(#cc-g)" />
-      <path d="M20.5 11.2a6 6 0 1 0 0 9.6" stroke="white" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M9 23 23 9" stroke="white" strokeOpacity=".55" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
+/** The Creative Cut mark (from the brand kit in Drive / the website repo). */
+export function LogoMark({ className }: { className?: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src="/brand/mark.png" alt="Creative Cut" width={44} height={44} className={className} />;
 }

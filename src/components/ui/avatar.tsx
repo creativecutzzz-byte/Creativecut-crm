@@ -1,8 +1,8 @@
 import { cn, initials } from "@/lib/utils";
 
 const palette = [
-  "from-violet-500/80 to-indigo-500/80",
-  "from-fuchsia-500/80 to-rose-500/80",
+  "from-lime-400/80 to-emerald-600/80",
+  "from-emerald-500/80 to-teal-700/80",
   "from-sky-500/80 to-cyan-500/80",
   "from-emerald-500/80 to-teal-500/80",
   "from-amber-500/80 to-orange-500/80",

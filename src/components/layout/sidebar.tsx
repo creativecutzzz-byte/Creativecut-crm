@@ -51,7 +51,7 @@ export function SidebarContent({ orgName, role, counts = {}, onNavigate, messagi
                       <Icon className={cn("size-4 shrink-0", active ? "text-accent-strong" : "text-subtle group-hover:text-muted")} />
                       <span className="flex-1">{item.label}</span>
                       {count > 0 && (
-                        <span className="min-w-5 rounded-full bg-accent px-1.5 text-center text-[11px] leading-5 font-semibold text-white" aria-label={`${count} pending`}>
+                        <span className="min-w-5 rounded-full bg-accent px-1.5 text-center text-[11px] leading-5 font-semibold text-ink" aria-label={`${count} pending`}>
                           {count > 99 ? "99+" : count}
                         </span>
                       )}

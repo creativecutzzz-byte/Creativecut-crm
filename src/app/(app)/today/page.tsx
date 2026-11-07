@@ -63,7 +63,7 @@ export default async function TodayPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs text-subtle">{new Date(now).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", weekday: "long", day: "numeric", month: "long" })}</p>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Namaste, {firstName} 👋</h1>
+          <h1 className="mt-1 font-display text-4xl leading-none tracking-wide uppercase sm:text-5xl">Namaste, <span className="text-accent">{firstName}</span> 👋</h1>
           <p className="mt-1 text-sm text-muted">
             {mine.length ? `${mine.length} task${mine.length === 1 ? "" : "s"} for today${myOverdue ? ` (${myOverdue} overdue)` : ""}` : "No tasks due — a good day to add leads."}
             {meetings.length ? ` · ${meetings.length} meeting${meetings.length === 1 ? "" : "s"}` : ""}

@@ -1,21 +1,26 @@
 @import "tailwindcss";
 
-/* Premium dark theme. The app is dark-only by design. */
+/* Creative Cut brand (Drive: Website Roadmap & Handbook): black, off-white,
+   acid-lime #C8F53C, forest green #1D4228 — no purple. Bebas Neue for big
+   headings, Satoshi for everything else. Dark-only by design. */
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-bebas), "Arial Narrow", ui-sans-serif, sans-serif;
 
-  --color-canvas: #08080a;
-  --color-surface: #101013;
-  --color-surface-2: #16161a;
-  --color-surface-3: #1d1d22;
+  --color-canvas: #0a0a0c;
+  --color-surface: #121612;
+  --color-surface-2: #181d19;
+  --color-surface-3: #1f2620;
   --color-line: rgb(255 255 255 / 0.07);
   --color-line-strong: rgb(255 255 255 / 0.12);
-  --color-fg: #ededf0;
-  --color-muted: #9b9ba6;
-  --color-subtle: #6b6b76;
-  --color-accent: #8b7cf6;
-  --color-accent-strong: #a597ff;
-  --color-accent-soft: rgb(139 124 246 / 0.14);
+  --color-fg: #f4f4f2;
+  --color-muted: #a7a7a7;
+  --color-subtle: #74786f;
+  --color-accent: #c8f53c;
+  --color-accent-strong: #d7ff5f;
+  --color-accent-soft: rgb(200 245 60 / 0.12);
+  --color-forest: #1d4228;
+  --color-ink: #0a0a0c;
 }
 
 :root {
@@ -34,7 +39,8 @@ body {
 }
 
 ::selection {
-  background: rgb(139 124 246 / 0.35);
+  background: var(--color-accent);
+  color: var(--color-ink);
 }
 
 * {

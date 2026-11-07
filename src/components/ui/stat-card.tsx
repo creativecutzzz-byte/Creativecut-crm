@@ -29,7 +29,7 @@ export function StatCard({
           </span>
         )}
       </div>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-fg tabular-nums">{value}</p>
+      <p className="mt-3 font-display text-4xl leading-none tracking-wide text-fg tabular-nums">{value}</p>
       <div className="mt-1.5 flex items-center gap-2 text-xs">
         {delta !== undefined && (
           <span className={cn("inline-flex items-center gap-0.5 font-medium", positive ? "text-emerald-400" : "text-rose-400")}>
