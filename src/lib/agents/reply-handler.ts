@@ -72,12 +72,12 @@ export const replyHandlerAgent = defineAgent<Config>({
   needsAi: false,
   minIntervalHours: 0,
   configSchema: config,
-  defaultConfig: { lookback_days: 3, not_now_days: 60, draft_replies: true, alert_email: "hello@creativecut.in" },
+  defaultConfig: { lookback_days: 3, not_now_days: 60, draft_replies: true, alert_email: "creativecutzzz@gmail.com" },
   configHelp:
     "lookback_days: how far back to check the Gmail inbox. not_now_days: when to re-engage a \"not now\" reply if they gave no date. draft_replies: let Claude draft an answer into the approval queue. alert_email: where to email you about hot replies (empty = no email alert).",
 
   async run(ctx, cfg) {
-    const fetched = gmail.isConfigured() ? await pullGmailReplies(ctx, cfg) : 0;
+    const fetched = gmail.canRead() ? await pullGmailReplies(ctx, cfg) : 0;
     const { data: inbound } = await ctx.supabase
       .from("messages")
       .select("id, channel, body, subject, lead_id, created_at, to_address")
@@ -97,7 +97,7 @@ export const replyHandlerAgent = defineAgent<Config>({
     const parts = Object.entries(tally).map(([k, v]) => `${v} ${k.replace(/_/g, " ")}`);
     return {
       status: "success",
-      summary: `${gmail.isConfigured() ? `Pulled ${fetched} new email repl${fetched === 1 ? "y" : "ies"}. ` : "Gmail not connected. "}Read ${inbound?.length ?? 0} message${inbound?.length === 1 ? "" : "s"}${parts.length ? `: ${parts.join(", ")}` : ""}.`,
+      summary: `${gmail.canRead() ? `Pulled ${fetched} new email repl${fetched === 1 ? "y" : "ies"}. ` : "Gmail not connected. "}Read ${inbound?.length ?? 0} message${inbound?.length === 1 ? "" : "s"}${parts.length ? `: ${parts.join(", ")}` : ""}.`,
       created: inbound?.length ?? 0,
       updated: fetched,
     };

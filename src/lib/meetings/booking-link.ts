@@ -29,7 +29,9 @@ export function verifyBookingToken(token: string | null | undefined): string | n
 /** Personal booking URL, or null when the CRM booking page can't be used (no site URL / secret / calendar). */
 export function personalBookingUrl(leadId: string) {
   const site = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
-  const calendarReady = Boolean(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_SERVICE_ACCOUNT_KEY && (process.env.GOOGLE_CALENDAR_USER || process.env.GMAIL_SENDER));
+  const serviceAccount = Boolean(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_SERVICE_ACCOUNT_KEY && (process.env.GOOGLE_CALENDAR_USER || process.env.GMAIL_SENDER));
+  const connectedAccount = Boolean(process.env.GOOGLE_OAUTH_CLIENT_ID && process.env.GOOGLE_OAUTH_CLIENT_SECRET && process.env.GOOGLE_OAUTH_REFRESH_TOKEN);
+  const calendarReady = serviceAccount || connectedAccount;
   if (!site || !secret() || !calendarReady) return null;
   return `${site}/book?t=${bookingToken(leadId)}`;
 }

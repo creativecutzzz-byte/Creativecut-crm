@@ -34,5 +34,5 @@ export const PLANNED_AGENTS: PlannedAgent[] = [
 
   { name: "Follow-up tracker & reminders", department: "crm_operations", status: "built-in", note: "Sequences, tasks, overdue follow-ups." },
   { name: "Pipeline automation", department: "crm_operations", status: "built-in", note: "Stages move on reply, booking and call outcome; quiet deals get nudge tasks." },
-  { name: "Daily brief & weekly report", department: "crm_operations", status: "built-in", note: "Morning email to hello@creativecut.in; Mondays add what's working." },
+  { name: "Daily brief & weekly report", department: "crm_operations", status: "built-in", note: "Morning email to your inbox; Mondays add what's working." },
 ];

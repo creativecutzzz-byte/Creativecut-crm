@@ -32,7 +32,7 @@ export const dailyBriefAgent = defineAgent<Config>({
   requires: [],
   needsAi: false,
   configSchema: config,
-  defaultConfig: { to: "hello@creativecut.in", weekly_day: 1, stale_days: 7 },
+  defaultConfig: { to: "creativecutzzz@gmail.com", weekly_day: 1, stale_days: 7 },
   configHelp: "to: where the brief goes. weekly_day: day for the weekly report (0=Sun … 6=Sat). stale_days: proposals/negotiations with no contact for this many days get a nudge task.",
 
   async run(ctx, cfg) {

@@ -7,6 +7,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { getViewer } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/env";
 import { instagram, integrationEnvStatus, isMessagingLive, whatsapp } from "@/lib/integrations";
+import { hasOAuthAccount, hasServiceAccount, oauthEmail } from "@/lib/integrations/google";
+import { oauthClientReady } from "@/lib/integrations/google-oauth";
 import { CURRENCY } from "@/lib/utils";
 import { Database, Megaphone, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
@@ -81,6 +83,34 @@ export default async function SettingsPage() {
             <CardHeader title="Outreach links" description="Filled into every sequence message" />
             <CardBody>
               <OutreachLinksForm bookingUrl={viewer.bookingUrl} portfolioUrl={viewer.portfolioUrl} canEdit={viewer.role === "owner" || viewer.role === "admin"} />
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader title="Google account" description="Calendar for the booking page, and the mailbox for alerts and the daily brief" />
+            <CardBody className="space-y-3 text-sm">
+              <Row
+                label="Status"
+                value={
+                  hasServiceAccount() ? (
+                    <Badge variant="success">Workspace service account</Badge>
+                  ) : hasOAuthAccount() ? (
+                    <Badge variant="success">Connected: {oauthEmail() || "Google account"}</Badge>
+                  ) : (
+                    <Badge variant="neutral">Not connected</Badge>
+                  )
+                }
+              />
+              {!hasServiceAccount() && (viewer.role === "owner" || viewer.role === "admin") && (
+                oauthClientReady() ? (
+                  <a href="/api/google/connect" className={buttonClasses({ variant: hasOAuthAccount() ? "secondary" : "primary", size: "sm" })}>
+                    {hasOAuthAccount() ? "Reconnect Google" : "Connect Google"}
+                  </a>
+                ) : (
+                  <p className="text-xs leading-relaxed text-subtle">
+                    Add <code>GOOGLE_OAUTH_CLIENT_ID</code> and <code>GOOGLE_OAUTH_CLIENT_SECRET</code> in Vercel (see docs/google-gmail-setup.md), redeploy, then connect here.
+                  </p>
+                )
+              )}
             </CardBody>
           </Card>
           <Card>
