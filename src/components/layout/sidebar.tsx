@@ -1,12 +1,20 @@
 "use client";
 
 import { LogoMark } from "@/components/icons";
+import type { MemberRole } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_SECTIONS } from "./nav-items";
+import { navFor, type BadgeKey } from "./nav-items";
 
-export function SidebarContent({ orgName, onNavigate, messagingLive = false }: { orgName: string; onNavigate?: () => void; messagingLive?: boolean }) {
+export interface NavProps {
+  orgName: string;
+  role: MemberRole;
+  counts?: Partial<Record<BadgeKey, number>>;
+  messagingLive?: boolean;
+}
+
+export function SidebarContent({ orgName, role, counts = {}, onNavigate, messagingLive = false }: NavProps & { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -20,13 +28,14 @@ export function SidebarContent({ orgName, onNavigate, messagingLive = false }: {
       </div>
 
       <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
-        {NAV_SECTIONS.map((section) => (
+        {navFor(role).map((section) => (
           <div key={section.title}>
             <p className="px-3 pb-2 text-[10px] font-semibold tracking-[0.12em] text-subtle uppercase">{section.title}</p>
             <ul className="space-y-0.5">
               {section.items.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                 const Icon = item.icon;
+                const count = item.badge ? (counts[item.badge] ?? 0) : 0;
                 return (
                   <li key={item.href}>
                     <Link
@@ -40,7 +49,12 @@ export function SidebarContent({ orgName, onNavigate, messagingLive = false }: {
                     >
                       {active && <span className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-accent" />}
                       <Icon className={cn("size-4 shrink-0", active ? "text-accent-strong" : "text-subtle group-hover:text-muted")} />
-                      {item.label}
+                      <span className="flex-1">{item.label}</span>
+                      {count > 0 && (
+                        <span className="min-w-5 rounded-full bg-accent px-1.5 text-center text-[11px] leading-5 font-semibold text-white" aria-label={`${count} pending`}>
+                          {count > 99 ? "99+" : count}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
@@ -67,10 +81,10 @@ export function SidebarContent({ orgName, onNavigate, messagingLive = false }: {
   );
 }
 
-export function Sidebar({ orgName, messagingLive }: { orgName: string; messagingLive?: boolean }) {
+export function Sidebar(props: NavProps) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-line bg-surface/80 backdrop-blur lg:block">
-      <SidebarContent orgName={orgName} messagingLive={messagingLive} />
+      <SidebarContent {...props} />
     </aside>
   );
 }

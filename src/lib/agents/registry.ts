@@ -4,6 +4,7 @@ import { apolloAgent } from "./apollo";
 import { callListAgent } from "./call-list";
 import { dailyBriefAgent } from "./daily-brief";
 import { meetingTrackerAgent } from "./meeting-tracker";
+import { metaAdsSyncAgent } from "./meta-ads-sync";
 import { enrichmentAgent } from "./enrichment";
 import { fundingNewsAgent } from "./funding-news";
 import { googleMapsAgent } from "./google-maps";
@@ -28,6 +29,7 @@ export const AGENTS: AgentDefinition[] = [
   outreachWriterAgent,
   outreachSenderAgent,
   callListAgent,
+  metaAdsSyncAgent,
   dailyBriefAgent,
 ];
 

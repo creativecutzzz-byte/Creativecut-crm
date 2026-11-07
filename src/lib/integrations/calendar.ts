@@ -1,5 +1,6 @@
 import "server-only";
 
+import { appsScript, hasAppsScript } from "./apps-script";
 import { googleAccessToken, hasGoogleAccess, hasOAuthAccount, oauthEmail } from "./google";
 
 // Google Calendar for the meeting calendar: the connected Google account, or
@@ -22,7 +23,7 @@ export interface CalendarEvent {
 
 export const calendar = {
   isConfigured() {
-    return hasGoogleAccess() && Boolean(calendarUser());
+    return (hasGoogleAccess() && Boolean(calendarUser())) || hasAppsScript();
   },
 
   user() {
@@ -31,6 +32,7 @@ export const calendar = {
 
   /** Busy intervals on the meeting calendar. */
   async freeBusy(timeMin: Date, timeMax: Date): Promise<{ start: string; end: string }[]> {
+    if (viaScript()) return appsScript("freeBusy", { timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString() });
     const res = await api<{ calendars?: Record<string, { busy?: { start: string; end: string }[] }> }>("freeBusy", {
       method: "POST",
       body: { timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), timeZone: "Asia/Kolkata", items: [{ id: "primary" }] },
@@ -40,6 +42,9 @@ export const calendar = {
 
   /** Creates an event with a Google Meet link and emails the invite to attendees. */
   async createEvent(input: { summary: string; description: string; start: Date; end: Date; attendees: string[] }): Promise<CalendarEvent> {
+    if (viaScript()) {
+      return normalize(await appsScript<RawEvent>("createEvent", { ...input, start: input.start.toISOString(), end: input.end.toISOString() }));
+    }
     const event = await api<RawEvent>("calendars/primary/events?conferenceDataVersion=1&sendUpdates=all", {
       method: "POST",
       body: {
@@ -57,6 +62,10 @@ export const calendar = {
 
   /** Events (including cancelled ones) changed since `updatedMin`, within a time range. */
   async listEvents(input: { timeMin: Date; timeMax: Date; updatedMin?: Date }): Promise<CalendarEvent[]> {
+    if (viaScript()) {
+      const items = await appsScript<RawEvent[]>("listEvents", { timeMin: input.timeMin.toISOString(), timeMax: input.timeMax.toISOString(), updatedMin: input.updatedMin?.toISOString() });
+      return items.filter((e) => e.start?.dateTime).map(normalize);
+    }
     const params = new URLSearchParams({
       timeMin: input.timeMin.toISOString(),
       timeMax: input.timeMax.toISOString(),
@@ -71,9 +80,14 @@ export const calendar = {
   },
 };
 
+/** Use the Apps Script only when neither the service account nor an OAuth connection is set up. */
+function viaScript() {
+  return !hasGoogleAccess() && hasAppsScript();
+}
+
 function calendarUser() {
   if (hasOAuthAccount()) return oauthEmail() || process.env.GOOGLE_CALENDAR_USER || "";
-  return process.env.GOOGLE_CALENDAR_USER || process.env.GMAIL_SENDER || "";
+  return process.env.GOOGLE_CALENDAR_USER || process.env.GMAIL_SENDER || (hasAppsScript() ? process.env.GOOGLE_SCRIPT_EMAIL || "" : "");
 }
 
 interface RawEvent {

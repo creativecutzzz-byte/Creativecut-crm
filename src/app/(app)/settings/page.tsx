@@ -9,6 +9,8 @@ import { isSupabaseConfigured } from "@/lib/env";
 import { instagram, integrationEnvStatus, isMessagingLive, whatsapp } from "@/lib/integrations";
 import { hasOAuthAccount, hasServiceAccount, oauthEmail } from "@/lib/integrations/google";
 import { oauthClientReady } from "@/lib/integrations/google-oauth";
+import { hasAppsScript } from "@/lib/integrations/apps-script";
+import { razorpay } from "@/lib/integrations/razorpay";
 import { CURRENCY } from "@/lib/utils";
 import { Database, Megaphone, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
@@ -95,12 +97,20 @@ export default async function SettingsPage() {
                     <Badge variant="success">Workspace service account</Badge>
                   ) : hasOAuthAccount() ? (
                     <Badge variant="success">Connected: {oauthEmail() || "Google account"}</Badge>
+                  ) : hasAppsScript() ? (
+                    <Badge variant="success">Connected via Apps Script (free)</Badge>
                   ) : (
                     <Badge variant="neutral">Not connected</Badge>
                   )
                 }
               />
-              {!hasServiceAccount() && (viewer.role === "owner" || viewer.role === "admin") && (
+              {!hasServiceAccount() && !hasAppsScript() && (
+                <p className="text-xs leading-relaxed text-subtle">
+                  Free and easiest: the Apps Script method (docs/google-apps-script-setup.md), no Google Cloud needed.
+                </p>
+              )}
+              <Row label="Razorpay" value={razorpay.isConfigured() ? <Badge variant="success">Connected</Badge> : <Badge variant="neutral">Not connected</Badge>} />
+              {!hasServiceAccount() && !hasAppsScript() && (viewer.role === "owner" || viewer.role === "admin") && (
                 oauthClientReady() ? (
                   <a href="/api/google/connect" className={buttonClasses({ variant: hasOAuthAccount() ? "secondary" : "primary", size: "sm" })}>
                     {hasOAuthAccount() ? "Reconnect Google" : "Connect Google"}

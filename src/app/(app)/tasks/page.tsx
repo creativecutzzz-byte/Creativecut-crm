@@ -1,3 +1,4 @@
+import { AutoRefresh } from "@/components/live/auto-refresh";
 import { NewTaskButton } from "@/components/tasks/new-task-button";
 import { TaskList } from "@/components/tasks/task-list";
 import { Card, CardHeader } from "@/components/ui/card";
@@ -40,6 +41,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-6">
+      <AutoRefresh seconds={90} />
       <PageHeader
         title="Tasks"
         description={`${open.length} open · ${overdue.length} overdue`}

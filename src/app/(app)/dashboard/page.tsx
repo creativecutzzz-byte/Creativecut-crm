@@ -1,3 +1,4 @@
+import { AutoRefresh } from "@/components/live/auto-refresh";
 import { DonutChart } from "@/components/charts/donut-chart";
 import { RevenueChart } from "@/components/charts/revenue-chart";
 import { sourcePalette } from "@/components/charts/theme";
@@ -52,6 +53,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <AutoRefresh seconds={90} />
       <PageHeader
         title={`Good ${greeting()}, ${firstName}`}
         description="Here's what's happening across your pipeline, clients and campaigns."

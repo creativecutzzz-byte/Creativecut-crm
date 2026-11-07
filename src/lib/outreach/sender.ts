@@ -154,8 +154,8 @@ export async function sendDraft(supabase: SupabaseClient, draftId: string, opts:
       if (gmail.isLive()) {
         const res = await gmail.send({ to, subject, text: body, threadId: thread?.threadId, inReplyTo: thread?.rfcId, unsubscribeUrl: draft.kind === "sequence" ? unsubscribeUrl(process.env.NEXT_PUBLIC_SITE_URL ?? null, lead.id) : null });
         status = "sent";
-        externalId = res.id;
-        threadId = res.threadId;
+        externalId = res.id || null;
+        threadId = res.threadId || null;
         rfcId = res.messageId;
       }
     } else if (draft.channel === "whatsapp") {

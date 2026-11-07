@@ -1,7 +1,10 @@
 "use client";
 
 import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CURRENCY } from "@/lib/utils";
 import { chartColors, tooltipStyle } from "./theme";
+
+const SYMBOL = CURRENCY === "INR" ? "₹" : CURRENCY === "EUR" ? "€" : "$";
 
 export function AdsChart({ data }: { data: { date: string; spend: number; revenue: number; leads: number }[] }) {
   return (
@@ -10,7 +13,7 @@ export function AdsChart({ data }: { data: { date: string; spend: number; revenu
         <ComposedChart data={data} margin={{ top: 8, right: 0, left: -12, bottom: 0 }}>
           <CartesianGrid stroke={chartColors.grid} vertical={false} />
           <XAxis dataKey="date" stroke={chartColors.axis} tickLine={false} axisLine={false} fontSize={11} minTickGap={24} />
-          <YAxis yAxisId="usd" stroke={chartColors.axis} tickLine={false} axisLine={false} fontSize={11} tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v}`} />
+          <YAxis yAxisId="usd" stroke={chartColors.axis} tickLine={false} axisLine={false} fontSize={11} tickFormatter={(v) => `${SYMBOL}${v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v}`} />
           <YAxis yAxisId="count" orientation="right" stroke={chartColors.axis} tickLine={false} axisLine={false} fontSize={11} />
           <Tooltip {...tooltipStyle} />
           <Legend wrapperStyle={{ fontSize: 12, color: chartColors.axis }} iconType="circle" iconSize={8} />

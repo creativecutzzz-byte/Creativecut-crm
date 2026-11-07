@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Bell, Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { MemberRole } from "@/lib/types";
+import type { BadgeKey } from "./nav-items";
 import { SidebarContent } from "./sidebar";
 
 export function Topbar({
@@ -15,6 +17,8 @@ export function Topbar({
   signOut,
   openTasks = 0,
   messagingLive = false,
+  role = "member",
+  counts = {},
 }: {
   orgName: string;
   userName: string;
@@ -24,6 +28,8 @@ export function Topbar({
   /** Open tasks due now or earlier for the viewer; lights the bell. */
   openTasks?: number;
   messagingLive?: boolean;
+  role?: MemberRole;
+  counts?: Partial<Record<BadgeKey, number>>;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -82,7 +88,7 @@ export function Topbar({
             <button onClick={() => setOpen(false)} className="absolute top-4 right-3 grid size-8 place-items-center rounded-lg text-muted hover:bg-white/5" aria-label="Close navigation">
               <X className="size-4" />
             </button>
-            <SidebarContent orgName={orgName} onNavigate={() => setOpen(false)} messagingLive={messagingLive} />
+            <SidebarContent orgName={orgName} role={role} counts={counts} onNavigate={() => setOpen(false)} messagingLive={messagingLive} />
           </div>
         </div>
       )}

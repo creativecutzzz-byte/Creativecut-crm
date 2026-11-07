@@ -3,6 +3,7 @@ import "server-only";
 import { z } from "zod";
 import { extract, isAiConfigured } from "@/lib/ai/claude";
 import { gmail } from "@/lib/integrations/gmail";
+import { razorpay } from "@/lib/integrations/razorpay";
 import { formatIst } from "@/lib/meetings/slots";
 import { istDayStart } from "@/lib/outreach/plan";
 import { outreachPerformance } from "@/lib/outreach/performance";
@@ -100,6 +101,28 @@ export const dailyBriefAgent = defineAgent<Config>({
       for (const h of hot.slice(0, 8)) lines.push(`• ${name(h.lead_id as string | null)} (${h.channel}): “${String(h.body).replace(/\s+/g, " ").slice(0, 140)}”${site ? ` → ${site}/leads/${h.lead_id}` : ""}`);
       lines.push("");
     }
+    // Yesterday's check-ins: who said they're stuck.
+    const yesterday = new Date(new Date(yStart).getTime() + 5.5 * 3_600_000).toISOString().slice(0, 10);
+    const { data: stuck } = await sb.from("checkins").select("user_id, stuck, profiles:user_id(full_name)").eq("org_id", ctx.orgId).eq("day", yesterday).not("stuck", "is", null);
+    if (stuck?.length) {
+      lines.push("🧱 STUCK (from yesterday's check-ins)");
+      for (const s of stuck) {
+        const p = s.profiles as { full_name?: string } | { full_name?: string }[] | null;
+        const who = (Array.isArray(p) ? p[0]?.full_name : p?.full_name) ?? "Teammate";
+        lines.push(`• ${who}: ${String(s.stuck).slice(0, 200)}`);
+      }
+      lines.push("");
+    }
+
+    if (razorpay.isConfigured()) {
+      try {
+        const pays = (await razorpay.payments(new Date(yStart), new Date(todayStart))).filter((p) => p.status === "captured");
+        lines.push(`💰 SALES YESTERDAY: ₹${Math.round(pays.reduce((s, p) => s + p.amount, 0)).toLocaleString("en-IN")} from ${pays.length} payment${pays.length === 1 ? "" : "s"}`, "");
+      } catch {
+        lines.push("💰 SALES: couldn't reach Razorpay", "");
+      }
+    }
+
     lines.push("PIPELINE");
     lines.push(`• ${fmt(stages) || "empty"} · open value ₹${pipelineValue.toLocaleString("en-IN")}`, "");
 
