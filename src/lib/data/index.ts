@@ -269,6 +269,23 @@ export const getOutreachQueue = cache(async (view: OutreachView) => {
   };
 });
 
+export interface Meeting {
+  id: string;
+  lead_id: string | null;
+  title: string;
+  starts_at: string;
+  ends_at: string;
+  meet_url: string | null;
+  source: "booking_page" | "calendar";
+  status: "scheduled" | "held" | "no_show" | "cancelled";
+}
+
+/** Meetings for one lead, newest first. Empty in demo mode. */
+export const getLeadMeetings = cache(async (leadId: string): Promise<Meeting[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<Meeting>("meetings", (q) => q.select("id, lead_id, title, starts_at, ends_at, meet_url, source, status").eq("lead_id", leadId).order("starts_at", { ascending: false }).limit(10));
+});
+
 /** Autopilot drafts for one lead (lead page). */
 export const getLeadOutreach = cache(async (leadId: string): Promise<OutreachDraft[]> => {
   if (!isSupabaseConfigured) return [];

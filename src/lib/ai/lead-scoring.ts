@@ -40,7 +40,7 @@ export function scoreLead(lead: Pick<Lead, "source" | "estimated_value" | "servi
   const reachable = [lead.email, lead.phone, lead.whatsapp_number].filter(Boolean).length;
   factors.push({ label: "Reachability", points: reachable * 4 });
 
-  const stageBonus: Partial<Record<Lead["stage"], number>> = { qualified: 8, proposal: 12, negotiation: 18, won: 25 };
+  const stageBonus: Partial<Record<Lead["stage"], number>> = { qualified: 8, meeting: 10, proposal: 12, negotiation: 18, won: 25 };
   if (stageBonus[lead.stage]) factors.push({ label: "Pipeline stage", points: stageBonus[lead.stage]! });
 
   if (lead.last_contacted_at) {

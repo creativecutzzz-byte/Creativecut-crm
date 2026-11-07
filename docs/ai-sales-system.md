@@ -128,10 +128,15 @@ Secret keys कभी चैट में न भेजें। उन्हे
 - Lead पेज पर **Start / Stop autopilot** है।
 - Setup: [`docs/google-workspace-setup.md`](google-workspace-setup.md)
 
-**Phase 3: CRM Ops + Reporting**
-- Meeting booking → stage auto-move; proposal follow-ups
-- Daily morning brief (WhatsApp/email), weekly report
-- Agent performance analytics, A/B testing
+**Phase 3: Meetings, calls & reporting** ✅ *बन गया*
+- **Booking page** (`/book`), `hello@creativecut.in` के Google Calendar पर: free/busy से खाली slots दिखते हैं, Google Meet invite जाता है, और हर lead को personal link मिलता है।
+- नया pipeline stage **Meeting booked** जुड़ा है।
+- **Meeting Tracker**: calendar sync, cancel होने पर "rebook" task, और call के बाद "log outcome" task।
+- **Meeting outcomes** (lead पेज): Held → Proposal (follow-ups शुरू), No-show (reschedule email), Not a fit (बंद)।
+- **Call List & Prep**: आज की meetings के talking points और call list, playbook 06 से।
+- **Daily Brief & Weekly Report**: रोज़ सुबह email; सोमवार को "क्या काम कर रहा है" और A/B नतीजे। ठंडी पड़ी deals पर nudge task भी बनता है।
+- **A/B subject lines**: Claude दो subject लिखता है और हर email में एक random चुना जाता है। Outreach → Sent पर हर step का reply rate दिखता है।
+- Setup: [`docs/google-workspace-setup.md`](google-workspace-setup.md) का section 6
 
 **Phase 4: Calling (optional)**
 - Inbound/warm AI calls, call summary, call list for manual cold calls

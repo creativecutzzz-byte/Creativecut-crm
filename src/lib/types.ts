@@ -3,7 +3,7 @@
 
 export type MemberRole = "owner" | "admin" | "manager" | "member";
 export type MemberStatus = "active" | "invited" | "disabled";
-export type LeadStage = "new" | "contacted" | "qualified" | "proposal" | "negotiation" | "won" | "lost";
+export type LeadStage = "new" | "contacted" | "qualified" | "meeting" | "proposal" | "negotiation" | "won" | "lost";
 export type LeadSource = "website" | "instagram" | "whatsapp" | "meta_ads" | "referral" | "apollo" | "google_maps" | "funding_news" | "other";
 export type ClientStatus = "onboarding" | "active" | "paused" | "churned";
 export type ActivityType =

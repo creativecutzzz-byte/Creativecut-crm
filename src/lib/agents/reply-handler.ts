@@ -3,6 +3,7 @@ import "server-only";
 import { z } from "zod";
 import { extract, isAiConfigured } from "@/lib/ai/claude";
 import { gmail } from "@/lib/integrations/gmail";
+import { personalBookingUrl } from "@/lib/meetings/booking-link";
 import { DAY } from "@/lib/outreach/plan";
 import { COMPANY_KNOWLEDGE } from "./knowledge";
 import { defineAgent, type AgentContext } from "./types";
@@ -71,7 +72,7 @@ export const replyHandlerAgent = defineAgent<Config>({
   needsAi: false,
   minIntervalHours: 0,
   configSchema: config,
-  defaultConfig: { lookback_days: 3, not_now_days: 60, draft_replies: true, alert_email: "" },
+  defaultConfig: { lookback_days: 3, not_now_days: 60, draft_replies: true, alert_email: "hello@creativecut.in" },
   configHelp:
     "lookback_days: how far back to check the Gmail inbox. not_now_days: when to re-engage a \"not now\" reply if they gave no date. draft_replies: let Claude draft an answer into the approval queue. alert_email: where to email you about hot replies (empty = no email alert).",
 
@@ -245,7 +246,7 @@ async function classify(ctx: AgentContext, m: InboundRow, leadName: string): Pro
       ctx.supabase.from("organizations").select("booking_url").eq("id", ctx.orgId).single(),
     ]);
     const input = [
-      `<context sender_name="${process.env.GMAIL_SENDER_NAME ?? ""}" booking_link="${(org?.booking_url as string | null) ?? ""}" channel="${m.channel}" prospect="${leadName}"/>`,
+      `<context sender_name="${process.env.GMAIL_SENDER_NAME ?? ""}" booking_link="${personalBookingUrl(m.lead_id) ?? (org?.booking_url as string | null) ?? ""}" channel="${m.channel}" prospect="${leadName}"/>`,
       last?.body ? `<our_last_message>\n${String(last.body).slice(0, 1500)}\n</our_last_message>` : "",
       `<their_reply>\n${m.body.slice(0, 3000)}\n</their_reply>`,
     ].join("\n");

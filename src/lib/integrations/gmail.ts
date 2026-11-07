@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createSign } from "node:crypto";
+import { b64url, googleAccessToken } from "./google";
 import { hasCredentials, isMessagingLive } from "./safety";
 
 // Gmail through Google Workspace: a service account with domain-wide
@@ -13,8 +13,6 @@ import { hasCredentials, isMessagingLive } from "./safety";
 const KEYS = ["GOOGLE_SERVICE_ACCOUNT_EMAIL", "GOOGLE_SERVICE_ACCOUNT_KEY", "GMAIL_SENDER"] as const;
 const SCOPE = "https://www.googleapis.com/auth/gmail.modify";
 const API = "https://gmail.googleapis.com/gmail/v1/users/me";
-
-let cached: { token: string; expires: number } | null = null;
 
 export const gmail = {
   envKeys: KEYS,
@@ -102,27 +100,8 @@ interface GmailMessage {
   payload?: GmailPart;
 }
 
-async function accessToken() {
-  if (cached && cached.expires > Date.now() + 60_000) return cached.token;
-  const now = Math.floor(Date.now() / 1000);
-  const claims = { iss: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL, sub: process.env.GMAIL_SENDER, scope: SCOPE, aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600 };
-  const unsigned = `${b64url(JSON.stringify({ alg: "RS256", typ: "JWT" }))}.${b64url(JSON.stringify(claims))}`;
-  // Env vars often store the PEM with literal "\n".
-  const key = (process.env.GOOGLE_SERVICE_ACCOUNT_KEY ?? "").replace(/\\n/g, "\n");
-  const signature = createSign("RSA-SHA256").update(unsigned).sign(key);
-  const res = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion: `${unsigned}.${b64url(signature)}` }),
-    cache: "no-store",
-    signal: AbortSignal.timeout(15_000),
-  });
-  const json = (await res.json().catch(() => ({}))) as { access_token?: string; expires_in?: number; error?: string; error_description?: string };
-  if (!res.ok || !json.access_token) {
-    throw new Error(`Google sign-in failed: ${json.error_description || json.error || `HTTP ${res.status}`}. Check domain-wide delegation for the gmail.modify scope.`);
-  }
-  cached = { token: json.access_token, expires: Date.now() + (json.expires_in ?? 3600) * 1000 };
-  return cached.token;
+function accessToken() {
+  return googleAccessToken(process.env.GMAIL_SENDER ?? "", SCOPE);
 }
 
 async function api<T>(path: string, init?: { method?: "GET" | "POST"; body?: unknown }): Promise<T> {
@@ -158,10 +137,6 @@ export function buildMime(input: SendInput, from: string, fromName: string) {
 
 function encodeWord(text: string) {
   return /^[\x00-\x7F]*$/.test(text) ? text : `=?UTF-8?B?${Buffer.from(text, "utf8").toString("base64")}?=`;
-}
-
-function b64url(input: string | Buffer) {
-  return Buffer.from(input).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 function header(msg: GmailMessage | null, name: string) {

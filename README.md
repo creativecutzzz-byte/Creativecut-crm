@@ -20,6 +20,7 @@ A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 
 | Instagram | `/instagram` | Reply to DMs, inbound DMs become leads via webhook, quick replies |
 | Meta Ads analytics | `/ads` | Spend, ROAS, CPL, CTR, daily chart, per-campaign table (read-only) |
 | AI agents | `/agents` | Lead generation (funding news, Google Maps, Apollo, website enrichment + Claude qualification) and outreach (writer, reply handler, sender) — see `docs/ai-sales-system.md` |
+| Meetings | `/book`, lead page | Booking page on Google Calendar (Meet invite, personal links), calendar sync, call outcomes, daily call list and morning brief |
 | Outreach approvals | `/outreach` | Approve / edit / skip AI-written emails, LinkedIn notes and replies; sent via Google Workspace (`docs/google-workspace-setup.md`) |
 | Follow-up workflows | `/workflows` | Trigger → step sequences, activate/pause, dry-run test run against a real lead |
 | Team management | `/team` | Members, roles, workload, invitations, change role / remove member, permission matrix |

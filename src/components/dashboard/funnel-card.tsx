@@ -3,7 +3,8 @@ import type { Lead, LeadStage } from "@/lib/types";
 import { formatPercent } from "@/lib/utils";
 
 const REACHED: Record<string, LeadStage[]> = {
-  contacted: ["contacted", "qualified", "proposal", "negotiation", "won"],
+  contacted: ["contacted", "qualified", "meeting", "proposal", "negotiation", "won"],
+  meeting: ["meeting", "proposal", "negotiation", "won"],
   proposal: ["proposal", "negotiation", "won"],
   won: ["won"],
 };
@@ -17,6 +18,7 @@ export function FunnelCard({ leads, now, days = 90 }: { leads: Lead[]; now: numb
   const steps = [
     { label: "Added", count: cohort.length },
     { label: "Contacted", count: cohort.filter((l) => REACHED.contacted!.includes(l.stage)).length },
+    { label: "Meeting", count: cohort.filter((l) => REACHED.meeting!.includes(l.stage)).length },
     { label: "Proposal", count: cohort.filter((l) => REACHED.proposal!.includes(l.stage)).length },
     { label: "Won", count: cohort.filter((l) => REACHED.won!.includes(l.stage)).length },
   ];

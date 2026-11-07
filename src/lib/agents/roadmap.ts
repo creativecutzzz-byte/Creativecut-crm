@@ -26,13 +26,13 @@ export const PLANNED_AGENTS: PlannedAgent[] = [
   { name: "Email via Google Workspace", department: "outreach", status: "built-in", note: "Outreach Sender: threaded follow-ups, sending hours, daily cap, unsubscribe link." },
   { name: "WhatsApp template touch", department: "outreach", status: "built-in", note: "Outreach Writer adds it for leads with marketing consent." },
   { name: "LinkedIn assistant", department: "outreach", status: "built-in", note: "Writes the connection note and DM; you send it (LinkedIn forbids automation)." },
-  { name: "A/B testing & deliverability", department: "outreach", status: "phase-3", note: "Compare openings and subjects; watch bounces." },
+  { name: "A/B subject tests & reply report", department: "outreach", status: "built-in", note: "Two subject lines per first email; Outreach → Sent shows reply rate per step and variant." },
 
-  { name: "Call list & script agent", department: "sales_calling", status: "phase-3", note: "Daily call list with talking points from playbook/06." },
-  { name: "Meeting booker", department: "sales_calling", status: "phase-3", note: "Cal.com / Google Calendar link; booking moves the stage." },
+  { name: "Booking page on Google Calendar", department: "sales_calling", status: "built-in", note: "Personal /book links in every email; Meet link + invite; stage → Meeting booked." },
+  { name: "Meeting outcomes", department: "sales_calling", status: "built-in", note: "Held → Proposal (follow-ups start), No-show → reschedule email, Not a fit → closed." },
   { name: "Voice AI (inbound/warm)", department: "sales_calling", status: "phase-4", note: "Vapi/Retell; only consented or inbound leads (TRAI/DND rules)." },
 
   { name: "Follow-up tracker & reminders", department: "crm_operations", status: "built-in", note: "Sequences, tasks, overdue follow-ups." },
-  { name: "Pipeline automation", department: "crm_operations", status: "phase-3", note: "Auto stage moves on reply, meeting and proposal." },
-  { name: "Daily brief & weekly report", department: "crm_operations", status: "phase-3", note: "Morning WhatsApp/email: new leads, replies, meetings, today's tasks." },
+  { name: "Pipeline automation", department: "crm_operations", status: "built-in", note: "Stages move on reply, booking and call outcome; quiet deals get nudge tasks." },
+  { name: "Daily brief & weekly report", department: "crm_operations", status: "built-in", note: "Morning email to hello@creativecut.in; Mondays add what's working." },
 ];

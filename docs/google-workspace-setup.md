@@ -25,7 +25,7 @@ CRM आपके Google Workspace mailbox से cold emails भेजेगा 
 ## 2. Google Cloud में service account
 
 1. console.cloud.google.com → नया project बनाएँ, जैसे `creativecut-crm`।
-2. **APIs & Services → Library → Gmail API → Enable**।
+2. **APIs & Services → Library** में जाकर **Gmail API** और **Google Calendar API**, दोनों Enable करें।
 3. **IAM & Admin → Service Accounts → Create service account**:
    - नाम: `crm-outreach`
    - Role: कुछ नहीं चाहिए, सीधे **Done** दबाएँ।
@@ -40,10 +40,11 @@ CRM आपके Google Workspace mailbox से cold emails भेजेगा 
 
 1. admin.google.com → **Security → Access and data control → API controls → Manage Domain Wide Delegation → Add new**
 2. **Client ID**: ऊपर कॉपी किया Unique ID
-3. **OAuth scopes**: बिल्कुल यही डालें:
+3. **OAuth scopes**: बिल्कुल यही दोनों डालें (comma से अलग करके):
    ```
-   https://www.googleapis.com/auth/gmail.modify
+   https://www.googleapis.com/auth/gmail.modify,https://www.googleapis.com/auth/calendar
    ```
+   पहला scope emails भेजने और पढ़ने के लिए है, दूसरा booking page और meetings के लिए।
 4. **Authorize** दबाएँ। इसे लागू होने में 5 मिनट से 24 घंटे तक लग सकते हैं।
 
 ---
@@ -58,6 +59,7 @@ Download की हुई JSON file खोलें। उसमें से �
 | `GOOGLE_SERVICE_ACCOUNT_KEY` | JSON का `private_key` (पूरा, `-----BEGIN PRIVATE KEY-----` से `-----END PRIVATE KEY-----` तक; `\n` जैसे हैं वैसे ही रहने दें) |
 | `GMAIL_SENDER` | outreach mailbox, जैसे `aanya@creativecut.co` |
 | `GMAIL_SENDER_NAME` | email में दिखने वाला नाम, जैसे `Aanya Kapoor` |
+| `GOOGLE_CALENDAR_USER` | जिस calendar पर meetings बुक हों: `hello@creativecut.in` |
 | `NEXT_PUBLIC_SITE_URL` | CRM का URL (unsubscribe link के लिए), जैसे `https://crm.creativecut.in` |
 | `CRON_SECRET` | कोई भी लंबी रैंडम स्ट्रिंग (unsubscribe link इसी से sign होते हैं) |
 | `MESSAGING_MODE` | टेस्ट होने तक `dry-run`, फिर `live` |
@@ -117,3 +119,30 @@ Lead-generation agents फिर भी दिन में एक बार ह
 | "Gmail API has not been used in project…" | Gmail API enable नहीं किया |
 | Emails spam में जा रहे हैं | SPF/DKIM/DMARC जाँचें (mail-tester.com), cap कम करें, links कम रखें |
 | Approve करने पर "queued for next window" | Sending hours या daily cap; Outreach Sender की settings देखें |
+
+---
+
+## 6. Meetings (Phase 3)
+
+1. CRM → **AI Agents → Meeting Tracker & Booking → Settings** में ये सेट करें:
+   - meeting की लंबाई (`duration_minutes`)
+   - घंटे (`start_hour` / `end_hour`, IST) और दिन (`days`)
+   - कितनी देर पहले तक booking हो सकती है (`min_notice_hours`)
+   - `notify_email`: `hello@creativecut.in`
+2. **Run now** दबाएँ, फिर switch **On** करें। इसके बाद यह हर cron run पर calendar sync करेगा।
+3. हर outreach email में `{{booking_link}}` की जगह अब उस lead का **personal booking link** जाता है: `https://<CRM>/book?t=…`। Lead सिर्फ़ समय चुनता है, और उसे Google Meet के साथ calendar invite मिल जाता है।
+4. Website या social bio के लिए एक आम link भी है: `https://<CRM>/book?w=<workspace key>`। Workspace key आपको Settings में मिलेगी।
+5. Booking होते ही ये सब अपने-आप होता है:
+   - lead की stage **Meeting booked** हो जाती है
+   - outreach रुक जाता है
+   - "Prep for call" task बनता है
+   - `hello@creativecut.in` पर email जाता है
+6. Calendar पर हाथ से भेजा गया invite (जिसमें lead guest हो) भी अपने-आप CRM में आ जाता है। Cancel होने पर "offer new times" task बनता है।
+7. Call ख़त्म होने के बाद lead पेज पर नतीजा चुनें:
+   - **Held → Proposal**: proposal follow-ups शुरू होते हैं, और "Send the proposal" task बनता है।
+   - **No-show**: reschedule email approval के लिए आता है।
+   - **Not a fit**: lead बंद हो जाती है।
+8. **Call List & Prep** agent रोज़ सुबह ये तैयार करता है:
+   - आज की meetings के talking points
+   - आज की call list (जिनका follow-up due है, या जिनके hot replies आए हैं)
+9. **Daily Brief** agent रोज़ सुबह `hello@creativecut.in` पर email भेजता है। सोमवार को इसमें weekly report भी होती है: कौन-सा message ज़्यादा जवाब ला रहा है, और subject line A/B test का नतीजा।

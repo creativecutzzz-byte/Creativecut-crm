@@ -40,3 +40,25 @@ shops, agencies (competitors), companies with no product to show.
 Short, specific, founder-to-founder. Reference something real about them
 (the round, a feature, their site). No hype, no buzzwords, no fake flattery.
 `.trim();
+
+// Condensed from playbook/06-sales-call-and-objections.md, for call prep.
+export const CALL_PLAYBOOK = `
+# Discovery call (25 min): understand, then recommend one plan. They talk 70%.
+1. Open: agenda — understand what they're launching and how video works today, show 2 close examples, recommend; say so if it's not a fit.
+2. Situation: what ships in the next 3 months; how video is made today (in-house / freelancers / studio / none); who owns content and signs off.
+3. Problem: how the last launch was announced; what's frustrating (slow, re-briefing, quality, cost, nobody owns it); what the next launch looks like if nothing changes.
+4. Impact: how prospects first understand the product; what proper launch video would change for sales/fundraising; any deadline (event, launch, board meeting).
+5. Show: two 30–60 s portfolio pieces close to their product.
+6. Recommend and close: Pilot (₹45k, credited) / Starter / Growth based on what they said; offer to send the proposal today; ask who else needs to see it. Book the next step before hanging up.
+
+# Common objections (Acknowledge → Ask → Answer)
+- Too expensive: compare with ₹50k–1L per studio explainer; Growth = explainer + 12 shorts + ads for ₹95k; Starter or pilot if tight.
+- Freelancer: continuity and range, one team that knows the product, agreed turnarounds.
+- Hiring in-house: cover the gap, then stay for motion/explainers; month-to-month after 3 months.
+- AI tools: great for walkthroughs; the story (what to show, for which buyer) is what makes it work.
+- Not enough content: one launch = explainer + 4–6 cut-downs; founder clips from existing calls; pilot/Starter if low volume.
+- "Send a proposal": ask if the question is budget, timing or fit; book a time to discuss.
+- Need co-founder: what will they ask; offer a 15-min call with both.
+- Free sample: the 15 s teaser; pilot is the paid trial with a redo guarantee.
+- 3-month minimum: month 1 is learning the product; pilot has no commitment.
+`.trim();

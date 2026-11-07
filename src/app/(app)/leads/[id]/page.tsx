@@ -4,6 +4,8 @@ import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
 import { LeadActions } from "@/components/leads/lead-actions";
 import { SequenceControls } from "@/components/leads/sequence-controls";
 import { AutopilotControls } from "@/components/outreach/autopilot-card";
+import { MeetingsCard } from "@/components/meetings/meetings-card";
+import { personalBookingUrl } from "@/lib/meetings/booking-link";
 import { StageForm } from "@/components/leads/stage-form";
 import { NewTaskButton } from "@/components/tasks/new-task-button";
 import { TaskList } from "@/components/tasks/task-list";
@@ -15,10 +17,10 @@ import { Progress } from "@/components/ui/progress";
 import { ScorePill } from "@/components/ui/score-pill";
 import { scoreLead } from "@/lib/ai/lead-scoring";
 import { LEAD_SOURCES } from "@/lib/constants";
-import { getLead, getLeadOutreach, getRequestTime, getTasks, getTeam, getTimeline, getViewer } from "@/lib/data";
+import { getLead, getLeadMeetings, getLeadOutreach, getRequestTime, getTasks, getTeam, getTimeline, getViewer } from "@/lib/data";
 import { formatCurrency, formatDate, formatRelative } from "@/lib/utils";
 import { memberByUserId } from "@/lib/team";
-import { ArrowLeft, Bot, Globe, Mail, Phone, Send, Sparkles, Target } from "lucide-react";
+import { ArrowLeft, Bot, CalendarDays, Globe, Mail, Phone, Send, Sparkles, Target } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function LeadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [lead, timeline, team, tasks, viewer, outreach] = await Promise.all([getLead(id), getTimeline({ leadId: id }), getTeam(), getTasks(), getViewer(), getLeadOutreach(id)]);
+  const [lead, timeline, team, tasks, viewer, outreach, meetings] = await Promise.all([getLead(id), getTimeline({ leadId: id }), getTeam(), getTasks(), getViewer(), getLeadOutreach(id), getLeadMeetings(id)]);
   if (!lead) notFound();
   const leadTasks = tasks.filter((t) => t.lead_id === lead.id);
   const activeSequence = leadTasks.find((t) => t.sequence && t.status === "open")?.sequence ?? null;
@@ -143,6 +145,22 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               )}
             </CardBody>
           </Card>
+
+          {viewer.mode === "live" && (
+            <Card>
+              <CardHeader
+                title={
+                  <span className="flex items-center gap-2">
+                    <CalendarDays className="size-4 text-accent-strong" /> Meetings
+                  </span>
+                }
+                description="Booked online or found on your Google Calendar"
+              />
+              <CardBody>
+                <MeetingsCard meetings={meetings} bookingUrl={personalBookingUrl(lead.id)} now={getRequestTime()} />
+              </CardBody>
+            </Card>
+          )}
 
           {viewer.mode === "live" && (
             <Card>

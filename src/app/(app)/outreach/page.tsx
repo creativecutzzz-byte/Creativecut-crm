@@ -1,4 +1,7 @@
 import { DraftCard } from "@/components/outreach/draft-card";
+import { PerformanceCard } from "@/components/outreach/performance-card";
+import { outreachPerformance } from "@/lib/outreach/performance";
+import { createClient } from "@/lib/supabase/server";
 import { QueueActions } from "@/components/outreach/queue-actions";
 import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
@@ -27,6 +30,7 @@ export default async function OutreachPage({ searchParams }: { searchParams: Pro
   const canApprove = viewer.mode === "live" && ["owner", "admin", "manager"].includes(viewer.role);
   const pendingEmails = view === "pending" ? queue.drafts.filter((d) => d.channel === "email" && d.kind === "sequence" && d.status === "pending").length : 0;
   const live = isMessagingLive();
+  const performance = view === "sent" && viewer.orgId ? await outreachPerformance(await createClient(), viewer.orgId, 30) : null;
 
   return (
     <div className="space-y-6">
@@ -70,6 +74,8 @@ export default async function OutreachPage({ searchParams }: { searchParams: Pro
           </Link>
         ))}
       </nav>
+
+      {performance && <PerformanceCard {...performance} />}
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {queue.drafts.map((d) => (
