@@ -29,7 +29,7 @@ export function MobileTabs({ counts = {} }: { role: MemberRole; counts?: Partial
               <Link href={t.href} className={cn("relative flex flex-col items-center gap-0.5 py-2 text-[11px]", active ? "text-fg" : "text-subtle")}>
                 <Icon className={cn("size-5", active && "text-accent-strong")} />
                 {t.label}
-                {count > 0 && <span className="absolute top-1 right-[calc(50%-18px)] min-w-4 rounded-full bg-accent px-1 text-center text-[10px] leading-4 font-semibold text-white">{count > 99 ? "99+" : count}</span>}
+                {count > 0 && <span className="absolute top-1 right-[calc(50%-18px)] min-w-4 rounded-full bg-accent px-1 text-center text-[10px] leading-4 font-semibold text-ink">{count > 99 ? "99+" : count}</span>}
               </Link>
             </li>
           );

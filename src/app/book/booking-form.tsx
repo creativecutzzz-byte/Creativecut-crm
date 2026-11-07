@@ -50,7 +50,7 @@ export function BookingForm({ days, token, workspace, needsDetails, needsEmail }
                   onClick={() => setPicked(s.start)}
                   className={cn(
                     "h-9 rounded-lg border px-3 text-sm transition-colors",
-                    picked === s.start ? "border-accent bg-accent text-white" : "border-line bg-surface-2 hover:border-line-strong",
+                    picked === s.start ? "border-accent bg-accent text-ink" : "border-line bg-surface-2 hover:border-line-strong",
                   )}
                 >
                   {s.label}

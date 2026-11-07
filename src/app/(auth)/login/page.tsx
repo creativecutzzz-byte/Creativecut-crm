@@ -27,7 +27,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                 Supabase isn&apos;t configured yet, so the CRM is running in <span className="text-fg">demo mode</span> with sample data.
                 Add your project URL and anon key to <code className="rounded bg-white/5 px-1 py-0.5 text-xs">.env.local</code> to enable sign-in.
               </p>
-              <a href="/today" className="flex h-9 items-center justify-center rounded-lg bg-accent text-sm font-medium text-white hover:bg-accent-strong">
+              <a href="/today" className="flex h-9 items-center justify-center rounded-lg bg-accent text-sm font-medium text-ink hover:bg-accent-strong">
                 Explore the demo
               </a>
             </div>

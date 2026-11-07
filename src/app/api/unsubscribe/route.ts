@@ -39,7 +39,7 @@ function page(message: string, token: string | null, status = 200) {
     : "";
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsubscribe</title>
 <style>body{font-family:system-ui,sans-serif;background:#0b0b10;color:#e7e7ee;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px}
-main{max-width:420px;text-align:center}button{margin-top:16px;padding:10px 18px;border-radius:10px;border:0;background:#8b7cf6;color:#fff;font-size:15px;cursor:pointer}</style>
+main{max-width:420px;text-align:center}button{margin-top:16px;padding:10px 18px;border-radius:10px;border:0;background:#c8f53c;color:#0a0a0c;font-size:15px;cursor:pointer}</style>
 </head><body><main><p>${message}</p>${form}</main></body></html>`;
   return new NextResponse(html, { status, headers: { "Content-Type": "text/html; charset=utf-8" } });
 }

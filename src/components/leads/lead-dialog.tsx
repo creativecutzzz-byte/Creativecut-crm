@@ -114,7 +114,7 @@ function LeadForm({ lead, team, onDone }: { lead?: Lead; team: Member[]; onDone:
           </div>
         </fieldset>
         <label className="flex items-start gap-2 text-xs text-muted sm:col-span-2">
-          <input type="checkbox" name="marketing_consent" defaultChecked={lead?.marketing_consent} className="mt-0.5 accent-[#8b7cf6]" />
+          <input type="checkbox" name="marketing_consent" defaultChecked={lead?.marketing_consent} className="mt-0.5 accent-[#c8f53c]" />
           Lead has opted in to receive automated follow-ups (required for workflows).
         </label>
       </ModalBody>

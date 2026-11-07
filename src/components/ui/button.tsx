@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { ButtonHTMLAttributes } from "react";
 
 const variants = {
-  primary: "bg-accent text-white hover:bg-accent-strong shadow-[0_0_0_1px_rgb(255_255_255/0.08)_inset,0_8px_24px_-8px_rgb(139_124_246/0.6)]",
+  primary: "bg-accent text-ink hover:bg-accent-strong shadow-[0_0_0_1px_rgb(255_255_255/0.08)_inset,0_8px_24px_-8px_rgb(200_245_60/0.35)]",
   secondary: "bg-surface-2 text-fg border border-line hover:bg-surface-3 hover:border-line-strong",
   ghost: "text-muted hover:text-fg hover:bg-white/5",
 };
