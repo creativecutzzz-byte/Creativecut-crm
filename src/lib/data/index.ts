@@ -12,6 +12,7 @@ import type {
   Integration,
   Lead,
   MemberRole,
+  Message,
   MessageTemplate,
   Task,
   TeamMember,
@@ -172,6 +173,133 @@ export const getTeam = cache(async (): Promise<TeamMember[]> => {
 export const getTemplates = cache(async (): Promise<MessageTemplate[]> => {
   if (!isSupabaseConfigured) return demo.demoTemplates;
   return liveQuery<MessageTemplate>("message_templates", (q) => q.select("*").order("name"));
+});
+
+export interface AgentRow {
+  key: string;
+  enabled: boolean;
+  config: Record<string, unknown>;
+  last_run_at: string | null;
+  last_status: string | null;
+  last_summary: string | null;
+}
+
+export interface AgentRun {
+  id: string;
+  agent_key: string;
+  trigger: "cron" | "manual";
+  status: "running" | "success" | "skipped" | "error";
+  summary: string | null;
+  items_created: number;
+  items_updated: number;
+  started_at: string;
+  finished_at: string | null;
+}
+
+/** Saved agent switches/settings and recent runs. Empty in demo mode. */
+export const getAgentData = cache(async (): Promise<{ rows: AgentRow[]; runs: AgentRun[] }> => {
+  if (!isSupabaseConfigured) return { rows: [], runs: [] };
+  const [rows, runs] = await Promise.all([
+    liveQuery<AgentRow>("agents", (q) => q.select("key, enabled, config, last_run_at, last_status, last_summary")),
+    liveQuery<AgentRun>("agent_runs", (q) => q.select("id, agent_key, trigger, status, summary, items_created, items_updated, started_at, finished_at").order("started_at", { ascending: false }).limit(30)),
+  ]);
+  return { rows, runs };
+});
+
+export interface OutreachDraft {
+  id: string;
+  lead_id: string;
+  kind: "sequence" | "reply";
+  sequence: string | null;
+  step: number | null;
+  step_label: string | null;
+  channel: "email" | "whatsapp" | "instagram" | "linkedin";
+  to_address: string | null;
+  subject: string | null;
+  body: string;
+  template_name: string | null;
+  notes: string | null;
+  status: "pending" | "approved" | "sent" | "failed" | "rejected" | "cancelled";
+  scheduled_for: string | null;
+  sent_at: string | null;
+  error: string | null;
+  created_at: string;
+  lead: { id: string; name: string; company: string | null; ai_score: number | null; linkedin_url: string | null; outreach_status: string | null } | null;
+}
+
+export type OutreachView = "pending" | "scheduled" | "sent" | "closed";
+
+const VIEW_STATUSES: Record<OutreachView, OutreachDraft["status"][]> = {
+  pending: ["pending", "failed"],
+  scheduled: ["approved"],
+  sent: ["sent"],
+  closed: ["rejected", "cancelled"],
+};
+
+/** Approval queue drafts for one view, plus counts for every view. Empty in demo mode. */
+export const getOutreachQueue = cache(async (view: OutreachView) => {
+  const empty = { drafts: [] as OutreachDraft[], counts: { pending: 0, scheduled: 0, sent: 0, closed: 0 } as Record<OutreachView, number>, sentToday: 0, activeLeads: 0 };
+  if (!isSupabaseConfigured) return empty;
+  const viewer = await getViewer();
+  if (!viewer.orgId) return empty;
+  const supabase = await createClient();
+  const count = (statuses: string[]) => supabase.from("outreach_drafts").select("id", { count: "exact", head: true }).in("status", statuses);
+  const istMidnight = new Date(Date.now() + 5.5 * 3_600_000);
+  istMidnight.setUTCHours(0, 0, 0, 0);
+  const [drafts, pending, scheduled, sent, closed, sentToday, active] = await Promise.all([
+    supabase
+      .from("outreach_drafts")
+      .select("id, lead_id, kind, sequence, step, step_label, channel, to_address, subject, body, template_name, notes, status, scheduled_for, sent_at, error, created_at, lead:leads(id, name, company, ai_score, linkedin_url, outreach_status)")
+      .in("status", VIEW_STATUSES[view])
+      .order(view === "sent" ? "sent_at" : "created_at", { ascending: view === "pending" || view === "scheduled" })
+      .limit(100),
+    count(VIEW_STATUSES.pending),
+    count(VIEW_STATUSES.scheduled),
+    count(VIEW_STATUSES.sent),
+    count(VIEW_STATUSES.closed),
+    supabase.from("messages").select("id", { count: "exact", head: true }).eq("channel", "email").eq("direction", "outbound").eq("status", "sent").gte("created_at", new Date(istMidnight.getTime() - 5.5 * 3_600_000).toISOString()),
+    supabase.from("leads").select("id", { count: "exact", head: true }).eq("outreach_status", "active"),
+  ]);
+  if (drafts.error) throw new Error(`Failed to load outreach queue: ${drafts.error.message}`);
+  return {
+    drafts: (drafts.data ?? []).map((d) => ({ ...d, lead: Array.isArray(d.lead) ? (d.lead[0] ?? null) : d.lead })) as OutreachDraft[],
+    counts: { pending: pending.count ?? 0, scheduled: scheduled.count ?? 0, sent: sent.count ?? 0, closed: closed.count ?? 0 },
+    sentToday: sentToday.count ?? 0,
+    activeLeads: active.count ?? 0,
+  };
+});
+
+export interface Meeting {
+  id: string;
+  lead_id: string | null;
+  title: string;
+  starts_at: string;
+  ends_at: string;
+  meet_url: string | null;
+  source: "booking_page" | "calendar";
+  status: "scheduled" | "held" | "no_show" | "cancelled";
+}
+
+/** Meetings for one lead, newest first. Empty in demo mode. */
+export const getLeadMeetings = cache(async (leadId: string): Promise<Meeting[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<Meeting>("meetings", (q) => q.select("id, lead_id, title, starts_at, ends_at, meet_url, source, status").eq("lead_id", leadId).order("starts_at", { ascending: false }).limit(10));
+});
+
+/** Autopilot drafts for one lead (lead page). */
+export const getLeadOutreach = cache(async (leadId: string): Promise<OutreachDraft[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<OutreachDraft>("outreach_drafts", (q) =>
+    q.select("id, lead_id, kind, sequence, step, step_label, channel, to_address, subject, body, template_name, notes, status, scheduled_for, sent_at, error, created_at").eq("lead_id", leadId).order("created_at", { ascending: false }).limit(20),
+  );
+});
+
+/** Latest WhatsApp / Instagram messages (both directions). Empty in demo mode. */
+export const getMessages = cache(async (channel: "whatsapp" | "instagram", limit = 25): Promise<Message[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<Message>("messages", (q) =>
+    q.select("id, channel, direction, status, lead_id, to_address, body, error, created_at").eq("channel", channel).order("created_at", { ascending: false }).limit(limit),
+  );
 });
 
 export const getWorkflows = cache(async (): Promise<Workflow[]> => {

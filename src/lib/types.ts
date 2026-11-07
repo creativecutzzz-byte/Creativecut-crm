@@ -3,8 +3,8 @@
 
 export type MemberRole = "owner" | "admin" | "manager" | "member";
 export type MemberStatus = "active" | "invited" | "disabled";
-export type LeadStage = "new" | "contacted" | "qualified" | "proposal" | "negotiation" | "won" | "lost";
-export type LeadSource = "website" | "instagram" | "whatsapp" | "meta_ads" | "referral" | "other";
+export type LeadStage = "new" | "contacted" | "qualified" | "meeting" | "proposal" | "negotiation" | "won" | "lost";
+export type LeadSource = "website" | "instagram" | "whatsapp" | "meta_ads" | "referral" | "apollo" | "google_maps" | "funding_news" | "other";
 export type ClientStatus = "onboarding" | "active" | "paused" | "churned";
 export type ActivityType =
   | "note" | "call" | "email" | "whatsapp" | "instagram" | "meeting" | "stage_change" | "task" | "system";
@@ -39,6 +39,15 @@ export interface Lead {
   phone: string | null;
   whatsapp_number: string | null;
   instagram_handle: string | null;
+  /** Instagram-scoped user id, set when they DM the account. Required to reply. */
+  instagram_user_id?: string | null;
+  linkedin_url?: string | null;
+  external_ref?: string | null;
+  enriched_at?: string | null;
+  outreach_status?: "active" | "replied" | "paused" | "completed" | "stopped" | "unsubscribed" | null;
+  outreach_step?: number | null;
+  outreach_plan?: unknown[] | null;
+  email_status?: "ok" | "bounced" | null;
   source: LeadSource;
   stage: LeadStage;
   estimated_value: number;
@@ -158,4 +167,16 @@ export interface AdInsightDay {
   leads: number;
   conversions: number;
   revenue: number;
+}
+
+export interface Message {
+  id: string;
+  channel: Channel;
+  direction: "inbound" | "outbound";
+  status: "draft" | "queued" | "simulated" | "sent" | "delivered" | "read" | "failed";
+  lead_id: string | null;
+  to_address: string | null;
+  body: string;
+  error: string | null;
+  created_at: string;
 }

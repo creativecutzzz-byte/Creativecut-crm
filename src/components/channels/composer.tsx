@@ -1,10 +1,10 @@
 "use client";
 
-import { simulateMessage, type SimulateState } from "@/app/actions/messages";
+import { sendMessage, type SendState } from "@/app/actions/messages";
 import { Button } from "@/components/ui/button";
 import { Label, Select, Textarea } from "@/components/ui/input";
 import type { MessageTemplate } from "@/lib/types";
-import { CheckCircle2, FlaskConical } from "lucide-react";
+import { CheckCircle2, FlaskConical, Send } from "lucide-react";
 import { useActionState, useState } from "react";
 
 interface ComposerLead {
@@ -17,13 +17,13 @@ function render(body: string, vars: Record<string, string>) {
   return body.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key: string) => vars[key] ?? `{{${key}}}`);
 }
 
-export function Composer({ channel, leads, templates, initialLeadId }: { channel: "whatsapp" | "instagram"; leads: ComposerLead[]; templates: MessageTemplate[]; initialLeadId?: string }) {
+export function Composer({ channel, leads, templates, initialLeadId, live = false }: { channel: "whatsapp" | "instagram"; leads: ComposerLead[]; templates: MessageTemplate[]; initialLeadId?: string; live?: boolean }) {
   const [leadId, setLeadId] = useState(initialLeadId && leads.some((l) => l.id === initialLeadId) ? initialLeadId : (leads[0]?.id ?? ""));
   const [templateId, setTemplateId] = useState(templates[0]?.id ?? "");
   const lead = leads.find((l) => l.id === leadId);
   const template = templates.find((t) => t.id === templateId);
   const [body, setBody] = useState(() => (template && lead ? render(template.body, lead.vars) : ""));
-  const [state, action, pending] = useActionState<SimulateState, FormData>(simulateMessage, {});
+  const [state, action, pending] = useActionState<SendState, FormData>(sendMessage, {});
 
   const applyTemplate = (tId: string, lId: string) => {
     const t = templates.find((x) => x.id === tId);
@@ -38,7 +38,7 @@ export function Composer({ channel, leads, templates, initialLeadId }: { channel
   return (
     <form action={action} className="space-y-4">
       <input type="hidden" name="channel" value={channel} />
-      <input type="hidden" name="template_name" value={template?.external_template_name ?? ""} />
+      <input type="hidden" name="template_id" value={template?.id ?? ""} />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <Label htmlFor="lead_id">To</Label>
@@ -86,15 +86,16 @@ export function Composer({ channel, leads, templates, initialLeadId }: { channel
       {state.preview && (
         <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/5 p-3 text-xs">
           <p className="flex items-center gap-1.5 font-medium text-emerald-300">
-            <CheckCircle2 className="size-3.5" /> Dry run complete — nothing was sent
+            <CheckCircle2 className="size-3.5" /> {state.status === "sent" ? `Sent on ${channel === "whatsapp" ? "WhatsApp" : "Instagram"}` : "Dry run complete — nothing was sent"}
           </p>
           <p className="mt-1.5 break-words text-muted">{state.preview}</p>
+          {state.note && <p className="mt-1.5 text-subtle">{state.note}</p>}
         </div>
       )}
 
       <div className="flex justify-end">
         <Button type="submit" variant="primary" disabled={pending}>
-          <FlaskConical className="size-4" /> {pending ? "Simulating…" : "Simulate send"}
+          {live ? <Send className="size-4" /> : <FlaskConical className="size-4" />} {pending ? (live ? "Sending…" : "Simulating…") : live ? "Send" : "Simulate send"}
         </Button>
       </div>
     </form>

@@ -6,7 +6,7 @@ import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { getViewer } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/env";
-import { DRY_RUN, integrationEnvStatus } from "@/lib/integrations";
+import { instagram, integrationEnvStatus, isMessagingLive, whatsapp } from "@/lib/integrations";
 import { CURRENCY } from "@/lib/utils";
 import { Database, Megaphone, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
@@ -20,10 +20,12 @@ export default async function SettingsPage() {
   const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "";
   const siteUrl = `${headerList.get("x-forwarded-proto") ?? "https"}://${host}`;
   const env = integrationEnvStatus();
+  const live = isMessagingLive();
+  const liveChannels = [whatsapp.isLive() && "WhatsApp", instagram.isLive() && "Instagram"].filter(Boolean).join(" + ");
 
   const integrations = [
-    { name: "WhatsApp Business", href: "/whatsapp", icon: WhatsAppIcon, ready: env.whatsapp, scope: "Messaging (dry-run)" },
-    { name: "Instagram", href: "/instagram", icon: InstagramIcon, ready: env.instagram, scope: "DMs (dry-run)" },
+    { name: "WhatsApp Business", href: "/whatsapp", icon: WhatsAppIcon, ready: env.whatsapp, scope: whatsapp.isLive() ? "Messaging (live)" : "Messaging (dry-run)" },
+    { name: "Instagram", href: "/instagram", icon: InstagramIcon, ready: env.instagram, scope: instagram.isLive() ? "DMs (live)" : "DMs (dry-run)" },
     { name: "Meta Ads", href: "/ads", icon: Megaphone, ready: env.meta_ads, scope: "Insights (read-only)" },
   ];
 
@@ -61,7 +63,8 @@ export default async function SettingsPage() {
         <Card>
           <CardHeader title="Safety" />
           <CardBody className="space-y-3 text-sm">
-            <Row label="Outbound messaging" value={<Badge variant={DRY_RUN ? "success" : "danger"}>{DRY_RUN ? "Dry-run (nothing sent)" : "Live"}</Badge>} />
+            <Row label="Outbound messaging" value={<Badge variant={liveChannels ? "warning" : "success"}>{liveChannels ? `Live: ${liveChannels}` : live ? "Live, but no credentials" : "Dry-run (nothing sent)"}</Badge>} />
+            <Row label="Meta webhook" value={<Badge variant={env.webhook ? "success" : "neutral"}>{env.webhook ? "Configured" : "Not configured"}</Badge>} />
             <Row label="Ad management" value={<Badge variant="success">Read-only</Badge>} />
             <Row label="Credential storage" value={<span className="text-muted">Env vars / Supabase Vault</span>} />
             <p className="flex items-start gap-2 pt-1 text-xs leading-relaxed text-subtle">
@@ -96,7 +99,7 @@ export default async function SettingsPage() {
       )}
 
       <Card>
-        <CardHeader title="Integrations" description="Placeholders — each shows whether server credentials are present" />
+        <CardHeader title="Integrations" description="Each shows whether server credentials are present" />
         <ul className="grid grid-cols-1 gap-3 p-5 md:grid-cols-3">
           {integrations.map(({ name, href, icon: Icon, ready, scope }) => (
             <li key={name} className="rounded-xl border border-line bg-surface-2/60 p-4">
