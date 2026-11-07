@@ -15,8 +15,9 @@ import type { z } from "zod/v4";
 export const AI_MODEL = process.env.ANTHROPIC_MODEL || "claude-opus-5-5";
 const EFFORT = (process.env.ANTHROPIC_EFFORT || "low") as "low" | "medium" | "high" | "xhigh" | "max";
 
+/** AI is on when a key is set, unless AI_ENABLED=false (e.g. no API credit yet): agents then use their rule-based fallbacks. */
 export function isAiConfigured() {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return Boolean(process.env.ANTHROPIC_API_KEY) && process.env.AI_ENABLED !== "false";
 }
 
 let client: Anthropic | null = null;
