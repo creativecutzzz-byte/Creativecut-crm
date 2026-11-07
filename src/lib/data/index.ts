@@ -12,6 +12,7 @@ import type {
   Integration,
   Lead,
   MemberRole,
+  Message,
   MessageTemplate,
   Task,
   TeamMember,
@@ -172,6 +173,14 @@ export const getTeam = cache(async (): Promise<TeamMember[]> => {
 export const getTemplates = cache(async (): Promise<MessageTemplate[]> => {
   if (!isSupabaseConfigured) return demo.demoTemplates;
   return liveQuery<MessageTemplate>("message_templates", (q) => q.select("*").order("name"));
+});
+
+/** Latest WhatsApp / Instagram messages (both directions). Empty in demo mode. */
+export const getMessages = cache(async (channel: "whatsapp" | "instagram", limit = 25): Promise<Message[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<Message>("messages", (q) =>
+    q.select("id, channel, direction, status, lead_id, to_address, body, error, created_at").eq("channel", channel).order("created_at", { ascending: false }).limit(limit),
+  );
 });
 
 export const getWorkflows = cache(async (): Promise<Workflow[]> => {

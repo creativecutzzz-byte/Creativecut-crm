@@ -4,7 +4,7 @@
 
 A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4** and **Supabase**.
 
-> **Safe by design:** WhatsApp and Instagram integrations are dry-run placeholders (nothing is ever sent), and Meta Ads is read-only analytics (nothing can be created or launched). No credentials are hardcoded.
+> **Safe by default:** WhatsApp and Instagram send real messages only when `MESSAGING_MODE=live` and their credentials are set (setup: [`docs/meta-setup.md`](docs/meta-setup.md)); otherwise sends are previewed. Meta Ads is read-only analytics. No credentials are hardcoded.
 
 ## Features
 
@@ -16,8 +16,8 @@ A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 
 | Tasks | `/tasks` | My / everyone's tasks, overdue & upcoming, create (linked to a lead or client), complete, delete. Sequence steps show the ready-to-send message with a copy button. |
 | Sales automation | lead page, `/settings` | Outreach sequences (cold, inbound, proposal, no-show, re-engage) as dated tasks with messages filled in; proposal follow-ups start automatically; onboarding checklist on conversion; monthly report tasks; CSV import; website lead capture (`/api/lead-capture`); conversion funnel on the dashboard |
 | Search | `/search` | Leads and clients by name, company, email, phone or Instagram handle |
-| WhatsApp Business | `/whatsapp` | Template composer with **simulated** send, connection checklist, create / delete templates |
-| Instagram | `/instagram` | DM reply composer (**simulated**), Instagram-sourced leads, quick replies |
+| WhatsApp Business | `/whatsapp` | Send text or approved templates (Cloud API), inbound messages via webhook, delivery receipts, templates |
+| Instagram | `/instagram` | Reply to DMs, inbound DMs become leads via webhook, quick replies |
 | Meta Ads analytics | `/ads` | Spend, ROAS, CPL, CTR, daily chart, per-campaign table (read-only) |
 | Follow-up workflows | `/workflows` | Trigger → step sequences, activate/pause, dry-run test run against a real lead |
 | Team management | `/team` | Members, roles, workload, invitations, change role / remove member, permission matrix |
@@ -97,7 +97,7 @@ Lead scoring (`src/lib/ai/lead-scoring.ts`) and dashboard insights (`src/lib/ai/
 
 - Only `NEXT_PUBLIC_SUPABASE_*` (public, RLS-protected) ever reach the browser.
 - Integration tokens belong in server env vars or Supabase Vault; the UI only shows whether they're *present*.
-- `.env*.local` is git-ignored. Dry-run is a code constant (`src/lib/integrations/safety.ts`), not a toggle.
+- `.env*.local` is git-ignored. Messages are only sent when `MESSAGING_MODE=live` (see `src/lib/integrations/README.md`).
 
 ## Scripts
 

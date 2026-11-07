@@ -39,6 +39,8 @@ export interface Lead {
   phone: string | null;
   whatsapp_number: string | null;
   instagram_handle: string | null;
+  /** Instagram-scoped user id, set when they DM the account. Required to reply. */
+  instagram_user_id?: string | null;
   source: LeadSource;
   stage: LeadStage;
   estimated_value: number;
@@ -158,4 +160,16 @@ export interface AdInsightDay {
   leads: number;
   conversions: number;
   revenue: number;
+}
+
+export interface Message {
+  id: string;
+  channel: Channel;
+  direction: "inbound" | "outbound";
+  status: "draft" | "queued" | "simulated" | "sent" | "delivered" | "read" | "failed";
+  lead_id: string | null;
+  to_address: string | null;
+  body: string;
+  error: string | null;
+  created_at: string;
 }

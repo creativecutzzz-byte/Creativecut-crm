@@ -1,31 +1,28 @@
 import "server-only";
 
 /**
- * Hard safety switch for every outbound integration.
+ * Master switch for outbound messaging.
  *
- * This build of the CRM is intentionally incapable of sending real messages or
- * launching ads. There is no environment variable that turns this off — going
- * live must be a deliberate code change, reviewed, with provider credentials
- * stored in Supabase Vault or server env vars (never in the database or repo).
+ * Messages reach WhatsApp / Instagram only when MESSAGING_MODE is exactly
+ * "live" *and* the provider's credentials are set. Anything else — unset, a
+ * typo, "test" — keeps the CRM in dry-run mode, where sends are previewed and
+ * nothing leaves the system. Set MESSAGING_MODE back to "dry-run" (or remove
+ * it) to stop all outbound messages immediately.
  */
-export const DRY_RUN = true as const;
-
-export interface SimulatedResult {
-  status: "simulated";
-  provider: string;
-  preview: string;
-  reason: string;
-  simulated_at: string;
+export function isMessagingLive() {
+  return process.env.MESSAGING_MODE === "live";
 }
 
-export function simulated(provider: string, preview: string): SimulatedResult {
-  return {
-    status: "simulated",
-    provider,
-    preview,
-    reason: "Dry-run mode: nothing was sent to the provider.",
-    simulated_at: new Date().toISOString(),
-  };
+export interface SendResult {
+  status: "simulated" | "sent";
+  provider: string;
+  preview: string;
+  externalId: string | null;
+  at: string;
+}
+
+export function simulated(provider: string, preview: string): SendResult {
+  return { status: "simulated", provider, preview, externalId: null, at: new Date().toISOString() };
 }
 
 /** Whether the env holds credentials for a provider. Values are never returned or logged. */
