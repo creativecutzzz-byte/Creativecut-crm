@@ -286,6 +286,75 @@ export const getLeadMeetings = cache(async (leadId: string): Promise<Meeting[]> 
   return liveQuery<Meeting>("meetings", (q) => q.select("id, lead_id, title, starts_at, ends_at, meet_url, source, status").eq("lead_id", leadId).order("starts_at", { ascending: false }).limit(10));
 });
 
+export interface Checkin {
+  id: string;
+  user_id: string;
+  day: string;
+  doing: string | null;
+  done: string | null;
+  stuck: string | null;
+  updated_at: string;
+}
+
+/** Today's date in India, YYYY-MM-DD. */
+export function istToday(now = Date.now()) {
+  return new Date(now + 5.5 * 3_600_000).toISOString().slice(0, 10);
+}
+
+/** Everyone's check-ins for a day (default today, IST). Empty in demo mode. */
+export const getCheckins = cache(async (day?: string): Promise<Checkin[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<Checkin>("checkins", (q) => q.select("id, user_id, day, doing, done, stuck, updated_at").eq("day", day ?? istToday()));
+});
+
+export interface TodayCounts {
+  myTasksDue: number;
+  approvals: number;
+}
+
+/** Small counters for the sidebar badges. */
+export const getTodayCounts = cache(async (): Promise<TodayCounts> => {
+  if (!isSupabaseConfigured) return { myTasksDue: 0, approvals: 0 };
+  const viewer = await getViewer();
+  if (!viewer.orgId || !viewer.userId) return { myTasksDue: 0, approvals: 0 };
+  const supabase = await createClient();
+  const endOfDay = new Date(Date.parse(`${istToday()}T23:59:59+05:30`)).toISOString();
+  const [tasks, drafts] = await Promise.all([
+    supabase.from("tasks").select("id", { count: "exact", head: true }).eq("assignee_id", viewer.userId).eq("status", "open").lte("due_at", endOfDay),
+    supabase.from("outreach_drafts").select("id", { count: "exact", head: true }).eq("status", "pending"),
+  ]);
+  return { myTasksDue: tasks.count ?? 0, approvals: drafts.count ?? 0 };
+});
+
+/** Meetings scheduled for today (IST), soonest first. */
+export const getTodayMeetings = cache(async (): Promise<Meeting[]> => {
+  if (!isSupabaseConfigured) return [];
+  const day = istToday();
+  return liveQuery<Meeting>("meetings", (q) =>
+    q
+      .select("id, lead_id, title, starts_at, ends_at, meet_url, source, status")
+      .eq("status", "scheduled")
+      .gte("starts_at", new Date(Date.parse(`${day}T00:00:00+05:30`)).toISOString())
+      .lte("starts_at", new Date(Date.parse(`${day}T23:59:59+05:30`)).toISOString())
+      .order("starts_at"),
+  );
+});
+
+/** Inbound messages from the last `hours` hours, newest first. */
+export const getRecentReplies = cache(async (hours = 48): Promise<(Message & { classification: { intent?: string; summary?: string } | null })[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery(
+    "messages",
+    (q) =>
+      q
+        .select("id, channel, direction, status, lead_id, to_address, body, error, created_at, classification")
+        .eq("direction", "inbound")
+        .gte("created_at", new Date(Date.now() - hours * 3_600_000).toISOString())
+        .order("created_at", { ascending: false })
+        .limit(20),
+  );
+});
+
 /** Autopilot drafts for one lead (lead page). */
 export const getLeadOutreach = cache(async (leadId: string): Promise<OutreachDraft[]> => {
   if (!isSupabaseConfigured) return [];

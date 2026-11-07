@@ -29,7 +29,7 @@ export async function updateSession(request: NextRequest) {
 
   if (data?.claims && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/today";
     url.search = "";
     return NextResponse.redirect(url);
   }

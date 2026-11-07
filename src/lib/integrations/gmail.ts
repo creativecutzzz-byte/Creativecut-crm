@@ -1,5 +1,6 @@
 import "server-only";
 
+import { appsScript, hasAppsScript } from "./apps-script";
 import { b64url, googleAccessToken, hasGoogleAccess, hasOAuthAccount, oauthEmail } from "./google";
 import { hasCredentials, isMessagingLive } from "./safety";
 
@@ -18,7 +19,7 @@ export const gmail = {
   envKeys: KEYS,
 
   isConfigured() {
-    return hasGoogleAccess() && Boolean(this.sender());
+    return (hasGoogleAccess() && Boolean(this.sender())) || hasAppsScript();
   },
 
   /** Reading replies needs the Workspace service account (gmail.modify); a connected @gmail.com only sends. */
@@ -39,6 +40,11 @@ export const gmail = {
   },
 
   async send(input: SendInput): Promise<{ id: string; threadId: string; messageId: string | null }> {
+    // Free Apps Script route: plain text, no threading (replies can't be matched to the thread).
+    if (!hasGoogleAccess() && hasAppsScript()) {
+      await appsScript("sendEmail", { to: input.to, subject: input.subject, text: input.text, name: this.senderName() || undefined });
+      return { id: "", threadId: "", messageId: null };
+    }
     const raw = buildMime(input, this.sender(), this.senderName());
     const sent = await api<{ id: string; threadId: string }>("messages/send", { method: "POST", body: { raw, ...(input.threadId ? { threadId: input.threadId } : {}) } });
     const meta = await api<GmailMessage>(`messages/${sent.id}?format=metadata&metadataHeaders=Message-ID`).catch(() => null);

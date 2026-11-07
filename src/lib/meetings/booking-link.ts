@@ -31,7 +31,8 @@ export function personalBookingUrl(leadId: string) {
   const site = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   const serviceAccount = Boolean(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_SERVICE_ACCOUNT_KEY && (process.env.GOOGLE_CALENDAR_USER || process.env.GMAIL_SENDER));
   const connectedAccount = Boolean(process.env.GOOGLE_OAUTH_CLIENT_ID && process.env.GOOGLE_OAUTH_CLIENT_SECRET && process.env.GOOGLE_OAUTH_REFRESH_TOKEN);
-  const calendarReady = serviceAccount || connectedAccount;
+  const appsScript = Boolean(process.env.GOOGLE_SCRIPT_URL && process.env.GOOGLE_SCRIPT_SECRET);
+  const calendarReady = serviceAccount || connectedAccount || appsScript;
   if (!site || !secret() || !calendarReady) return null;
   return `${site}/book?t=${bookingToken(leadId)}`;
 }

@@ -20,11 +20,11 @@ const credentials = z.object({
 
 function safeNext(next: string | undefined) {
   // Only allow same-site relative redirects.
-  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/today";
 }
 
 export async function signIn(_: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isSupabaseConfigured) redirect("/dashboard");
+  if (!isSupabaseConfigured) redirect("/today");
 
   const parsed = credentials.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
@@ -37,7 +37,7 @@ export async function signIn(_: AuthState, formData: FormData): Promise<AuthStat
 }
 
 export async function sendMagicLink(_: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isSupabaseConfigured) redirect("/dashboard");
+  if (!isSupabaseConfigured) redirect("/today");
 
   const email = z.email().safeParse(formData.get("email"));
   if (!email.success) return { error: "Enter a valid email" };
@@ -59,7 +59,7 @@ const signUpSchema = z.object({
 });
 
 export async function signUp(_: AuthState, formData: FormData): Promise<AuthState> {
-  if (!isSupabaseConfigured) redirect("/dashboard");
+  if (!isSupabaseConfigured) redirect("/today");
 
   const parsed = signUpSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
@@ -75,7 +75,7 @@ export async function signUp(_: AuthState, formData: FormData): Promise<AuthStat
 
   // With email confirmation on, there's no session until the link is clicked.
   if (!data.session) return { message: "Check your inbox to confirm your email, then sign in." };
-  redirect("/dashboard");
+  redirect("/today");
 }
 
 const workspaceSchema = z.object({ name: z.string().trim().min(2, "Name your workspace").max(80) });
@@ -92,7 +92,7 @@ export async function createWorkspace(_: AuthState, formData: FormData): Promise
   if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect("/today");
 }
 
 export async function signOut() {

@@ -1,8 +1,9 @@
 import { signOut } from "@/app/actions/auth";
+import { MobileTabs } from "@/components/layout/mobile-tabs";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { CreateWorkspaceForm } from "@/components/layout/create-workspace-form";
-import { getRequestTime, getTasks, getViewer } from "@/lib/data";
+import { getRequestTime, getTasks, getTodayCounts, getViewer } from "@/lib/data";
 import { instagram, whatsapp } from "@/lib/integrations";
 import { redirect } from "next/navigation";
 
@@ -15,10 +16,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     : 0;
 
   const messagingLive = whatsapp.isLive() || instagram.isLive();
+  const counts = viewer.orgId ? await getTodayCounts() : { myTasksDue: 0, approvals: 0 };
+  // Only people who can approve see the approvals badge.
+  const badges = { myTasksDue: counts.myTasksDue, approvals: ["owner", "admin", "manager"].includes(viewer.role) ? counts.approvals : 0 };
 
   return (
     <div className="min-h-dvh">
-      <Sidebar orgName={viewer.orgName} messagingLive={messagingLive} />
+      <Sidebar orgName={viewer.orgName} role={viewer.role} counts={badges} messagingLive={messagingLive} />
       <div className="lg:pl-64">
         <Topbar
           orgName={viewer.orgName}
@@ -28,11 +32,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           signOut={viewer.mode === "live" ? signOut : undefined}
           openTasks={dueTasks}
           messagingLive={messagingLive}
+          role={viewer.role}
+          counts={badges}
         />
-        <main className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main className="mx-auto w-full max-w-[1400px] px-4 pt-6 pb-24 sm:px-6 lg:px-8 lg:py-8">
           {viewer.mode === "live" && !viewer.orgId ? <NoOrganization /> : children}
         </main>
       </div>
+      {viewer.orgId && <MobileTabs role={viewer.role} counts={badges} />}
     </div>
   );
 }

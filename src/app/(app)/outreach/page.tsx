@@ -1,3 +1,4 @@
+import { AutoRefresh } from "@/components/live/auto-refresh";
 import { DraftCard } from "@/components/outreach/draft-card";
 import { PerformanceCard } from "@/components/outreach/performance-card";
 import { outreachPerformance } from "@/lib/outreach/performance";
@@ -34,6 +35,7 @@ export default async function OutreachPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="space-y-6">
+      <AutoRefresh seconds={90} />
       <PageHeader
         title="Outreach"
         description="AI-written messages wait here for your approval. Approved emails go out from your Google Workspace mailbox inside sending hours."
