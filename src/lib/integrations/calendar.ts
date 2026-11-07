@@ -1,9 +1,9 @@
 import "server-only";
 
-import { googleAccessToken, hasServiceAccount } from "./google";
+import { googleAccessToken, hasGoogleAccess, hasOAuthAccount, oauthEmail } from "./google";
 
-// Google Calendar for the meeting calendar (GOOGLE_CALENDAR_USER, e.g.
-// hello@creativecut.in) through the same Workspace service account.
+// Google Calendar for the meeting calendar: the connected Google account, or
+// GOOGLE_CALENDAR_USER through the Workspace service account.
 // Scope: https://www.googleapis.com/auth/calendar (events + free/busy).
 
 const SCOPE = "https://www.googleapis.com/auth/calendar";
@@ -22,7 +22,7 @@ export interface CalendarEvent {
 
 export const calendar = {
   isConfigured() {
-    return hasServiceAccount() && Boolean(calendarUser());
+    return hasGoogleAccess() && Boolean(calendarUser());
   },
 
   user() {
@@ -72,6 +72,7 @@ export const calendar = {
 };
 
 function calendarUser() {
+  if (hasOAuthAccount()) return oauthEmail() || process.env.GOOGLE_CALENDAR_USER || "";
   return process.env.GOOGLE_CALENDAR_USER || process.env.GMAIL_SENDER || "";
 }
 

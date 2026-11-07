@@ -19,7 +19,7 @@ export const meetingTrackerAgent = defineAgent<MeetingSettings>({
   name: "Meeting Tracker & Booking",
   department: "sales_calling",
   description: "Runs the booking page on your Google Calendar and syncs every meeting with a lead: stage moves to Meeting booked, outreach stops, prep and outcome tasks appear.",
-  requires: ["GOOGLE_SERVICE_ACCOUNT_EMAIL", "GOOGLE_SERVICE_ACCOUNT_KEY", "GOOGLE_CALENDAR_USER"],
+  requires: [],
   needsAi: false,
   minIntervalHours: 0,
   configSchema: meetingSettingsSchema,
@@ -28,6 +28,7 @@ export const meetingTrackerAgent = defineAgent<MeetingSettings>({
     "Booking page: duration_minutes, start_hour/end_hour (IST), days (0=Sun…6=Sat), min_notice_hours, horizon_days, buffer_minutes around existing events, max_per_day slots offered, title ({{company}}, {{name}}). notify_email: who gets the \"meeting booked\" email.",
 
   async run(ctx, cfg) {
+    if (!calendar.isConfigured()) return { status: "skipped", summary: "Connect Google (Settings → Connect Google) or set up the Workspace service account first.", created: 0, updated: 0 };
     const now = new Date();
     const lastSync = typeof ctx.state.last_sync === "string" ? new Date(ctx.state.last_sync) : null;
     const events = await calendar.listEvents({

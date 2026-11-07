@@ -12,7 +12,7 @@ export const meetingSettingsSchema = bookingSettingsSchema.extend({
   notify_email: z.union([z.literal(""), z.email()]),
 });
 export type MeetingSettings = z.infer<typeof meetingSettingsSchema>;
-export const DEFAULT_MEETING_SETTINGS: MeetingSettings = { ...DEFAULT_BOOKING_SETTINGS, notify_email: "hello@creativecut.in" };
+export const DEFAULT_MEETING_SETTINGS: MeetingSettings = { ...DEFAULT_BOOKING_SETTINGS, notify_email: "creativecutzzz@gmail.com" };
 
 export async function loadMeetingSettings(supabase: SupabaseClient, orgId: string): Promise<MeetingSettings> {
   const { data } = await supabase.from("agents").select("config").eq("org_id", orgId).eq("key", "meeting_tracker").maybeSingle();

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { b64url, googleAccessToken } from "./google";
+import { b64url, googleAccessToken, hasGoogleAccess, hasOAuthAccount, oauthEmail } from "./google";
 import { hasCredentials, isMessagingLive } from "./safety";
 
 // Gmail through Google Workspace: a service account with domain-wide
@@ -18,6 +18,11 @@ export const gmail = {
   envKeys: KEYS,
 
   isConfigured() {
+    return hasGoogleAccess() && Boolean(this.sender());
+  },
+
+  /** Reading replies needs the Workspace service account (gmail.modify); a connected @gmail.com only sends. */
+  canRead() {
     return hasCredentials(...KEYS);
   },
 
@@ -26,7 +31,7 @@ export const gmail = {
   },
 
   sender() {
-    return process.env.GMAIL_SENDER ?? "";
+    return process.env.GMAIL_SENDER || (hasOAuthAccount() ? oauthEmail() : "");
   },
 
   senderName() {
