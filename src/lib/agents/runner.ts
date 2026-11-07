@@ -62,7 +62,7 @@ export async function runAgent(supabase: SupabaseClient, orgId: string, key: str
   if (missing.length > 0) {
     outcome = { key, status: "skipped", summary: `Missing server settings: ${missing.join(", ")}` };
   } else if (def.needsAi && !isAiConfigured()) {
-    outcome = { key, status: "skipped", summary: "Needs ANTHROPIC_API_KEY" };
+    outcome = { key, status: "skipped", summary: process.env.ANTHROPIC_API_KEY ? "AI is switched off (AI_ENABLED=false)" : "Needs ANTHROPIC_API_KEY" };
   } else {
     try {
       const result = await def.run({ supabase, orgId, ownerId: (owner?.user_id as string | undefined) ?? null, state }, config);
