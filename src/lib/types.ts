@@ -4,7 +4,7 @@
 export type MemberRole = "owner" | "admin" | "manager" | "member";
 export type MemberStatus = "active" | "invited" | "disabled";
 export type LeadStage = "new" | "contacted" | "qualified" | "proposal" | "negotiation" | "won" | "lost";
-export type LeadSource = "website" | "instagram" | "whatsapp" | "meta_ads" | "referral" | "other";
+export type LeadSource = "website" | "instagram" | "whatsapp" | "meta_ads" | "referral" | "apollo" | "google_maps" | "funding_news" | "other";
 export type ClientStatus = "onboarding" | "active" | "paused" | "churned";
 export type ActivityType =
   | "note" | "call" | "email" | "whatsapp" | "instagram" | "meeting" | "stage_change" | "task" | "system";
@@ -41,6 +41,9 @@ export interface Lead {
   instagram_handle: string | null;
   /** Instagram-scoped user id, set when they DM the account. Required to reply. */
   instagram_user_id?: string | null;
+  linkedin_url?: string | null;
+  external_ref?: string | null;
+  enriched_at?: string | null;
   source: LeadSource;
   stage: LeadStage;
   estimated_value: number;

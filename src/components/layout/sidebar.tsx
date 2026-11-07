@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_SECTIONS } from "./nav-items";
 
-export function SidebarContent({ orgName, onNavigate }: { orgName: string; onNavigate?: () => void }) {
+export function SidebarContent({ orgName, onNavigate, messagingLive = false }: { orgName: string; onNavigate?: () => void; messagingLive?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -51,17 +51,26 @@ export function SidebarContent({ orgName, onNavigate }: { orgName: string; onNav
       </nav>
 
       <div className="m-3 rounded-xl border border-line bg-surface-2/60 p-4">
-        <p className="text-xs font-medium text-fg">Safe mode is on</p>
-        <p className="mt-1 text-[11px] leading-relaxed text-muted">Messages and ads run as dry-runs. Nothing is sent or launched.</p>
+        {messagingLive ? (
+          <>
+            <p className="text-xs font-medium text-amber-300">Live messaging is on</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted">WhatsApp / Instagram sends are delivered. Ads stay read-only.</p>
+          </>
+        ) : (
+          <>
+            <p className="text-xs font-medium text-fg">Safe mode is on</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted">Messages and ads run as dry-runs. Nothing is sent or launched.</p>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
-export function Sidebar({ orgName }: { orgName: string }) {
+export function Sidebar({ orgName, messagingLive }: { orgName: string; messagingLive?: boolean }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-line bg-surface/80 backdrop-blur lg:block">
-      <SidebarContent orgName={orgName} />
+      <SidebarContent orgName={orgName} messagingLive={messagingLive} />
     </aside>
   );
 }

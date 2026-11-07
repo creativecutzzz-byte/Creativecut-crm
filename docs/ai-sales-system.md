@@ -101,11 +101,23 @@ Secret keys कभी चैट में न भेजें। उन्हे
 
 ## Build plan (phases)
 
-**Phase 1: Brain + Lead Generation** *(अभी शुरू)*
-- `agent_jobs` / `agent_runs` tables, cron endpoint, Claude client (dry-run fallback अगर key न हो)
-- Knowledge layer (playbook → DB)
-- Agents: Funding-news finder → Apollo search → Website enrichment → Claude qualification + personalization → lead CRM में
-- "Agents" पेज: हर agent on/off, आख़िरी run, नतीजे, errors
+**Phase 1: Brain + Lead Generation** ✅ *बन गया (CRM → AI Agents)*
+- `agents` / `agent_runs` tables, रोज़ सुबह 9:00 IST का cron (`vercel.json` → `/api/cron/agents`), और Claude client (`src/lib/ai/claude.ts`)
+- Knowledge layer: `src/lib/agents/knowledge.ts` (ICP और offer, playbook से)
+- Agents (`src/lib/agents/`):
+  - **Funding News**: Inc42 funding, Entrackr और YourStory के feeds पढ़ता है। Claude ICP fit जाँचता है और congrats line लिखता है। Key न हो तो keyword rules से काम करता है।
+  - **Google Maps**: Places API (New) से business खोजता है (default: Pune/Bengaluru के real-estate developers)।
+  - **Apollo**: (1) funded companies के founder का email ढूँढता है; (2) ICP filters से नए लोग लाता है। हर run में credits की सीमा तय है।
+  - **Enrichment & Qualification**: website पढ़कर Claude ये देता है: score, कारण, red flags, कौन-सी service बेचें, personal first line और अगला कदम। Score 70+ होने पर "Review & start outreach" task बनता है।
+- "AI Agents" पेज पर हर agent के लिए on/off, Run now, settings (JSON) और run log है।
+- Duplicate नहीं बनते (`external_ref` और company नाम से जाँच होती है)।
+
+### Phase 1 चालू करना
+1. Migrations लगाएँ: `supabase db push`
+2. Vercel env में डालें: `ANTHROPIC_API_KEY`, `APOLLO_API_KEY`, `GOOGLE_MAPS_API_KEY`, `CRON_SECRET` (कोई भी रैंडम स्ट्रिंग), `SUPABASE_SERVICE_ROLE_KEY` → Redeploy
+3. CRM → **AI Agents** → हर agent पर **Run now** दबाकर एक बार टेस्ट करें, फिर switch **On** करें
+4. Apollo credits पर नज़र रखें: `max_credits_per_run` से सीमा तय करें।
+5. Claude का ख़र्च कम करना हो तो `ANTHROPIC_MODEL=claude-haiku-5-5` रखें।
 
 **Phase 2: Outreach autopilot**
 - Approval queue (Review → Approve/Edit/Reject)

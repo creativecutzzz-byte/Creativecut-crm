@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { CreateWorkspaceForm } from "@/components/layout/create-workspace-form";
 import { getRequestTime, getTasks, getViewer } from "@/lib/data";
+import { instagram, whatsapp } from "@/lib/integrations";
 import { redirect } from "next/navigation";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -13,9 +14,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     ? (await getTasks()).filter((t) => t.status === "open" && t.assignee_id === viewer.userId && t.due_at && new Date(t.due_at).getTime() <= now).length
     : 0;
 
+  const messagingLive = whatsapp.isLive() || instagram.isLive();
+
   return (
     <div className="min-h-dvh">
-      <Sidebar orgName={viewer.orgName} />
+      <Sidebar orgName={viewer.orgName} messagingLive={messagingLive} />
       <div className="lg:pl-64">
         <Topbar
           orgName={viewer.orgName}
@@ -24,6 +27,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           mode={viewer.mode}
           signOut={viewer.mode === "live" ? signOut : undefined}
           openTasks={dueTasks}
+          messagingLive={messagingLive}
         />
         <main className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           {viewer.mode === "live" && !viewer.orgId ? <NoOrganization /> : children}

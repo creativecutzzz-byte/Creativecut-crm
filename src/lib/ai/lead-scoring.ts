@@ -10,6 +10,9 @@ const SOURCE_WEIGHT: Record<LeadSource, number> = {
   instagram: 12,
   whatsapp: 14,
   website: 10,
+  funding_news: 12,
+  apollo: 8,
+  google_maps: 6,
   other: 5,
 };
 

@@ -14,6 +14,7 @@ export function Topbar({
   mode,
   signOut,
   openTasks = 0,
+  messagingLive = false,
 }: {
   orgName: string;
   userName: string;
@@ -22,6 +23,7 @@ export function Topbar({
   signOut?: () => Promise<void>;
   /** Open tasks due now or earlier for the viewer; lights the bell. */
   openTasks?: number;
+  messagingLive?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -80,7 +82,7 @@ export function Topbar({
             <button onClick={() => setOpen(false)} className="absolute top-4 right-3 grid size-8 place-items-center rounded-lg text-muted hover:bg-white/5" aria-label="Close navigation">
               <X className="size-4" />
             </button>
-            <SidebarContent orgName={orgName} onNavigate={() => setOpen(false)} />
+            <SidebarContent orgName={orgName} onNavigate={() => setOpen(false)} messagingLive={messagingLive} />
           </div>
         </div>
       )}

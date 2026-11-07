@@ -175,6 +175,37 @@ export const getTemplates = cache(async (): Promise<MessageTemplate[]> => {
   return liveQuery<MessageTemplate>("message_templates", (q) => q.select("*").order("name"));
 });
 
+export interface AgentRow {
+  key: string;
+  enabled: boolean;
+  config: Record<string, unknown>;
+  last_run_at: string | null;
+  last_status: string | null;
+  last_summary: string | null;
+}
+
+export interface AgentRun {
+  id: string;
+  agent_key: string;
+  trigger: "cron" | "manual";
+  status: "running" | "success" | "skipped" | "error";
+  summary: string | null;
+  items_created: number;
+  items_updated: number;
+  started_at: string;
+  finished_at: string | null;
+}
+
+/** Saved agent switches/settings and recent runs. Empty in demo mode. */
+export const getAgentData = cache(async (): Promise<{ rows: AgentRow[]; runs: AgentRun[] }> => {
+  if (!isSupabaseConfigured) return { rows: [], runs: [] };
+  const [rows, runs] = await Promise.all([
+    liveQuery<AgentRow>("agents", (q) => q.select("key, enabled, config, last_run_at, last_status, last_summary")),
+    liveQuery<AgentRun>("agent_runs", (q) => q.select("id, agent_key, trigger, status, summary, items_created, items_updated, started_at, finished_at").order("started_at", { ascending: false }).limit(30)),
+  ]);
+  return { rows, runs };
+});
+
 /** Latest WhatsApp / Instagram messages (both directions). Empty in demo mode. */
 export const getMessages = cache(async (channel: "whatsapp" | "instagram", limit = 25): Promise<Message[]> => {
   if (!isSupabaseConfigured) return [];

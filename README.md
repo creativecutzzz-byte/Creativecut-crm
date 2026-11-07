@@ -19,6 +19,7 @@ A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 
 | WhatsApp Business | `/whatsapp` | Send text or approved templates (Cloud API), inbound messages via webhook, delivery receipts, templates |
 | Instagram | `/instagram` | Reply to DMs, inbound DMs become leads via webhook, quick replies |
 | Meta Ads analytics | `/ads` | Spend, ROAS, CPL, CTR, daily chart, per-campaign table (read-only) |
+| AI agents | `/agents` | Daily lead-generation agents: funding news, Google Maps, Apollo, website enrichment + Claude qualification (see `docs/ai-sales-system.md`) |
 | Follow-up workflows | `/workflows` | Trigger → step sequences, activate/pause, dry-run test run against a real lead |
 | Team management | `/team` | Members, roles, workload, invitations, change role / remove member, permission matrix |
 | Settings | `/settings` | Rename workspace, your name, safety status, integration credential status |

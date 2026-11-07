@@ -18,6 +18,9 @@ export const LEAD_SOURCES: Record<LeadSource, string> = {
   whatsapp: "WhatsApp",
   meta_ads: "Meta Ads",
   referral: "Referral",
+  apollo: "Apollo",
+  google_maps: "Google Maps",
+  funding_news: "Funding news",
   other: "Other",
 };
 
