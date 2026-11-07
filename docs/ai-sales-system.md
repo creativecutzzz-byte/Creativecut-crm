@@ -35,7 +35,7 @@
 | Agent | कैसे बनेगा | स्थिति |
 | --- | --- | --- |
 | Sequence Manager | 5 sequences (cold, inbound, proposal, no-show, re-engage) पहले से हैं, पर अभी सिर्फ़ tasks बनाते हैं। इन्हें cron से **अपने-आप भेजने वाला** बनाना है। | 🟡 |
-| Email Outreach Agent | Gmail API या Resend/Instantly, एक **अलग sending domain** से (जैसे `creativecut.co`), ताकि मुख्य domain spam में न जाए | 🔨 🔑 domain + email provider |
+| Email Outreach Agent | Google Workspace (Gmail API), **अलग sending domain** से | ✅ |
 | WhatsApp Outreach | ✅ जुड़ गया। ⚠️ Cold लोगों को सिर्फ़ approved template जाएगा, और सिर्फ़ opt-in वालों को | ✅ |
 | Instagram DM | ✅ सिर्फ़ जवाब (Meta नियम) | ✅ |
 | LinkedIn Outreach | ⚠️ ऊपर देखें: आपके लिए task + AI-लिखा मैसेज, आप copy-paste करें | 🟡 |
@@ -119,11 +119,14 @@ Secret keys कभी चैट में न भेजें। उन्हे
 4. Apollo credits पर नज़र रखें: `max_credits_per_run` से सीमा तय करें।
 5. Claude का ख़र्च कम करना हो तो `ANTHROPIC_MODEL=claude-haiku-5-5` रखें।
 
-**Phase 2: Outreach autopilot**
-- Approval queue (Review → Approve/Edit/Reject)
-- Sequences का auto-send (email + WhatsApp template), daily limits, quiet hours
-- Reply handler (AI classification → stage/sequence/alert)
-- Unsubscribe handling
+**Phase 2: Outreach autopilot** ✅ *बन गया (CRM → Outreach, AI Agents → 02 Outreach)*
+- **Outreach Writer**: qualified leads को autopilot पर डालता है। Claude हर sequence step (Email, LinkedIn note, WhatsApp template) personalise करता है।
+- **Approval queue** (`/outreach`): हर message पर Approve & send / Edit / Skip / Stop autopilot। LinkedIn steps के लिए Copy और "I did this"।
+- **Outreach Sender**: Google Workspace mailbox से भेजता है। Follow-ups उसी thread में जाते हैं। Sending hours (IST), daily cap और unsubscribe footer लागू होते हैं, और `List-Unsubscribe` one-click भी है।
+- **Reply Handler**: Gmail के जवाब, WhatsApp और Instagram पढ़ता है, फिर intent पहचानकर stage, sequence, task और alert सँभालता है, और जवाब का draft भी लिखता है।
+- **Suppression list**: unsubscribe हुए लोगों को फिर कभी contact या import नहीं किया जाता।
+- Lead पेज पर **Start / Stop autopilot** है।
+- Setup: [`docs/google-workspace-setup.md`](google-workspace-setup.md)
 
 **Phase 3: CRM Ops + Reporting**
 - Meeting booking → stage auto-move; proposal follow-ups

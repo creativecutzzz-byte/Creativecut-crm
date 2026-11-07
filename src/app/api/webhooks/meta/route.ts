@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
   }
 
   const ingest = async (args: { channel: "whatsapp" | "instagram"; from: string; name?: string; handle?: string; body: string; externalId?: string }) => {
-    const { error } = await supabase.rpc("ingest_inbound_message", {
+    const { data: leadId, error } = await supabase.rpc("ingest_inbound_message", {
       p_org_slug: workspace,
       p_channel: args.channel,
       p_from: args.from,
@@ -52,7 +52,15 @@ export async function POST(request: NextRequest) {
       p_body: args.body,
       p_external_id: args.externalId ?? null,
     });
-    if (error) console.error(`[meta webhook] ingest failed: ${error.message}`);
+    if (error) {
+      console.error(`[meta webhook] ingest failed: ${error.message}`);
+      return;
+    }
+    if (leadId) {
+      // They replied: stop any queued autopilot steps right away.
+      await supabase.from("outreach_drafts").update({ status: "cancelled", error: "They replied" }).eq("lead_id", leadId).eq("kind", "sequence").in("status", ["pending", "approved"]);
+      await supabase.from("leads").update({ outreach_status: "replied" }).eq("id", leadId).eq("outreach_status", "active");
+    }
   };
 
   try {

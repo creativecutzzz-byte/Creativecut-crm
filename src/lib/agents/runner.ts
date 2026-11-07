@@ -99,11 +99,16 @@ export async function runAgent(supabase: SupabaseClient, orgId: string, key: str
 
 /** Every enabled agent in every workspace, sources before enrichment. */
 export async function runScheduled(supabase: SupabaseClient) {
-  const { data: rows, error } = await supabase.from("agents").select("org_id, key").eq("enabled", true);
+  const { data: rows, error } = await supabase.from("agents").select("org_id, key, last_run_at").eq("enabled", true);
   if (error) throw new Error(error.message);
   const order = new Map(AGENTS.map((a, i) => [a.key, i]));
   const byOrg = new Map<string, string[]>();
-  for (const r of rows ?? []) byOrg.set(r.org_id as string, [...(byOrg.get(r.org_id as string) ?? []), r.key as string]);
+  const now = Date.now();
+  const due = (rows ?? []).filter((r) => {
+    const interval = getAgentDefinition(r.key as string)?.minIntervalHours ?? 20;
+    return !r.last_run_at || now - new Date(r.last_run_at as string).getTime() >= interval * 3_600_000 - 5 * 60_000;
+  });
+  for (const r of due) byOrg.set(r.org_id as string, [...(byOrg.get(r.org_id as string) ?? []), r.key as string]);
 
   const results: (RunOutcome & { orgId: string })[] = [];
   for (const [orgId, keys] of byOrg) {

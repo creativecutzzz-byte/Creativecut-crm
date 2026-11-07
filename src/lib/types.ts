@@ -44,6 +44,10 @@ export interface Lead {
   linkedin_url?: string | null;
   external_ref?: string | null;
   enriched_at?: string | null;
+  outreach_status?: "active" | "replied" | "paused" | "completed" | "stopped" | "unsubscribed" | null;
+  outreach_step?: number | null;
+  outreach_plan?: unknown[] | null;
+  email_status?: "ok" | "bounced" | null;
   source: LeadSource;
   stage: LeadStage;
   estimated_value: number;

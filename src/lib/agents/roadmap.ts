@@ -22,11 +22,10 @@ export const PLANNED_AGENTS: PlannedAgent[] = [
   { name: "Instagram & WhatsApp lead capture", department: "lead_generation", status: "built-in", note: "Inbound DMs and messages become leads via the Meta webhook." },
   { name: "Website form capture", department: "lead_generation", status: "built-in", note: "/api/lead-capture" },
 
-  { name: "Approval queue (human oversight)", department: "outreach", status: "phase-2", note: "Every AI-written message waits for Approve / Edit / Reject." },
-  { name: "Email outreach agent", department: "outreach", status: "phase-2", note: "Sends sequence emails from a separate outreach domain, with daily limits." },
-  { name: "WhatsApp template outreach", department: "outreach", status: "phase-2", note: "Approved templates to opted-in leads." },
-  { name: "LinkedIn assistant", department: "outreach", status: "phase-2", note: "Writes the connection note and DM; you send it (LinkedIn forbids automation)." },
-  { name: "Reply handler", department: "outreach", status: "phase-2", note: "Claude reads replies: interested / not now / unsubscribe → stage, sequence and alert." },
+  { name: "Approval queue (human oversight)", department: "outreach", status: "built-in", note: "Outreach page: every AI-written message waits for Approve / Edit / Skip." },
+  { name: "Email via Google Workspace", department: "outreach", status: "built-in", note: "Outreach Sender: threaded follow-ups, sending hours, daily cap, unsubscribe link." },
+  { name: "WhatsApp template touch", department: "outreach", status: "built-in", note: "Outreach Writer adds it for leads with marketing consent." },
+  { name: "LinkedIn assistant", department: "outreach", status: "built-in", note: "Writes the connection note and DM; you send it (LinkedIn forbids automation)." },
   { name: "A/B testing & deliverability", department: "outreach", status: "phase-3", note: "Compare openings and subjects; watch bounces." },
 
   { name: "Call list & script agent", department: "sales_calling", status: "phase-3", note: "Daily call list with talking points from playbook/06." },

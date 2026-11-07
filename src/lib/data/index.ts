@@ -206,6 +206,77 @@ export const getAgentData = cache(async (): Promise<{ rows: AgentRow[]; runs: Ag
   return { rows, runs };
 });
 
+export interface OutreachDraft {
+  id: string;
+  lead_id: string;
+  kind: "sequence" | "reply";
+  sequence: string | null;
+  step: number | null;
+  step_label: string | null;
+  channel: "email" | "whatsapp" | "instagram" | "linkedin";
+  to_address: string | null;
+  subject: string | null;
+  body: string;
+  template_name: string | null;
+  notes: string | null;
+  status: "pending" | "approved" | "sent" | "failed" | "rejected" | "cancelled";
+  scheduled_for: string | null;
+  sent_at: string | null;
+  error: string | null;
+  created_at: string;
+  lead: { id: string; name: string; company: string | null; ai_score: number | null; linkedin_url: string | null; outreach_status: string | null } | null;
+}
+
+export type OutreachView = "pending" | "scheduled" | "sent" | "closed";
+
+const VIEW_STATUSES: Record<OutreachView, OutreachDraft["status"][]> = {
+  pending: ["pending", "failed"],
+  scheduled: ["approved"],
+  sent: ["sent"],
+  closed: ["rejected", "cancelled"],
+};
+
+/** Approval queue drafts for one view, plus counts for every view. Empty in demo mode. */
+export const getOutreachQueue = cache(async (view: OutreachView) => {
+  const empty = { drafts: [] as OutreachDraft[], counts: { pending: 0, scheduled: 0, sent: 0, closed: 0 } as Record<OutreachView, number>, sentToday: 0, activeLeads: 0 };
+  if (!isSupabaseConfigured) return empty;
+  const viewer = await getViewer();
+  if (!viewer.orgId) return empty;
+  const supabase = await createClient();
+  const count = (statuses: string[]) => supabase.from("outreach_drafts").select("id", { count: "exact", head: true }).in("status", statuses);
+  const istMidnight = new Date(Date.now() + 5.5 * 3_600_000);
+  istMidnight.setUTCHours(0, 0, 0, 0);
+  const [drafts, pending, scheduled, sent, closed, sentToday, active] = await Promise.all([
+    supabase
+      .from("outreach_drafts")
+      .select("id, lead_id, kind, sequence, step, step_label, channel, to_address, subject, body, template_name, notes, status, scheduled_for, sent_at, error, created_at, lead:leads(id, name, company, ai_score, linkedin_url, outreach_status)")
+      .in("status", VIEW_STATUSES[view])
+      .order(view === "sent" ? "sent_at" : "created_at", { ascending: view === "pending" || view === "scheduled" })
+      .limit(100),
+    count(VIEW_STATUSES.pending),
+    count(VIEW_STATUSES.scheduled),
+    count(VIEW_STATUSES.sent),
+    count(VIEW_STATUSES.closed),
+    supabase.from("messages").select("id", { count: "exact", head: true }).eq("channel", "email").eq("direction", "outbound").eq("status", "sent").gte("created_at", new Date(istMidnight.getTime() - 5.5 * 3_600_000).toISOString()),
+    supabase.from("leads").select("id", { count: "exact", head: true }).eq("outreach_status", "active"),
+  ]);
+  if (drafts.error) throw new Error(`Failed to load outreach queue: ${drafts.error.message}`);
+  return {
+    drafts: (drafts.data ?? []).map((d) => ({ ...d, lead: Array.isArray(d.lead) ? (d.lead[0] ?? null) : d.lead })) as OutreachDraft[],
+    counts: { pending: pending.count ?? 0, scheduled: scheduled.count ?? 0, sent: sent.count ?? 0, closed: closed.count ?? 0 },
+    sentToday: sentToday.count ?? 0,
+    activeLeads: active.count ?? 0,
+  };
+});
+
+/** Autopilot drafts for one lead (lead page). */
+export const getLeadOutreach = cache(async (leadId: string): Promise<OutreachDraft[]> => {
+  if (!isSupabaseConfigured) return [];
+  return liveQuery<OutreachDraft>("outreach_drafts", (q) =>
+    q.select("id, lead_id, kind, sequence, step, step_label, channel, to_address, subject, body, template_name, notes, status, scheduled_for, sent_at, error, created_at").eq("lead_id", leadId).order("created_at", { ascending: false }).limit(20),
+  );
+});
+
 /** Latest WhatsApp / Instagram messages (both directions). Empty in demo mode. */
 export const getMessages = cache(async (channel: "whatsapp" | "instagram", limit = 25): Promise<Message[]> => {
   if (!isSupabaseConfigured) return [];

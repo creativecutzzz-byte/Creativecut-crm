@@ -3,6 +3,7 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
 import { LeadActions } from "@/components/leads/lead-actions";
 import { SequenceControls } from "@/components/leads/sequence-controls";
+import { AutopilotControls } from "@/components/outreach/autopilot-card";
 import { StageForm } from "@/components/leads/stage-form";
 import { NewTaskButton } from "@/components/tasks/new-task-button";
 import { TaskList } from "@/components/tasks/task-list";
@@ -14,10 +15,10 @@ import { Progress } from "@/components/ui/progress";
 import { ScorePill } from "@/components/ui/score-pill";
 import { scoreLead } from "@/lib/ai/lead-scoring";
 import { LEAD_SOURCES } from "@/lib/constants";
-import { getLead, getRequestTime, getTasks, getTeam, getTimeline, getViewer } from "@/lib/data";
+import { getLead, getLeadOutreach, getRequestTime, getTasks, getTeam, getTimeline, getViewer } from "@/lib/data";
 import { formatCurrency, formatDate, formatRelative } from "@/lib/utils";
 import { memberByUserId } from "@/lib/team";
-import { ArrowLeft, Globe, Mail, Phone, Send, Sparkles, Target } from "lucide-react";
+import { ArrowLeft, Bot, Globe, Mail, Phone, Send, Sparkles, Target } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function LeadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [lead, timeline, team, tasks, viewer] = await Promise.all([getLead(id), getTimeline({ leadId: id }), getTeam(), getTasks(), getViewer()]);
+  const [lead, timeline, team, tasks, viewer, outreach] = await Promise.all([getLead(id), getTimeline({ leadId: id }), getTeam(), getTasks(), getViewer(), getLeadOutreach(id)]);
   if (!lead) notFound();
   const leadTasks = tasks.filter((t) => t.lead_id === lead.id);
   const activeSequence = leadTasks.find((t) => t.sequence && t.status === "open")?.sequence ?? null;
@@ -148,10 +149,45 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               <CardHeader
                 title={
                   <span className="flex items-center gap-2">
+                    <Bot className="size-4 text-accent-strong" /> Outreach autopilot
+                  </span>
+                }
+                description="AI writes each step, you approve it, the CRM sends it and stops when they reply"
+              />
+              <CardBody>
+                <AutopilotControls
+                  leadId={lead.id}
+                  status={lead.outreach_status ?? null}
+                  step={lead.outreach_step ?? null}
+                  steps={lead.outreach_plan?.length ?? 0}
+                  pending={outreach.filter((d) => d.status === "pending").length}
+                  closed={lead.stage === "won" || lead.stage === "lost"}
+                />
+                {outreach.length > 0 && (
+                  <ul className="mt-4 space-y-1.5 border-t border-line pt-3">
+                    {outreach.slice(0, 6).map((d) => (
+                      <li key={d.id} className="flex items-center justify-between gap-2 text-xs">
+                        <span className="truncate text-muted">
+                          {d.channel} · {d.step_label}
+                        </span>
+                        <Badge variant={d.status === "sent" ? "success" : d.status === "pending" ? "warning" : d.status === "failed" ? "danger" : "neutral"}>{d.status}</Badge>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </CardBody>
+            </Card>
+          )}
+
+          {viewer.mode === "live" && (
+            <Card>
+              <CardHeader
+                title={
+                  <span className="flex items-center gap-2">
                     <Send className="size-4 text-accent-strong" /> Outreach sequence
                   </span>
                 }
-                description="Creates a dated task per step with the message filled in"
+                description="Manual mode: creates a dated task per step with the message filled in"
               />
               <CardBody className="space-y-3">
                 {lead.personalization ? (

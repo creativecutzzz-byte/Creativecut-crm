@@ -28,6 +28,8 @@ export interface AgentDefinition<C = Record<string, unknown>> {
   /** Server env vars the agent can't run without. */
   requires: string[];
   needsAi: boolean;
+  /** Scheduled runs are skipped until this many hours have passed since the last run. Default 20 (daily). */
+  minIntervalHours?: number;
   configSchema: z.ZodType<C>;
   defaultConfig: C;
   /** Plain-language help for the settings, shown next to the editor. */

@@ -47,6 +47,11 @@ export function normalizeCompany(name: string) {
 /** Inserts a lead plus a "found by agent" activity. Returns false when it already existed. */
 export async function createLead(ctx: AgentContext, lead: NewLead): Promise<boolean> {
   const { activity, ...row } = lead;
+  const contact = [lead.email?.toLowerCase(), lead.phone?.replace(/\D/g, "")].filter((v): v is string => Boolean(v));
+  if (contact.length) {
+    const { count } = await ctx.supabase.from("suppressions").select("id", { count: "exact", head: true }).eq("org_id", ctx.orgId).in("value", contact);
+    if (count) return false;
+  }
   const { data, error } = await ctx.supabase
     .from("leads")
     .insert({
