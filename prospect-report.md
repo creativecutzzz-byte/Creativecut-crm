@@ -11,6 +11,61 @@ Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. The EVER Agency emai
 - **"Open" means the listing was returned by a live search on 14 November.** I could not confirm with any employer that a role is still unfilled.
 - **Skills the listings ask for that your site does not state** (Premiere Pro, DaVinci Resolve, colour grading, Higgsfield, ElevenLabs, Seedance) are flagged per lead. I did not claim them in any draft.
 
+## Update: second pass for leads with email addresses (14 November)
+
+A second round of Indeed searches (including India and the UK) and a scan of official company sites brought the list to **20 qualified leads**. One of them is now the strongest lead overall.
+
+**Revised top five:** 1. RVS Media India (new, below) 2. EVER Agency (email sent 14 November) 3. Picture Perfect Video 4. Creator Marketing (MADLeadFlow) 5. Whatisup Media. Beyond the Narrative moves to sixth; its draft is kept.
+
+### New #1. RVS Media India: Freelance Video Editor and AI Video Producer
+
+| | |
+|---|---|
+| Source | [Freelance Video Editor & AI Video Producer, RVS Media India (Indeed)](https://to.indeed.com/aabfgdr427v9). Cross-posted under the company name "D- Generation" ([second listing](https://to.indeed.com/aagyr4zjl926)), counted once |
+| Posted | 5 November 2026 (9 days ago) |
+| Status | Listed on Indeed on 14 November. Still unfilled: unverified |
+| Engagement | Freelance, part-time, "ongoing retainer with potential for growth", 2–3 days a week or project-based, from ₹30,000 a month |
+| Urgency evidence | No start-date wording. Typical turnaround "3–5 working days per video" |
+| Observed signal | "Fully Remote — India-Based." Product demos from screen recordings with "motion graphics, callouts, captions", AI and avatar-led client videos, vertical cutdowns for LinkedIn, Shorts and Instagram, podcast edits, and reusable intros, outros and lower thirds |
+| Need | Both editing and motion on a retainer, for SaaS, ecommerce and AI content. Stated in the listing |
+| Matched proof | P8 finance-app UI-animation explainer (closest: software shown with motion). P6 and P7 for AI work. Your site also lists AI avatar videos and podcast editing as services. This is the closest match to your portfolio on the whole list |
+| Contact route | Apply through the Indeed listing. Company address published on the official site: `hello@rvsmedia.co.uk` (general inbox, not a hiring address; `info@` and `sales@` also appear). Named hiring contact: unverified |
+| Flags | Requires Premiere Pro, After Effects, Audition, an Adobe Creative Cloud subscription, and hands-on AI video tools (HeyGen, Synthesia, Runway, Kling or similar), none of which your site names. Requires overlap with UK hours, about 1:30–6:30 PM IST. Asks for a showreel, 2–3 samples, your AI tools, availability and rate |
+
+### Other new leads
+
+| # | Prospect and role | Source | Posted | Status | Engagement | Urgency evidence | Observed need | Matched proof | Email or best route | Flags |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | Nuria Life: Social Media and Video Content Producer | [Indeed listing](https://to.indeed.com/aajw26mxrzwh) | 5 Nov 2026 | Listed 14 Nov, unfilled unverified | Two-week contract, C$25 an hour, 20 hours, "opportunity to extend" | **"Immediate start"** | 4–6 edited clips from a 9 November expert broadcast, with hooks, captions and graphics | P3 captioned talking-head reel | The listing says to apply through Indeed. The only address on the site is `signup@nurialife.club`, a membership inbox, so there is no usable email route | The role required live availability on 9 November, which has passed. Also includes social posting and community replies |
+| 13 | Sarfo Entertainment (Dr. Kojo Sarfo): Comedy Content Curator and Video Clipper | [Indeed listing](https://to.indeed.com/aa9wmt6jd4pd) | 23 Oct 2026 | Listed 14 Nov, unfilled unverified | Part-time contract, $30 an hour, 12 hours a week | None | Picking and clipping the best moments from stand-up and podcast footage | P3 (partial: no comedy work on your site) | Indeed listing. Email: unverified (site returned an error) | Requires prior comedy or podcast curation experience |
+| 14 | Divine Hindu: Freelance Video Editor | [Indeed listing](https://to.indeed.com/aaktjn9bsnw9) | 4 Nov 2026 | Listed 14 Nov, unfilled unverified | Freelance or intern, up to ₹10,000 a month | **"Immediate Joining"** | Instagram Reels and YouTube Shorts edits | Creator reels category, including the food-across-India reel with Hindi titles | **`hr@divinehindu.in`, printed in the listing** (resume and work samples) | Intern-level stipend, likely well below your rates |
+| 15 | GAMURS (GTA6 Bible): Video Editor | [Indeed listing](https://to.indeed.com/aazk8bbvqrh9) | 5 Nov 2026 | Listed 14 Nov, unfilled unverified | Contract | **Game launches 19 November**; "1 to 2 videos a day during launch"; paid trial before launch | Recording and editing no-commentary game walkthroughs, plus thumbnails | None. No gaming work on your site | Indeed listing, with two screening questions | Needs your own game capture setup and gaming portfolio. Weak fit |
+| 16 | Eat with Aunties (Auntie's food brand): Freelance Video Editor | [Indeed listing](https://to.indeed.com/aa92xdh9xvyc) | 16 Oct 2026 | Listed 14 Nov, unfilled unverified | Freelance, from £15 an hour, at least 10 hours a week | None | Long and short form content for a family food brand | P1 restaurant ad | Indeed listing. Email: unverified (site returned an error) | UK listing; location limits not stated |
+| 17 | Alex Jorge Media: Freelance Video Editor | [Indeed listing](https://to.indeed.com/aam4bds6qjvz) | 25 Oct 2026 | Listed 14 Nov, unfilled unverified | Freelance, £150–£300 a week | None | Hospitality and product marketing edits with colour, graphics and effects | P1, P2 | Indeed listing. Email: unverified (site unreachable) | Prefers DaVinci Resolve. UK listing |
+| 18 | Emma Technologies LTD: Freelance Video Editor | [Indeed listing](https://to.indeed.com/aanmlqbw8yg7) | 31 Oct 2026 | Listed 14 Nov, unfilled unverified | Freelance, £3,000–£5,000 a month | None | Edits with graphics, titles, transitions and animations | P9 | Indeed listing, which asks for a 1-minute intro video | Generic description with unusually high pay and no company detail. Check the company before applying |
+| 19 | AdroitG: AI Video Creator and Creative Director | [Indeed listing](https://to.indeed.com/aapz64bqwfrw) | 16 Oct 2026 | Listed 14 Nov, unfilled unverified | Listed full-time, paid ₹500–₹2,000 an hour | None | AI-generated cinematic videos for stories and poetry, with kinetic typography | P6 AI spec ad | Indeed listing. Email: unverified (site blocked access) | Requires an AI film or poetry-visualiser portfolio |
+| 20 | Vybout: Video Editor (Reels, Trends and Creative Edits) | [Indeed listing](https://to.indeed.com/aat8z8j6lxr6) | 22 Oct 2026 | Listed 14 Nov, unfilled unverified | Part-time intern, ₹5,000–₹10,000 a month | None | Meme, gaming and pop-culture reels | Creator reels category | Indeed listing | Intern-level pay |
+
+RVS Media India is lead 11 in the running count.
+
+### Emails found for leads already on the list
+
+| Lead | Address | Where it is published | Note |
+|---|---|---|---|
+| Column Five (lead 7) | `contact@columnfivemedia.com` | Official site home page | General inbox. The listing asks for applications through Indeed |
+| Advanced Hair Restoration (lead 6) | `catt.c@advancedhair.com` | Official site careers page | US-only role |
+| Twinn.live (full-time, below) | `hello@twinn.live` | Official site about and careers pages | Full-time role |
+
+No published address was found for Whatisup Media, MADLeadFlow, Beyond the Narrative, Sarfo Entertainment, Eat with Aunties or Alex Jorge Media.
+
+### Additional full-time role
+
+Twinn.live, Video Editor: [Indeed listing](https://to.indeed.com/aambfvg8hlbl), posted 21 October 2026, full-time, ₹18,000–₹20,000 a month, "Anywhere in India". Short-form, promo and AI-generated video edits.
+
+### Excluded in this pass
+
+Maison Sportiefs (prints `info@sportiefs.com`, but the role is hands-on product photography and stop-motion), Canaway Academy (on-camera presenter, editing excluded), Operations Media (content writing role), Motion Duty (one-line listing, ₹2,000–₹4,000 a month), bravo languages (French required).
+
 ## 1. Your services and usable proof
 
 Source: <https://www.creativecut.in> and its `/work`, `/services/*` and `/about` pages, read on 14 November 2026. The site presents the work as Creative Cut's, and names you as Creative Director leading editing and motion design. It does not credit individual projects to you personally, so drafts say "our" for the work.
@@ -132,7 +187,7 @@ Ranked on recency, recurring volume, need for both editing and motion, and wheth
 | 9 | CELLA, for an unnamed global brand: Part-Time Freelance Video Editor | [Indeed listing](https://to.indeed.com/aaxnxmbxp4kr) | 9 Nov 2026 | "Open for thirty days" per the listing | Freelance, ad hoc, $45–$55 an hour | None | Brand content edits with motion titles, graphics and colour | P9 | Indeed listing (job ID 102026-167070) | Staffing firm (Randstad Digital), Hershey PA. Eligibility outside the US: unverified, likely restricted |
 | 10 | LIA Creative: Freelance Reels and TikTok Editor | [Indeed listing](https://to.indeed.com/aamn798z4nc4) | 5 Nov 2026 | Listed 14 Nov, unfilled unverified | Contractor, $300–$400 a month | None | 16 to 18 short videos a month, 7–10 seconds each, food, lifestyle and fashion | P1 | Indeed listing, with a screening question | **"Must be based in the United States."** Not eligible from India |
 
-I found 10 qualified leads, not 20. The rest of what turned up was expired, older than 30 days, or closed.
+The first pass found these 10. The second pass (see the update near the top) added 10 more, for 20 in total.
 
 ## 4. Urgent or relevant full-time roles (reported separately)
 
@@ -163,7 +218,7 @@ Excluded: The Shinpaughs (US only, DaVinci Resolve), The MMHM Experience (unpaid
 |---|---|---|
 | Your website | Worked. Read home, work, four service pages and about | n/a |
 | Instagram (@ig_creativecut_) | **Failed.** HTTP 429 and a redirect to the login page | Website only. Metricool is connected but has no social network linked, so it could not help either |
-| Indeed connector | Worked. 13 searches across US, UK, Canada and Australia, 13 listings read in full. "Immediate start" and UK, Australia and podcast searches returned nothing | n/a |
+| Indeed connector | Worked. 23 searches across US, UK, Canada, Australia and India over two passes, 29 listings read in full. First pass: 13 searches across US, UK, Canada and Australia, 13 listings read in full. "Immediate start" and UK, Australia and podcast searches returned nothing | n/a |
 | LinkedIn | **No connector in this session**, and LinkedIn needs a login. A `site:linkedin.com/jobs` web search returned no LinkedIn pages | Indeed, plus web search of other job boards |
 | Apollo | Connected. 125 lead credits, 0 used. **People search is blocked on your plan** (message below). No credits spent | Vibe Prospecting |
 | Vibe Prospecting | Partly worked. Matched 6 of 8 companies and returned a free masked preview with four names. Unlocking the full 12 records costs credits and the tool reported the balance is too low to export, so I stopped there. No credits spent | Contact routes printed in the listings themselves |
@@ -184,4 +239,4 @@ I have not upgraded or bought anything.
 2. Tell me whether you can contract through a US entity. If not, drop leads 6 and 10 and treat 9 as unlikely.
 3. Confirm which tools you want named in applications (Premiere Pro, After Effects, DaVinci Resolve, CapCut, Higgsfield, ElevenLabs, Seedance). Leads 1, 2 and 3 ask for specific ones.
 4. Lead 2 needs you to complete its sample project before the email can go.
-5. Say which drafts you approve. I will not contact anyone until you do.
+5. Say which drafts you approve. Apart from the EVER Agency email you told me to send, I will not contact anyone until you do.

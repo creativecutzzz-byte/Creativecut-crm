@@ -2,7 +2,7 @@
 
 Prepared 14 November 2026. **Only the EVER Agency email has been sent**, on your instruction. Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
 
-Notes that apply to all five:
+Notes that apply to all drafts:
 
 - The drafts say "I run Creative Cut" and "our" for the work, because your site presents the projects as the studio's.
 - In the emails, `creativecut.in` is a hyperlink (in the body and under your name). LinkedIn DMs keep the plain URL because LinkedIn does not support link text.
@@ -164,3 +164,67 @@ Hi [name], I saw the Beyond the Narrative listing for an editor on long-form vid
 3. Software and experience: [your editing software]. We edit YouTube videos, reels and podcasts and make motion graphics.
 4. Availability: I can start immediately. [hours per week you can commit]
 5. Compensation: [your preferred arrangement]. The 30-day paid trial works for me.
+
+---
+
+## 6. RVS Media India (now the strongest lead)
+
+**Send to:** apply through the [Indeed listing](https://to.indeed.com/aabfgdr427v9). `hello@rvsmedia.co.uk` is the company's general inbox from its official site, not a hiring address. **Saved as a Gmail draft, not sent.**
+
+**Subject:** Freelance video editor and AI video producer, Delhi-based
+
+Hi RVS Media team,
+
+Your listing for a freelance Video Editor & AI Video Producer covers product demos from screen recordings, AI and avatar-led client videos, cutdowns for LinkedIn, Shorts and Instagram, and podcast edits, on an ongoing retainer. I'm based in Delhi and can take on those formats, including motion graphics, callouts and captions on software walkthroughs.
+
+I run Creative Cut, an editing and motion studio. Our SaaS work includes a UI-animation explainer of a finance app working with AI assistants: [creativecut.in/work#saas-tech](https://www.creativecut.in/work#saas-tech)
+
+I can start immediately, and the paid test project works for me. Shall I send the three work samples you ask for?
+
+Hemant Chauhan
+Creative Cut
+[creativecut.in](https://www.creativecut.in)
+
+*Before sending:* the listing asks for five things. Add your showreel, the AI video, voice and editing tools you use, your days per week, your rate, and confirmation of the 1:30–6:30 PM IST overlap. It also requires Premiere Pro, After Effects and an Adobe Creative Cloud subscription.
+
+**LinkedIn DM**
+
+Hi [name], I saw RVS Media's listing for an India-based freelance video editor and AI video producer. I run Creative Cut in Delhi. A finance-app UI explainer from our SaaS work: https://www.creativecut.in/work#saas-tech. I can start immediately and am happy to do the paid test. Who should I send samples to?
+
+**Application note (Indeed, answering the five things the listing asks for)**
+
+1. Showreel / portfolio: https://www.creativecut.in/work
+2. Relevant samples: the finance-app UI-animation explainer under SaaS & Tech Explainers (product demo), the AI-generated spec ad under AI Creatives, and the captioned reels under Creator & Social Reels (social cutdown).
+3. AI experience: [the AI video, voice, image and editing tools you use]
+4. Availability: I can start immediately. [days per week], with overlap during 1:30–6:30 PM IST [confirm].
+5. Commercials: [your rate or preferred structure]
+
+---
+
+## 7. Divine Hindu
+
+**Send to:** `hr@divinehindu.in`, printed in the [Indeed listing](https://to.indeed.com/aaktjn9bsnw9). **Saved as a Gmail draft, not sent.** The stipend is up to ₹10,000 a month, so decide whether this is worth pursuing.
+
+**Subject:** Short-form video editor, available immediately
+
+Hi Divine Hindu team,
+
+Your listing asks for a freelance editor for Instagram Reels and YouTube Shorts, with immediate joining. I can take on your short-form edits: cuts, captions, titles, music and motion callouts, exported for both platforms.
+
+I run Creative Cut, a Delhi-based editing and motion studio. Our creator and social reels include an information reel about food across India with Hindi titles, which shows short-form editing for an Indian audience: [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels)
+
+I can start immediately. What would you like edited first?
+
+Hemant Chauhan
+Creative Cut
+[creativecut.in](https://www.creativecut.in)
+
+*Before sending:* the listing asks for a resume as well as work samples. Attach one.
+
+---
+
+## 8. Nuria Life (application note only)
+
+**Send to:** the [Indeed listing](https://to.indeed.com/aajw26mxrzwh). There is no usable email address. The role required live availability on 9 November, which has passed, so this pitches only the post-event clips.
+
+I run Creative Cut, an editing and motion studio. Your listing describes four to six edited clips from the November 9 broadcast, with strong hooks, accurate captions and clean graphics for LinkedIn, Instagram and Facebook. I can take on the clip selection, editing, captions and graphics from the recording. Examples: the podcast-style talking-head reel with captions at https://www.creativecut.in/work#creator-reels, which our studio edited. Location and time zone: Delhi, India (IST). I was not part of the 9 November coverage, and I can start on the recording immediately.
