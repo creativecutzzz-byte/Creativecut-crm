@@ -76,7 +76,7 @@ I run Creative Cut, an editing and motion studio, and I'd like to take on your s
 
 ## 2. Picture Perfect Video
 
-**Send to:** `info@pictureperfectvideo.com`, as the listing instructs. **Saved as a Gmail draft, not sent.** **Do not send until the sample project is done.** The kit is at https://tricky-balance-ff6.notion.site/video-editor.
+**Send to:** `info@pictureperfectvideo.com`, as the listing instructs. **Sent from your Gmail on 14 November 2026 at 19:57 UTC, directly from Gmail and not by Claude. It went out with the `[link to sample folder]` placeholder still in it, so a follow-up with the sample project link is needed.** **Do not send until the sample project is done.** The kit is at https://tricky-balance-ff6.notion.site/video-editor.
 
 **Subject:** PPV AI Editor Application: Hemant Chauhan
 
