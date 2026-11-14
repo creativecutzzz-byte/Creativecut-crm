@@ -1,6 +1,6 @@
 # Prospect report: video editing and motion graphics leads
 
-Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Eight emails went out on 14 November 2026: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps and Taiwan Edu Consult (sent on your instruction), and Picture Perfect Video (sent directly from Gmail, with its sample-link placeholder unfilled). Nothing else has gone out. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
+Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. 22 emails went out on 14 November 2026 to 14 recipients, all listed in the sent log at the top of the drafts file. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
 
 ## Read this first
 

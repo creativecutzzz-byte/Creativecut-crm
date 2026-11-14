@@ -1,6 +1,6 @@
 # Outreach drafts
 
-Prepared 14 November 2026. **Eight emails have gone out: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps and Taiwan Edu Consult (sent by Claude on your instruction), and Picture Perfect Video (sent directly from Gmail).** Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
+Prepared 14 November 2026. **Sent log (14 November 2026).** First round, 8 emails: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps, Taiwan Edu Consult (sent by Claude on your instruction) and Picture Perfect Video (sent directly from Gmail). Second round, 14 emails, sent on your instruction in the revised format (plain `www.creativecut.in`, Creative Director signature): a revised copy to each of those 8 on the same thread, and a first email to 6 new leads (Inspire Global Venture, Jaagruk Bharat, EXAR Digital, Ekakshar, Sivion Solutions, Chuffed). The Picture Perfect Video resend replaced the blank sample link with a line saying the sample will follow on the thread, so that sample is now owed.
 
 Notes that apply to all drafts:
 
@@ -348,3 +348,18 @@ Creative Director, Creative Cut
 www.creativecut.in
 
 *Before sending:* the listing wants a portfolio featuring Canva and CapCut work, plus a resume, your rates and hours per week. Your site does not show Canva or CapCut work, so this is the weakest fit of the four.
+
+---
+
+## 13. Six new leads emailed in the revised format
+
+All six are salaried listings that print an email. Each email says plainly that it is not an application for the full-time role and offers Creative Cut on a freelance basis. **All sent from your Gmail on 14 November 2026.**
+
+| Lead | Sent to | Subject | Proof named |
+|---|---|---|---|
+| Inspire Global Venture | `roshani@inspireglobalventure.com` | Freelance studio option for your performance ad edits | Bathroom fittings reel with price callouts (Product & Brand Ads) |
+| Jaagruk Bharat | `hr@jaagrukbharat.com` | Freelance studio option for your Reels and Shorts | Food-across-India reel with Hindi titles (Creator & Social Reels) |
+| EXAR Digital | `hr.exardigital@gmail.com` | Freelance studio option for your video editing | AI spec ad (AI Creatives), business-story motion piece (Motion Graphics) |
+| Ekakshar | `projectmanager@ekakshar.co.in` | Freelance studio option for your client video edits | Tutorial reel with animated app UI (Creator & Social Reels) |
+| Sivion Solutions | `contact@sivionsolutions.com` | Freelance studio option for your video editing | Talking-head promo for an AI writing tool, business-story motion piece |
+| Chuffed | `sami@we-are-chuffed.com` | Freelance studio option for your Instagram edits | Podcast-style talking-head reel with captions |
