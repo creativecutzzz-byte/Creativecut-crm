@@ -12,6 +12,38 @@ Notes that apply to all drafts:
 
 ---
 
+## Reusable template
+
+Signature for all outreach: **Hemant Chauhan, Creative Director, Creative Cut**. Body length 70–120 words. Replace everything in square brackets.
+
+```text
+Subject: [Role or deliverable in their words, e.g. "Editor for your six weekly reels"]
+
+Hi [First name / Company team],
+
+Your listing [describes / asks for] [one specific detail from their post: volume, format, platform, deadline]. I can take that on: [the deliverables in their terms, e.g. selecting clips, the edit, captions, motion graphics, weekly export].
+
+I run Creative Cut, an editing and motion studio[ in Delhi]. [One project, named in words], which shows [the skill that matches their need]: [link to the matching section of creativecut.in/work]
+
+I can start immediately[, and the (paid test / trial / start date they mention) works for me]. [One easy question, e.g. "Which account would you want cut first?"]
+
+Hemant Chauhan
+Creative Director, Creative Cut
+creativecut.in
+```
+
+LinkedIn version:
+
+```text
+Hi [name], I saw [company]'s listing for [role / deliverable]. I'm the Creative Director at Creative Cut and can take on [deliverables]. [Project in a few words]: [link]. I can start immediately. [One question?]
+```
+
+Proof links by need: SaaS and product demos `creativecut.in/work#saas-tech` · motion graphics `#motion` · ads and product videos `#product-ads` · reels, talking-head and podcast clips `#creator-reels` · AI video `#ai` · events `#events` · real estate `#real-estate`.
+
+Before sending, add a line for each thing the listing asks applicants to include (rates, CV, software, hours, time zone).
+
+---
+
 ## 1. EVER Agency
 
 **Send to:** `bradley@everagency.co`. The listing prints `bradley@everagnecy.co`, but that domain does not exist; `everagency.co` does and receives mail. If it bounces, apply through the [Indeed listing](https://to.indeed.com/aabtp4p4q6vq). **Sent from your Gmail on 14 November 2026.**
@@ -27,7 +59,7 @@ I run Creative Cut, an editing and motion studio. Our product and brand ads incl
 I can start immediately. Which account would you want cut first?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing asks for advanced Premiere Pro and colour grading. Add a line on each if they apply to you.
@@ -57,7 +89,7 @@ I run Creative Cut, an editing and motion studio. Our AI work includes a product
 I can start immediately. Would you like me to begin with one of the paid projects?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the subject line is the one the listing requires. The listing also asks for Higgsfield and Seedance 2.5 experience and a few hours a day overlapping US business hours. Add a line confirming each if true.
@@ -85,7 +117,7 @@ I run Creative Cut, an editing and motion studio. Our AI work includes an AI-gen
 I can start immediately. Which client's ads would you want variations on first?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing requires hands-on Higgsfield and ElevenLabs. Add that only if true.
@@ -115,7 +147,7 @@ I run Creative Cut, an editing studio. Our creator reels include a tutorial reel
 I can start immediately. Would you like to send one week's footage as a first batch?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 **LinkedIn DM**
@@ -148,7 +180,7 @@ I run Creative Cut, an editing and motion studio. One example close to your form
 I can start immediately, and the 30-day paid trial works for me. Which topic is first in your queue?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing prefers US-based applicants and your site shows no long-form example. If you have one, add its link.
@@ -182,7 +214,7 @@ I run Creative Cut, an editing and motion studio. Our SaaS work includes a UI-an
 I can start immediately, and the paid test project works for me. Shall I send the three work samples you ask for?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing asks for five things. Add your showreel, the AI video, voice and editing tools you use, your days per week, your rate, and confirmation of the 1:30–6:30 PM IST overlap. It also requires Premiere Pro, After Effects and an Adobe Creative Cloud subscription.
@@ -216,7 +248,7 @@ I run Creative Cut, a Delhi-based editing and motion studio. Our creator and soc
 I can start immediately. What would you like edited first?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing asks for a resume as well as work samples. Attach one.
@@ -246,7 +278,7 @@ I run Creative Cut, an editing and motion studio in Delhi (IST), started in 2022
 I can start immediately, and the paid test edit works for me. Which track would you like the test on?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing also asks for a CV or short summary of experience and tools, your weekly availability, and overlap with US business hours. Add those.
@@ -268,7 +300,7 @@ I run Creative Cut, an editing and motion studio. A skincare example from our po
 I can start immediately, and the test edit works for me. Would you like to send the test footage?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing requires turnaround within 48 hours of receiving footage. Your site says most edits are delivered in 1–2 days; add a line confirming it if you want to commit to that.
@@ -290,7 +322,7 @@ I run Creative Cut, an editing and motion studio in Delhi. Two relevant examples
 I can start immediately. Which story would you like edited first?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing asks for six things. Still missing: a third example, your availability and working hours, your hourly rate or monthly retainer, your price for a 30–60 second reel and for a 10-minute YouTube video, and the editing software and AI tools you use.
@@ -312,7 +344,7 @@ I run Creative Cut, an editing and motion studio. An education example from our 
 I can start immediately. Which would you like first, a promotional ad or a student story?
 
 Hemant Chauhan
-Creative Cut
+Creative Director, Creative Cut
 [creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing wants a portfolio featuring Canva and CapCut work, plus a resume, your rates and hours per week. Your site does not show Canva or CapCut work, so this is the weakest fit of the four.
