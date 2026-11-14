@@ -13,7 +13,7 @@ Notes that apply to all five:
 
 ## 1. EVER Agency
 
-**Send to:** the listing prints `bradley@everagnecy.co`, which looks like a misspelling. Verify the address first, or apply through the [Indeed listing](https://to.indeed.com/aabtp4p4q6vq).
+**Send to:** `bradley@everagency.co`. The listing prints `bradley@everagnecy.co`, but that domain does not exist; `everagency.co` does and receives mail. If it bounces, apply through the [Indeed listing](https://to.indeed.com/aabtp4p4q6vq). **Saved as a Gmail draft, not sent.**
 
 **Subject:** Editor for your six weekly hospitality reels
 
@@ -42,7 +42,7 @@ I run Creative Cut, an editing and motion studio, and I'd like to take on your s
 
 ## 2. Picture Perfect Video
 
-**Send to:** `info@pictureperfectvideo.com`, as the listing instructs. **Do not send until the sample project is done.** The kit is at https://tricky-balance-ff6.notion.site/video-editor.
+**Send to:** `info@pictureperfectvideo.com`, as the listing instructs. **Saved as a Gmail draft, not sent.** **Do not send until the sample project is done.** The kit is at https://tricky-balance-ff6.notion.site/video-editor.
 
 **Subject:** PPV AI Editor Application: Hemant Chauhan
 

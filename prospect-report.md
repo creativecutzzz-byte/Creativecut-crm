@@ -58,7 +58,7 @@ Ranked on recency, recurring volume, need for both editing and motion, and wheth
 | Observed signal | "Edit one high-level social media reel per week for each assigned account, starting with 6 accounts (6 reels per week)" from the agency's own hotel and restaurant shoots. Asks for colour grading, sound design, titles and graphics |
 | Need | A recurring weekly batch of six reels with titling and motion. Stated in the listing, not inferred |
 | Matched proof | P1 restaurant ad (closest subject). P11 property walkthroughs as a second option for venue footage. Partial match: no hotel work on your site |
-| Contact route | The listing says to email a portfolio and short note to `bradley@everagnecy.co`. **That domain looks misspelled in the listing** ("everagnecy"). `everagency.co` returned an error and `www.everagency.co/contact` loaded blank, so the correct address is unverified. Safest route: apply through the Indeed listing. Contact surname: unverified |
+| Contact route | The listing says to email a portfolio and short note to `bradley@everagnecy.co`. **That domain does not exist** (DNS lookup on 14 November returned no such domain). `everagency.co` does exist and receives mail through Google Workspace, so the corrected address is `bradley@everagency.co`. The mailbox itself is unverified and could bounce; the Indeed listing is the fallback. Contact surname: unverified |
 | Flags | Location reads "[Remote / Dallas-Fort Worth area]", an unfilled template, so eligibility outside the US is unverified. Requires advanced Premiere Pro and colour grading, which your site does not state |
 
 ### 2. Picture Perfect Video: AI Video and Photo Editor
