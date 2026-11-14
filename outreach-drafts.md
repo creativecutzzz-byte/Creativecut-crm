@@ -1,6 +1,6 @@
 # Outreach drafts
 
-Prepared 14 November 2026. **Sent log (14 November 2026).** First round, 8 emails: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps, Taiwan Edu Consult (sent by Claude on your instruction) and Picture Perfect Video (sent directly from Gmail). Second round, 14 emails, sent on your instruction in the revised format (plain `www.creativecut.in`, Creative Director signature): a revised copy to each of those 8 on the same thread, and a first email to 6 new leads (Inspire Global Venture, Jaagruk Bharat, EXAR Digital, Ekakshar, Sivion Solutions, Chuffed). The Picture Perfect Video resend replaced the blank sample link with a line saying the sample will follow on the thread, so that sample is now owed.
+Prepared 14 November 2026. **Sent log (14 November 2026).** First round, 8 emails: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps, Taiwan Edu Consult (sent by Claude on your instruction) and Picture Perfect Video (sent directly from Gmail). Second round, 14 emails, sent on your instruction in the revised format (plain `www.creativecut.in`, Creative Director signature): a revised copy to each of those 8 on the same thread, and a first email to 6 new leads (Inspire Global Venture, Jaagruk Bharat, EXAR Digital, Ekakshar, Sivion Solutions, Chuffed). The Picture Perfect Video resend replaced the blank sample link with a line saying the sample will follow on the thread, so that sample is now owed. Third round, 20 cold emails on your instruction, to companies with no hiring signal: 9 funded startups from the playbook prospect list and 11 Delhi NCR real estate developers. Recipients, subjects and the observed detail used for each are in `cold-outreach-2026-11-14.csv`. Total for the day: 42 emails to 34 recipients.
 
 Notes that apply to all drafts:
 
@@ -363,3 +363,49 @@ All six are salaried listings that print an email. Each email says plainly that 
 | Ekakshar | `projectmanager@ekakshar.co.in` | Freelance studio option for your client video edits | Tutorial reel with animated app UI (Creator & Social Reels) |
 | Sivion Solutions | `contact@sivionsolutions.com` | Freelance studio option for your video editing | Talking-head promo for an AI writing tool, business-story motion piece |
 | Chuffed | `sami@we-are-chuffed.com` | Freelance studio option for your Instagram edits | Podcast-style talking-head reel with captions |
+
+---
+
+## 14. Cold outreach round (no hiring signal)
+
+**All 20 sent from your Gmail on 14 November 2026.** Every email went to an address published on the company's own website, is plain text with only `www.creativecut.in`, and ends with: "P.S. If this isn't relevant, just reply "no" and I won't follow up."
+
+**Startups (9).** The opening line is the personalisation line from `playbook/prospects-2026-10.csv`, and the offer is the playbook's free 15-second teaser of one of their product screens. Shamrock AI and Unveilr AI were skipped because the playbook marks their websites as unverified.
+
+```text
+Subject: [Company] launch videos
+
+Hi [Company] team,
+
+[Personalisation line: their funding news and the product idea a video would show.]
+
+I'm Hemant, Creative Director at Creative Cut. We make product explainers, UI animations and founder videos for SaaS companies on a monthly plan, so each launch gets a video without briefing a new studio. Our SaaS and tech explainer work is at www.creativecut.in
+
+Would it be useful if I sent a 15-second animated teaser of one of your product screens? No cost, just to show what it could look like.
+
+Hemant Chauhan
+Creative Director, Creative Cut
+www.creativecut.in
+
+P.S. If this isn't relevant, just reply "no" and I won't follow up.
+```
+
+**Real estate developers (11).** The opening line is a detail read from each developer's homepage on 14 November. The ask is a short outline of how you would cut a reel for a named project, with no free work promised.
+
+```text
+Subject: Project videos for [Developer]
+
+Hi [Developer] team,
+
+[What their site shows: named projects, construction updates or a new launch.] [The video that fits it.] Could you pass this to whoever looks after marketing?
+
+I'm Hemant, Creative Director at Creative Cut, a Delhi-based video editing and motion studio. Our real estate work includes [matching real estate project from the portfolio]: www.creativecut.in
+
+Would it be useful if I sent a short outline of how we'd cut a reel for [project]?
+
+Hemant Chauhan
+Creative Director, Creative Cut
+www.creativecut.in
+
+P.S. If this isn't relevant, just reply "no" and I won't follow up.
+```

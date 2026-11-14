@@ -1,6 +1,6 @@
 # Prospect report: video editing and motion graphics leads
 
-Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. 22 emails went out on 14 November 2026 to 14 recipients, all listed in the sent log at the top of the drafts file. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
+Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. 42 emails went out on 14 November 2026 to 34 recipients, all listed in the sent log at the top of the drafts file. That includes 20 cold emails to companies with no hiring signal (9 funded startups, 11 Delhi NCR real estate developers), listed in [`cold-outreach-2026-11-14.csv`](cold-outreach-2026-11-14.csv). Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
 
 ## Read this first
 
