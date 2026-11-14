@@ -11,6 +11,47 @@ Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Three emails were se
 - **"Open" means the listing was returned by a live search on 14 November.** I could not confirm with any employer that a role is still unfilled.
 - **Skills the listings ask for that your site does not state** (Premiere Pro, DaVinci Resolve, colour grading, Higgsfield, ElevenLabs, Seedance) are flagged per lead. I did not claim them in any draft.
 
+## Update: fourth pass with Apify (14 November)
+
+Apify is now connected by API token (Free plan, $5 monthly credit). I ran the `valig/indeed-jobs-scraper` actor for 15 searches across India, the US, the UK, the UAE, Canada, Australia and Singapore. It returned 722 unique listings for **$0.03 of credit**. 60 of them are relevant, posted since 15 October, not expired, and print an email address in the listing. All 60 are in [`leads-with-emails.csv`](leads-with-emails.csv). Most are full-time or on-site jobs in India; the ones worth your time are below.
+
+Nothing in this section has been contacted. "Open" means the actor returned the listing as not expired on 14 November.
+
+### Freelance and contract leads with a printed email
+
+| # | Prospect and role | Source | Posted | Engagement | Urgency evidence | Observed need | Matched proof | Email (printed in listing) | Flags |
+|---|---|---|---|---|---|---|---|---|---|
+| 21 | **Quantumstrat**: Freelance Video Editor / Motion Designer / 3D Animator | [Indeed India](http://in.indeed.com/job/freelance-video-editor-motion-designer-3d-animator-remote-49f64f939137b37e) | 3 Nov 2026 | Project-based and hourly freelance, remote, "our best freelancers become long-term team members" | None stated. "Occasional weekend turnarounds" | A bench of editors and animators for US agency clients: short-form, YouTube, explainers, kinetic typography, product animation. Both services | Kinetic-typography brand explainer (SaaS), P9 motion graphics, P3 captioned reels | `quantumstrat4@gmail.com`, subject "[Role] – [Your Name] – [Country]" | Open to India by name. Wants 3+ years, a portfolio "next to US agency work", overlap with US business hours, CV, weekly availability. Paid test edit. The company is an electronics trader with a creative division and uses a Gmail address, so check it before sharing anything sensitive |
+| 22 | **Brixx Derma**: Short-Form Video Editor (Freelance) | [MyCareersFuture, Singapore](https://www.mycareersfuture.gov.sg/job/de25f13551eda3833476f5fbe18325c7) | 22 Oct 2026 | Ongoing freelance, 3-month initial term, 10–12 videos a month | "Turnaround within 48 hours" | Reels and TikToks from briefs, shoot footage and livestream replays, with captions and brand templates | P7 facial mist product ad (skincare), creator reels | `contact@brixxderma.com` (send portfolio) | "We welcome applicants from any country." Wants 2+ years of short-form, ideally beauty or e-commerce. Test edit |
+| 23 | **Lives Across Maps**: Videographer / Video Editor | [Indeed India](http://in.indeed.com/job/videographer-video-editor-remote-india-007253c5534b4a94) | 14 Nov 2026 (today) | Freelance / contract, Remote India, ₹10,000–₹36,000 a month, "potential for regular ongoing work" | None stated | Travel and interview edits for YouTube, reels and trailers, with subtitles, titles, maps and simple animations | P10 event film with animated map graphics, the food-across-India reel | `hello@livesacrossmaps.com`, subject "Videographer / Video Editor Application – [Your Name]" | Asks for three examples with your contribution, hours, hourly or retainer rate, a price for a reel and a 10-minute video, and your software and AI tools |
+| 24 | **Taiwan Edu Consult**: Freelance Video Editor | [Indeed India](http://in.indeed.com/job/freelance-video-editor-canva-capcut-specialist-18299811689fb99c) | 7 Nov 2026 | Freelance, remote | "Tight deadlines" | Reels and Shorts for education marketing: promo ads, mentorship intros, student stories | P5 education reel | `taiwaneduconsult@gmail.com`, subject "Freelance Video Editor" | Specifically wants Canva and CapCut work in the portfolio, which your site does not show. Asks for resume, rates and hours |
+| 25 | **LGID Media**: Short-Form Video Editor | [Indeed UAE](http://ae.indeed.com/job/short-form-video-editor-0697c73ec7f079c9) | 19 Oct 2026 | Contract, AED 2,000–5,000 a month | None stated | Short-form with After Effects motion graphics and animated text | P9, P3 | `mohanad@lgidmedia.com`, subject "Short-Form Video Editor Application" | **"Hybrid remote in Dubai"**, so likely not open to you |
+
+### Remote full-time roles in India with a printed email (reported separately)
+
+| Prospect and role | Source | Posted | Pay | Urgency evidence | Email |
+|---|---|---|---|---|---|
+| Inspire Global Venture: Creative Video Editor (also a Performance Marketing editor role) | [Indeed India](http://in.indeed.com/job/creative-video-editor-immediate-joiner-7de567bff416cbc9) | 6 Nov 2026 | ₹15,000–₹18,000 a month | **"Joining: Immediate"**; an older listing says "Must be willing to start today" | `roshani@inspireglobalventure.com` |
+| Jaagruk Bharat: Video Editor | [Indeed India](http://in.indeed.com/job/video-editor-3aa827bfa8070db2) | 13 Nov 2026 | Up to ₹25,000 a month | **"Immediate Joiners Preferred"** | `hr@jaagrukbharat.com` |
+| EXAR Digital: Video Editor | [Indeed India](http://in.indeed.com/job/video-editor-a4e7a76d6a8be2a7) | 2 Nov 2026 | ₹10,000–₹20,000 a month | None | `hr.exardigital@gmail.com` |
+| Ekakshar: Video Editor Associate | [Indeed India](http://in.indeed.com/job/video-editor-a4baff8500cb593e) | 2 Nov 2026 | Unverified | None | `projectmanager@ekakshar.co.in` |
+| Sivion Solutions: Video Editor | [Indeed India](http://in.indeed.com/job/video-editor-a6bc67795ce2b746) | 22 Oct 2026 | Unverified | None | `contact@sivionsolutions.com` |
+| Chuffed: Digital Storyteller (video editor) | [Indeed India](http://in.indeed.com/job/digital-storyteller-video-editor-570f2838c13d67d2) | 11 Nov 2026 | ₹20,000–₹30,000 a month | Start date 30 November | `sami@we-are-chuffed.com` |
+
+These are salaried jobs at pay levels far below a studio retainer. I would only contact them if you want to offer Creative Cut as an outsourced alternative, which is a different pitch from answering the listing.
+
+### On-site roles near Delhi with a printed email (watchlist)
+
+Ad Mafiya Creative Agency, Chhatarpur, New Delhi: Video Editor & Motion Graphic Artist, full-time in office, `admafiyaofficial@gmail.com` ([listing](http://in.indeed.com/job/video-editor-motion-graphic-artist-9e41e60b122952e8), 4 Nov). OnO Creators, Noida: Video Editor, `ritika.sharma@onocreators.com` ([listing](http://in.indeed.com/job/video-editor-19d98cbacc96db8f), 3 Nov). Studio Arunisha, Gurugram: Video Editor & Animator, on-site, `hr@studioarunisha.com` ([listing](http://in.indeed.com/job/video-editor-animator-e236f9a9723a4afd), 22 Oct). These are in-office jobs, not freelance openings.
+
+### Source log additions
+
+| Service | Result |
+|---|---|
+| Apify | **Now working.** Token saved on the "Creative Cut" environment. `valig/indeed-jobs-scraper`, 15 runs, 722 unique listings, $0.03 of the $5 monthly credit used. One run failed on an invalid country code (`gb`; the actor wants `uk`) and was rerun |
+| Indeed connector | Still rate-limited throughout this pass |
+| Apollo | Free company lookup refused the job-posting filters: "Cannot access advanced filters … on free plan. Please start a trial or upgrade." Not upgraded |
+
 ## Update: third pass (14 November, later)
 
 This pass looked for more leads with email addresses and **found none that are new and verified.** The two sources that produce them were unavailable:

@@ -228,3 +228,91 @@ Creative Cut
 **Send to:** the [Indeed listing](https://to.indeed.com/aajw26mxrzwh). There is no usable email address. The role required live availability on 9 November, which has passed, so this pitches only the post-event clips.
 
 I run Creative Cut, an editing and motion studio. Your listing describes four to six edited clips from the November 9 broadcast, with strong hooks, accurate captions and clean graphics for LinkedIn, Instagram and Facebook. I can take on the clip selection, editing, captions and graphics from the recording. Examples: the podcast-style talking-head reel with captions at https://www.creativecut.in/work#creator-reels, which our studio edited. Location and time zone: Delhi, India (IST). I was not part of the 9 November coverage, and I can start on the recording immediately.
+
+---
+
+## 9. Quantumstrat
+
+**Send to:** `quantumstrat4@gmail.com`, printed in the [listing](http://in.indeed.com/job/freelance-video-editor-motion-designer-3d-animator-remote-49f64f939137b37e). The subject format is required by the listing. **Saved as a Gmail draft, not sent.**
+
+**Subject:** Video Editor and Motion Graphics – Hemant Chauhan – India
+
+Hi Quantumstrat team,
+
+Your listing describes a bench of freelance editors and animators for US agency clients, across short-form social, YouTube, explainers and product animation, and invites applications for more than one track. I'm applying for Video Editor and Motion Graphics / 2D Animator.
+
+I run Creative Cut, an editing and motion studio in Delhi (IST), started in 2022. Three pieces closest to your tracks: a kinetic-typography brand explainer at [creativecut.in/work#saas-tech](https://www.creativecut.in/work#saas-tech), business-story motion graphics at [creativecut.in/work#motion](https://www.creativecut.in/work#motion), and captioned reels at [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels).
+
+I can start immediately, and the paid test edit works for me. Which track would you like the test on?
+
+Hemant Chauhan
+Creative Cut
+[creativecut.in](https://www.creativecut.in)
+
+*Before sending:* the listing also asks for a CV or short summary of experience and tools, your weekly availability, and overlap with US business hours. Add those.
+
+---
+
+## 10. Brixx Derma
+
+**Send to:** `contact@brixxderma.com`, printed in the [listing](https://www.mycareersfuture.gov.sg/job/de25f13551eda3833476f5fbe18325c7). **Saved as a Gmail draft, not sent.**
+
+**Subject:** Short-form editor for your Reels and TikToks
+
+Hi Brixx Derma team,
+
+Your listing describes 10–12 short-form videos a month for Instagram and TikTok, cut from briefs, shoot footage and livestream replays, with captions, on-screen text and your brand templates. I can take on those edits and the livestream cut-downs, and keep each one consistent with your templates.
+
+I run Creative Cut, an editing and motion studio. A skincare example from our portfolio is a product ad for a facial mist with liquid visuals: [creativecut.in/work#ai](https://www.creativecut.in/work#ai). Captioned short-form reels are at [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels).
+
+I can start immediately, and the test edit works for me. Would you like to send the test footage?
+
+Hemant Chauhan
+Creative Cut
+[creativecut.in](https://www.creativecut.in)
+
+*Before sending:* the listing requires turnaround within 48 hours of receiving footage. Your site says most edits are delivered in 1–2 days; add a line confirming it if you want to commit to that.
+
+---
+
+## 11. Lives Across Maps
+
+**Send to:** `hello@livesacrossmaps.com`, printed in the [listing](http://in.indeed.com/job/videographer-video-editor-remote-india-007253c5534b4a94). The subject is the one the listing requires. **Saved as a Gmail draft, not sent.**
+
+**Subject:** Videographer / Video Editor Application – Hemant Chauhan
+
+Hi Lives Across Maps team,
+
+Your listing asks for an editor to turn travel footage, interviews and personal stories into YouTube videos and short reels, with subtitles, titles, maps and simple animations, from footage and voiceovers you supply. I can take on those edits, the reels and trailers, and the map and title animation.
+
+I run Creative Cut, an editing and motion studio in Delhi. Two relevant examples our studio edited: an event film with animated map graphics at [creativecut.in/work#events](https://www.creativecut.in/work#events), and an information reel about food across India with Hindi titles at [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels).
+
+I can start immediately. Which story would you like edited first?
+
+Hemant Chauhan
+Creative Cut
+[creativecut.in](https://www.creativecut.in)
+
+*Before sending:* the listing asks for six things. Still missing: a third example, your availability and working hours, your hourly rate or monthly retainer, your price for a 30–60 second reel and for a 10-minute YouTube video, and the editing software and AI tools you use.
+
+---
+
+## 12. Taiwan Edu Consult
+
+**Send to:** `taiwaneduconsult@gmail.com`, printed in the [listing](http://in.indeed.com/job/freelance-video-editor-canva-capcut-specialist-18299811689fb99c). The subject is the one the listing requires. **Saved as a Gmail draft, not sent.**
+
+**Subject:** Freelance Video Editor
+
+Hi Taiwan Edu Consult team,
+
+Your listing asks for a freelance editor to turn raw footage into reels and Shorts for LinkedIn, Instagram and YouTube, with hooks, captions and brand-consistent graphics, for promotional ads, mentorship intros and student success stories. I can take on those edits, including text overlays, animation and sound.
+
+I run Creative Cut, an editing and motion studio. An education example from our portfolio is a reel that explains a topic using animated ChatGPT UI: [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels)
+
+I can start immediately. Which would you like first, a promotional ad or a student story?
+
+Hemant Chauhan
+Creative Cut
+[creativecut.in](https://www.creativecut.in)
+
+*Before sending:* the listing wants a portfolio featuring Canva and CapCut work, plus a resume, your rates and hours per week. Your site does not show Canva or CapCut work, so this is the weakest fit of the four.
