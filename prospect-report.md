@@ -11,6 +11,24 @@ Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Three emails were se
 - **"Open" means the listing was returned by a live search on 14 November.** I could not confirm with any employer that a role is still unfilled.
 - **Skills the listings ask for that your site does not state** (Premiere Pro, DaVinci Resolve, colour grading, Higgsfield, ElevenLabs, Seedance) are flagged per lead. I did not claim them in any draft.
 
+## Update: third pass (14 November, later)
+
+This pass looked for more leads with email addresses and **found none that are new and verified.** The two sources that produce them were unavailable:
+
+- **Indeed:** the connector returned "rate limit exceeded" on every search for the whole pass, after 23 searches and 29 listing reads earlier today.
+- **LinkedIn:** the public job search page loads without a login, but a bulk scan of listing descriptions was blocked by this session's permission check. I did not work around it.
+
+Web search and direct reads of other boards turned up these, none with a usable hiring email:
+
+| Prospect and role | Source | Posted | Engagement | Note |
+|---|---|---|---|---|
+| Advantage HQ (listed by BM Digital): Senior Video Editor | [Remote Rocketship, India page](https://www.remoterocketship.com/country/india/jobs/video-editor/) | 5 days ago | Contract, $800–$1,800 a month, "Anywhere in the World" | Short-form social and performance ads from UGC. Also on We Work Remotely, where it is marked Latin America only, so eligibility is unverified. No email found |
+| Private client via Twine: Hair and Makeup Work Video Editor | [Twine](https://www.twine.net/jobs/video-editors) | 14 Nov 2026 | Single job, remote, "work from anywhere", marked urgent | Applying needs a paid Twine membership |
+| "Thomas" via Twine: Animator for an Americana road-trip music video | [Twine](https://www.twine.net/jobs/animators) | 14 Nov 2026 | Single job, $750–$1,500, remote worldwide | 3:30 illustrated music video. Applying needs a paid Twine membership. No illustration work on your site |
+| 99brightminds: Senior Generative AI Video Specialist | [Remote Rocketship, India page](https://www.remoterocketship.com/country/india/jobs/video-editor/) | 4 days ago | Full-time, remote, India eligible | Corporate videos with Higgsfield. General inbox on the official site: `info@99brightminds.com` (not a hiring address) |
+
+Checked and dropped: OnStage (German required), Binghali Creative (prints an email, but applications closed 14 October), BeatStars (prints an email, posted December 2025). Blocked: Glassdoor, Himalayas, Indeed's public site.
+
 ## Update: second pass for leads with email addresses (14 November)
 
 A second round of Indeed searches (including India and the UK) and a scan of official company sites brought the list to **20 qualified leads**. One of them is now the strongest lead overall.
