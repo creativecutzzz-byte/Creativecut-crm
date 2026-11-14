@@ -1,6 +1,6 @@
 # Outreach drafts
 
-Prepared 14 November 2026. **Three emails have been sent on your instruction: EVER Agency, RVS Media India and Divine Hindu.** Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
+Prepared 14 November 2026. **Eight emails have gone out: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps and Taiwan Edu Consult (sent by Claude on your instruction), and Picture Perfect Video (sent directly from Gmail).** Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
 
 Notes that apply to all drafts:
 
@@ -265,7 +265,7 @@ I run Creative Cut, an editing and motion studio. Your listing describes four to
 
 ## 9. Quantumstrat
 
-**Send to:** `quantumstrat4@gmail.com`, printed in the [listing](http://in.indeed.com/job/freelance-video-editor-motion-designer-3d-animator-remote-49f64f939137b37e). The subject format is required by the listing. **Saved as a Gmail draft, not sent.**
+**Send to:** `quantumstrat4@gmail.com`, printed in the [listing](http://in.indeed.com/job/freelance-video-editor-motion-designer-3d-animator-remote-49f64f939137b37e). The subject format is required by the listing. **Sent from your Gmail on 14 November 2026.**
 
 **Subject:** Video Editor and Motion Graphics – Hemant Chauhan – India
 
@@ -287,7 +287,7 @@ Creative Director, Creative Cut
 
 ## 10. Brixx Derma
 
-**Send to:** `contact@brixxderma.com`, printed in the [listing](https://www.mycareersfuture.gov.sg/job/de25f13551eda3833476f5fbe18325c7). **Saved as a Gmail draft, not sent.**
+**Send to:** `contact@brixxderma.com`, printed in the [listing](https://www.mycareersfuture.gov.sg/job/de25f13551eda3833476f5fbe18325c7). **Sent from your Gmail on 14 November 2026.**
 
 **Subject:** Short-form editor for your Reels and TikToks
 
@@ -309,7 +309,7 @@ Creative Director, Creative Cut
 
 ## 11. Lives Across Maps
 
-**Send to:** `hello@livesacrossmaps.com`, printed in the [listing](http://in.indeed.com/job/videographer-video-editor-remote-india-007253c5534b4a94). The subject is the one the listing requires. **Saved as a Gmail draft, not sent.**
+**Send to:** `hello@livesacrossmaps.com`, printed in the [listing](http://in.indeed.com/job/videographer-video-editor-remote-india-007253c5534b4a94). The subject is the one the listing requires. **Sent from your Gmail on 14 November 2026.**
 
 **Subject:** Videographer / Video Editor Application – Hemant Chauhan
 
@@ -331,7 +331,7 @@ Creative Director, Creative Cut
 
 ## 12. Taiwan Edu Consult
 
-**Send to:** `taiwaneduconsult@gmail.com`, printed in the [listing](http://in.indeed.com/job/freelance-video-editor-canva-capcut-specialist-18299811689fb99c). The subject is the one the listing requires. **Saved as a Gmail draft, not sent.**
+**Send to:** `taiwaneduconsult@gmail.com`, printed in the [listing](http://in.indeed.com/job/freelance-video-editor-canva-capcut-specialist-18299811689fb99c). The subject is the one the listing requires. **Sent from your Gmail on 14 November 2026.**
 
 **Subject:** Freelance Video Editor
 

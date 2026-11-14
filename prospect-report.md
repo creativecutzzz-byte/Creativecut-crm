@@ -1,6 +1,6 @@
 # Prospect report: video editing and motion graphics leads
 
-Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Three emails were sent on 14 November 2026 on your instruction: EVER Agency, RVS Media India and Divine Hindu. Nothing else has gone out. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
+Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Eight emails went out on 14 November 2026: EVER Agency, RVS Media India, Divine Hindu, Quantumstrat, Brixx Derma, Lives Across Maps and Taiwan Edu Consult (sent on your instruction), and Picture Perfect Video (sent directly from Gmail, with its sample-link placeholder unfilled). Nothing else has gone out. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
 
 ## Read this first
 
@@ -15,7 +15,7 @@ Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Three emails were se
 
 Apify is now connected by API token (Free plan, $5 monthly credit). I ran the `valig/indeed-jobs-scraper` actor for 15 searches across India, the US, the UK, the UAE, Canada, Australia and Singapore. It returned 722 unique listings for **$0.03 of credit**. 60 of them are relevant, posted since 15 October, not expired, and print an email address in the listing. All 60 are in [`leads-with-emails.csv`](leads-with-emails.csv). Most are full-time or on-site jobs in India; the ones worth your time are below.
 
-Nothing in this section has been contacted. "Open" means the actor returned the listing as not expired on 14 November.
+Leads 21–24 were emailed on 14 November on your instruction; nothing else in this section has been contacted. "Open" means the actor returned the listing as not expired on 14 November.
 
 ### Freelance and contract leads with a printed email
 
