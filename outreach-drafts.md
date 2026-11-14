@@ -1,6 +1,6 @@
 # Outreach drafts
 
-Prepared 14 November 2026. **Nothing here has been sent.** Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
+Prepared 14 November 2026. **Only the EVER Agency email has been sent**, on your instruction. Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
 
 Notes that apply to all five:
 
@@ -14,7 +14,7 @@ Notes that apply to all five:
 
 ## 1. EVER Agency
 
-**Send to:** `bradley@everagency.co`. The listing prints `bradley@everagnecy.co`, but that domain does not exist; `everagency.co` does and receives mail. If it bounces, apply through the [Indeed listing](https://to.indeed.com/aabtp4p4q6vq). **Saved as a Gmail draft, not sent.**
+**Send to:** `bradley@everagency.co`. The listing prints `bradley@everagnecy.co`, but that domain does not exist; `everagency.co` does and receives mail. If it bounces, apply through the [Indeed listing](https://to.indeed.com/aabtp4p4q6vq). **Sent from your Gmail on 14 November 2026.**
 
 **Subject:** Editor for your six weekly hospitality reels
 
