@@ -5,6 +5,7 @@ Prepared 14 November 2026. **Nothing here has been sent.** Each draft goes with 
 Notes that apply to all five:
 
 - The drafts say "I run Creative Cut" and "our" for the work, because your site presents the projects as the studio's.
+- In the emails, `creativecut.in` is a hyperlink (in the body and under your name). LinkedIn DMs keep the plain URL because LinkedIn does not support link text.
 - Your site has no per-project pages, so each link goes to the category and the sentence names the project.
 - I did not name any editing software or promise a turnaround. Add those where a listing asks.
 - No LinkedIn profile was verified for any contact, so each DM needs you to find the right person first.
@@ -21,12 +22,13 @@ Hi Bradley,
 
 Your listing describes six accounts with one high-level reel a week each, cut from your own hotel and restaurant shoots. I can take that on: pulling the strongest moments from the raw footage, then the edit, titles, graphics and sound design, delivered on your weekly deadline with revisions.
 
-I run Creative Cut, an editing and motion studio. Our product and brand ads include a restaurant ad built around a burger concept, which shows food-and-venue editing close to your accounts: https://www.creativecut.in/work#product-ads
+I run Creative Cut, an editing and motion studio. Our product and brand ads include a restaurant ad built around a burger concept, which shows food-and-venue editing close to your accounts: [creativecut.in/work#product-ads](https://www.creativecut.in/work#product-ads)
 
 I can start immediately. Which account would you want cut first?
 
 Hemant Chauhan
 Creative Cut
+[creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing asks for advanced Premiere Pro and colour grading. Add a line on each if they apply to you.
 
@@ -50,12 +52,13 @@ Hi Picture Perfect Video team,
 
 Your listing asks for one editor to take your real hotel, restaurant and nightclub footage and extend it with AI that looks fully real, and to edit short videos with music for Instagram, TikTok and YouTube. My sample project from your kit is here, with the note on how I made it: [link to sample folder]
 
-I run Creative Cut, an editing and motion studio. Our AI work includes a product ad for a facial mist that blends AI liquid visuals with the real product: https://www.creativecut.in/work#ai
+I run Creative Cut, an editing and motion studio. Our AI work includes a product ad for a facial mist that blends AI liquid visuals with the real product: [creativecut.in/work#ai](https://www.creativecut.in/work#ai)
 
 I can start immediately. Would you like me to begin with one of the paid projects?
 
 Hemant Chauhan
 Creative Cut
+[creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the subject line is the one the listing requires. The listing also asks for Higgsfield and Seedance 2.5 experience and a few hours a day overlapping US business hours. Add a line confirming each if true.
 
@@ -77,12 +80,13 @@ Hi MADLeadFlow team,
 
 Your Video Editor listing describes editing ads for Facebook, Instagram and YouTube, with several hook variations per ad for testing, and AI-generated scenes alongside real footage. I can take on the ad edits, captions, graphics and sound, and cut each concept into multiple hooks and lengths.
 
-I run Creative Cut, an editing and motion studio. Our AI work includes an AI-generated spec ad taken from storyboard to final frames: https://www.creativecut.in/work#ai
+I run Creative Cut, an editing and motion studio. Our AI work includes an AI-generated spec ad taken from storyboard to final frames: [creativecut.in/work#ai](https://www.creativecut.in/work#ai)
 
 I can start immediately. Which client's ads would you want variations on first?
 
 Hemant Chauhan
 Creative Cut
+[creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing requires hands-on Higgsfield and ElevenLabs. Add that only if true.
 
@@ -106,12 +110,13 @@ Hi [first name],
 
 Your listing describes about eight videos a week across two or three client accounts: a few 1–2 minute DIY tutorials and five 30–60 second shorts, with the clips already selected and in order. I can take on the assembly, smooth cuts, captions, music and text overlays, formatted for Reels, TikTok and Facebook, on your weekly deadlines.
 
-I run Creative Cut, an editing studio. Our creator reels include a tutorial reel with animated app UI and captioned talking-head edits: https://www.creativecut.in/work#creator-reels
+I run Creative Cut, an editing studio. Our creator reels include a tutorial reel with animated app UI and captioned talking-head edits: [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels)
 
 I can start immediately. Would you like to send one week's footage as a first batch?
 
 Hemant Chauhan
 Creative Cut
+[creativecut.in](https://www.creativecut.in)
 
 **LinkedIn DM**
 
@@ -138,12 +143,13 @@ Hi Beyond the Narrative team,
 
 Your listing asks for someone to edit long-form YouTube videos and cut three to five Shorts from each, with captions, graphics, sound and stock footage, and to help shape a recognisable visual identity for the channel. I can take on those edits and the Shorts, including the intros and outros.
 
-I run Creative Cut, an editing and motion studio. One example close to your format is an education reel that uses animated ChatGPT UI to explain a topic: https://www.creativecut.in/work#creator-reels
+I run Creative Cut, an editing and motion studio. One example close to your format is an education reel that uses animated ChatGPT UI to explain a topic: [creativecut.in/work#creator-reels](https://www.creativecut.in/work#creator-reels)
 
 I can start immediately, and the 30-day paid trial works for me. Which topic is first in your queue?
 
 Hemant Chauhan
 Creative Cut
+[creativecut.in](https://www.creativecut.in)
 
 *Before sending:* the listing prefers US-based applicants and your site shows no long-form example. If you have one, add its link.
 
