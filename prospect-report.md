@@ -1,6 +1,6 @@
 # Prospect report: video editing and motion graphics leads
 
-Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. The EVER Agency email was sent on 14 November 2026 on your instruction; nothing else has gone out. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
+Prepared 14 November 2026 for Hemant Chauhan, Creative Cut. Three emails were sent on 14 November 2026 on your instruction: EVER Agency, RVS Media India and Divine Hindu. Nothing else has gone out. Drafts are in [`outreach-drafts.md`](outreach-drafts.md).
 
 ## Read this first
 

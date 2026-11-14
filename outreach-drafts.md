@@ -1,6 +1,6 @@
 # Outreach drafts
 
-Prepared 14 November 2026. **Only the EVER Agency email has been sent**, on your instruction. Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
+Prepared 14 November 2026. **Three emails have been sent on your instruction: EVER Agency, RVS Media India and Divine Hindu.** Everything else is unsent. Each draft goes with the matching lead in [`prospect-report.md`](prospect-report.md). Text in [square brackets] needs your input before sending.
 
 Notes that apply to all drafts:
 
@@ -169,7 +169,7 @@ Hi [name], I saw the Beyond the Narrative listing for an editor on long-form vid
 
 ## 6. RVS Media India (now the strongest lead)
 
-**Send to:** apply through the [Indeed listing](https://to.indeed.com/aabfgdr427v9). `hello@rvsmedia.co.uk` is the company's general inbox from its official site, not a hiring address. **Saved as a Gmail draft, not sent.**
+**Send to:** apply through the [Indeed listing](https://to.indeed.com/aabfgdr427v9). `hello@rvsmedia.co.uk` is the company's general inbox from its official site, not a hiring address. **Sent from your Gmail on 14 November 2026.**
 
 **Subject:** Freelance video editor and AI video producer, Delhi-based
 
@@ -203,7 +203,7 @@ Hi [name], I saw RVS Media's listing for an India-based freelance video editor a
 
 ## 7. Divine Hindu
 
-**Send to:** `hr@divinehindu.in`, printed in the [Indeed listing](https://to.indeed.com/aaktjn9bsnw9). **Saved as a Gmail draft, not sent.** The stipend is up to ₹10,000 a month, so decide whether this is worth pursuing.
+**Send to:** `hr@divinehindu.in`, printed in the [Indeed listing](https://to.indeed.com/aaktjn9bsnw9). **Sent from your Gmail on 14 November 2026.** The stipend is up to ₹10,000 a month, so decide whether this is worth pursuing.
 
 **Subject:** Short-form video editor, available immediately
 
