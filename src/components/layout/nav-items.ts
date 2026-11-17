@@ -1,6 +1,6 @@
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
 import type { MemberRole } from "@/lib/types";
-import { Bot, Briefcase, IndianRupee, Inbox, ListChecks, LayoutDashboard, Megaphone, Settings, Sun, Target, Users, Workflow } from "lucide-react";
+import { Bot, Briefcase, Rocket, IndianRupee, Inbox, ListChecks, LayoutDashboard, Megaphone, Settings, Sun, Target, Users, Workflow } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 export type BadgeKey = "myTasksDue" | "approvals";
@@ -32,6 +32,7 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     title: "Sales",
     items: [
       { href: "/outreach", label: "Outreach", icon: Inbox, badge: "approvals" },
+      { href: "/engine", label: "Outreach Engine", icon: Rocket, roles: ADMINS },
       { href: "/whatsapp", label: "WhatsApp", icon: WhatsAppIcon },
       { href: "/instagram", label: "Instagram", icon: InstagramIcon },
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: LEADERS },
