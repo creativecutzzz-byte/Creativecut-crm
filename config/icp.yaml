@@ -1,0 +1,13 @@
+# Ideal customer profile for the Outreach Engine (Step 5 of docs/guide.md).
+# Replace every value with your own. allowed_countries is ALSO the compliance
+# allow-list: only list regions you have cleared with legal advice.
+industries: [B2B SaaS, D2C brands, Digital agencies]
+employee_range: [10, 200]
+target_titles: [Founder, Co-founder, CEO, Head of Marketing, Head of Growth, CMO, VP Marketing]
+allowed_countries: [IN, US, CA]
+exclude: [competitors, video production agencies, students, consumer-only businesses]
+min_score: 70
+# Skip free-mail addresses (gmail.com, yahoo.com, ...) — business contacts only.
+business_email_only: true
+# Treat risky / catch-all addresses from the verifier as a low-priority segment (true) or drop them (false).
+keep_catch_all: false
