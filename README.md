@@ -21,6 +21,7 @@ A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 
 | Meta Ads analytics | `/ads` | Spend, ROAS, CPL, CTR, daily chart, per-campaign table (read-only) |
 | AI agents | `/agents` | Lead generation (funding news, Google Maps, Apollo, website enrichment + Claude qualification) and outreach (writer, reply handler, sender) — see `docs/ai-sales-system.md` |
 | Meetings | `/book`, lead page | Booking page on Google Calendar (Meet invite, personal links), calendar sync, call outcomes, daily call list and morning brief |
+| Outreach Engine | `/engine` | High-volume cold email from a warmed mailbox fleet: verify → ICP-qualify → research → fact-checked draft → send in the recipient's morning → follow up → classify replies, with a deliverability guard — see [`docs/outreach-engine/README.md`](docs/outreach-engine/README.md) |
 | Outreach approvals | `/outreach` | Approve / edit / skip AI-written emails, LinkedIn notes and replies; sent via Google Workspace (`docs/google-workspace-setup.md`) |
 | Follow-up workflows | `/workflows` | Trigger → step sequences, activate/pause, dry-run test run against a real lead |
 | Team management | `/team` | Members, roles, workload, invitations, change role / remove member, permission matrix |
@@ -104,4 +105,4 @@ Lead scoring (`src/lib/ai/lead-scoring.ts`) and dashboard insights (`src/lib/ai/
 
 ## Scripts
 
-`npm run dev` · `npm run build` · `npm run lint` · `npm run typecheck`
+`npm run dev` · `npm run build` · `npm run lint` · `npm run typecheck` · `npm test` · `npm run migrate` (outreach engine schema) · `npm run test-send -- <from> <to>`
