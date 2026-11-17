@@ -102,3 +102,26 @@ export async function signOut() {
   }
   redirect("/login");
 }
+
+/**
+ * Google sign-in through Supabase Auth (enable the Google provider in Supabase ->
+ * Authentication -> Providers, and set SUPABASE_GOOGLE_LOGIN=true). The `hd`
+ * hint pre-selects the Workspace domain; the outreach engine itself enforces
+ * ALLOWED_LOGIN_DOMAIN on every request.
+ */
+export async function signInWithGoogle(formData: FormData) {
+  if (!isSupabaseConfigured) redirect("/today");
+  const next = safeNext(String(formData.get("next") ?? "") || undefined);
+  const origin = (await headers()).get("origin") ?? "";
+  const hd = (process.env.ALLOWED_LOGIN_DOMAIN ?? "").split(",")[0]?.trim();
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      queryParams: hd ? { hd, prompt: "select_account" } : { prompt: "select_account" },
+    },
+  });
+  if (error || !data.url) redirect("/login?error=auth");
+  redirect(data.url);
+}

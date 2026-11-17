@@ -2,6 +2,7 @@ import { LogoMark } from "@/components/icons";
 import { isSupabaseConfigured } from "@/lib/env";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { signInWithGoogle } from "@/app/actions/auth";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -20,7 +21,18 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
         <div className="card p-6">
           {isSupabaseConfigured ? (
-            <LoginForm next={next} initialError={error ? "That sign-in link is invalid or expired." : undefined} />
+            <>
+              {process.env.SUPABASE_GOOGLE_LOGIN === "true" && (
+                <form action={signInWithGoogle} className="mb-4 space-y-4">
+                  <input type="hidden" name="next" value={next ?? ""} />
+                  <button type="submit" className="flex h-9 w-full items-center justify-center rounded-lg border border-line bg-surface-2 text-sm font-medium text-fg hover:bg-surface-3">
+                    Continue with Google{process.env.ALLOWED_LOGIN_DOMAIN ? ` (${process.env.ALLOWED_LOGIN_DOMAIN.split(",")[0]})` : ""}
+                  </button>
+                  <p className="text-center text-[11px] text-subtle">or</p>
+                </form>
+              )}
+              <LoginForm next={next} initialError={error ? "That sign-in link is invalid or expired." : undefined} />
+            </>
           ) : (
             <div className="space-y-4 text-sm">
               <p className="text-muted">

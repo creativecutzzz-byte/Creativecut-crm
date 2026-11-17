@@ -8,6 +8,12 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // The outreach engine reads its YAML config and prompt files at runtime.
+  outputFileTracingIncludes: {
+    "/api/**": ["./config/**", "./docs/prompts/**"],
+    "/engine": ["./config/**", "./docs/prompts/**"],
+  },
+  serverExternalPackages: ["pg", "googleapis"],
   env: {
     NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: supabaseAnonKey,
