@@ -50,8 +50,9 @@ prospect's local weekday morning, follows up in the same thread, stops the momen
 7. **Secrets and URLs.** `CRON_SECRET` (32+ random chars), `UNSUB_SECRET`, `UNSUB_BASE_URL` (a domain you control, e.g. `https://crm.creativecut.in`),
    `ALERT_WEBHOOK_URL`, `ALLOWED_LOGIN_DOMAIN`. Identity: `OUTREACH_COMPANY_NAME`, `OUTREACH_OFFER`, `OUTREACH_POSTAL_ADDRESS`.
 8. **ICP.** Edit `config/icp.yaml` (industries, titles, size, allowed countries, `min_score`).
-9. **Deploy (Vercel Pro).** The every-minute crons in `vercel.json` need the **Pro** plan; on Hobby the deploy fails with a daily-cron
-   limit error. Push, add every variable for Production, redeploy, confirm the jobs under Settings → Cron Jobs, then trigger each once:
+9. **Deploy (Vercel Pro).** The team is on **Hobby** today, which only allows once-a-day crons, so `vercel.json` currently runs each
+   engine job once a day (enough to deploy and test, not to run the engine). After upgrading to Pro, switch to the guide's schedule:
+   `research` and `send` `* * * * *`, `replies` `*/3 * * * *`, `guard` `*/5 * * * *`. Push, add every variable for Production, redeploy, confirm the jobs under Settings → Cron Jobs, then trigger each once:
    ```bash
    curl -H "Authorization: Bearer $CRON_SECRET" https://crm.creativecut.in/api/cron/guard
    ```

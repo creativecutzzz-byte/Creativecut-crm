@@ -11,7 +11,7 @@ quality gate -> send -> follow up -> classify replies.
 
 ## Stack
 Next.js App Router (TypeScript), Postgres (Supabase, schema `outreach`, accessed with `pg`
-through DATABASE_URL), Anthropic SDK, googleapis. Deployed on Vercel (Pro: every-minute cron).
+through DATABASE_URL), Anthropic SDK, googleapis. Deployed on Vercel. Every-minute crons need Pro; on Hobby vercel.json runs each job daily.
 
 ## Hard rules
 - Emails are plain text. No tracking pixels and no wrapped links.
