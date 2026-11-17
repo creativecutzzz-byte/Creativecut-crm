@@ -1,0 +1,20 @@
+# Deliverability guard thresholds (Step 9 of docs/guide.md). Starting points to tune
+# against your own data — these are not Google rules. The guard never auto-resumes.
+mailbox_bounce:
+  rate: 0.02          # 2% hard bounces...
+  window: 100         # ...of the last 100 sends
+  min_sends: 30       # only once the mailbox has at least 30 sends
+domain_bounce:
+  rate: 0.02
+  window: 200
+negative_replies:
+  rate: 0.01          # opt-outs + not_interested
+  window: 300
+quota_pause_hours: 24
+postmaster:
+  spam_rate_halve: 0.001   # 0.1% -> halve the domain's daily cap
+  spam_rate_pause: 0.003   # 0.3% -> pause the domain
+  pause_reputations: [LOW, BAD]
+reply_rate_alert:
+  min_sends: 150      # alert only, when reply rate < half of the 7-day median
+  ratio: 0.5
