@@ -1,6 +1,7 @@
 "use server";
 
 import { firstIssue, optionalText, requireWorkspace, type ActionState } from "@/lib/actions";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -29,6 +30,11 @@ export async function createTemplate(_: ActionState, formData: FormData): Promis
   });
   if (error) return { error: error.code === "23505" ? "A template with that name already exists." : error.message };
 
+  await captureServerEvent(ws.viewer.userId, "template_created", {
+    channel: parsed.data.channel,
+    variable_count: extractVariables(parsed.data.body).length,
+    has_external_template: Boolean(parsed.data.external_template_name),
+  });
   revalidatePath(`/${parsed.data.channel}`);
   return { ok: true, message: "Template saved" };
 }

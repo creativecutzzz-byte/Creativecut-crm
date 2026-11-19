@@ -147,6 +147,7 @@ export const dailyBriefAgent = defineAgent<Config>({
           `${COMPANY_KNOWLEDGE}\n\n# Your job\nYou read today's sales brief for Creative Cut's founder and return exactly 3 short, concrete priorities for today (who to call or reply to first, what to unblock). No fluff.`,
           lines.join("\n"),
           800,
+          ctx.aiObservability,
         );
         lines.splice(2, 0, "FOCUS TODAY", ...f.bullets.slice(0, 3).map((b) => `• ${b}`), "");
       } catch {

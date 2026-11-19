@@ -250,7 +250,7 @@ async function classify(ctx: AgentContext, m: InboundRow, leadName: string): Pro
       last?.body ? `<our_last_message>\n${String(last.body).slice(0, 1500)}\n</our_last_message>` : "",
       `<their_reply>\n${m.body.slice(0, 3000)}\n</their_reply>`,
     ].join("\n");
-    return extract(verdict, SYSTEM, input, 2000);
+    return extract(verdict, SYSTEM, input, 2000, ctx.aiObservability);
   }
   // Keyword rules when Claude isn't connected.
   const t = m.body.toLowerCase();

@@ -2,6 +2,7 @@
 
 import { scoreLead } from "@/lib/ai/lead-scoring";
 import { requireWorkspace, type ActionState } from "@/lib/actions";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { LEAD_SOURCES } from "@/lib/constants";
 import type { LeadSource } from "@/lib/types";
 import { revalidatePath } from "next/cache";
@@ -123,6 +124,13 @@ export async function importLeads(_: ActionState, formData: FormData): Promise<A
     await supabase.from("activities").insert(activities);
   }
 
+  if (leads.length) {
+    await captureServerEvent(viewer.userId, "leads_imported", {
+      imported_count: leads.length,
+      duplicate_count: duplicates,
+      skipped_count: problems.length,
+    });
+  }
   revalidatePath("/leads");
   revalidatePath("/dashboard");
   const parts = [`${leads.length} imported`];

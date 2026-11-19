@@ -1,4 +1,5 @@
 import { runScheduled } from "@/lib/agents/runner";
+import { logPostHogInfo } from "@/lib/posthog-logger";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -17,5 +18,6 @@ export async function GET(request: NextRequest) {
   if (!supabase) return NextResponse.json({ error: "SUPABASE_SERVICE_ROLE_KEY is not set" }, { status: 503 });
 
   const results = await runScheduled(supabase);
+  logPostHogInfo("Scheduled agents completed", { agent_run_count: results.length });
   return NextResponse.json({ ran: results.length, results });
 }

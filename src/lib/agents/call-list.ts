@@ -176,7 +176,7 @@ async function callPlan(ctx: AgentContext, lead: LeadRow): Promise<string> {
     `<lead>\n${JSON.stringify({ name: lead.name, company: lead.company, stage: lead.stage, score: lead.ai_score, research, service_interest: lead.service_interest, fit_reasons: (lead.enrichment as { fit_reasons?: string[] } | null)?.fit_reasons ?? [] })}\n</lead>`,
     history?.length ? `<recent_messages>\n${history.map((h) => `[${h.direction} ${h.channel}] ${String(h.body).slice(0, 300)}`).join("\n")}\n</recent_messages>` : "",
   ].join("\n");
-  const p: Plan = await extract(plan, SYSTEM, input, 2500);
+  const p: Plan = await extract(plan, SYSTEM, input, 2500, ctx.aiObservability);
   return [
     `🎯 Goal: ${p.goal}`,
     `👋 Opener: ${p.opener}`,

@@ -301,7 +301,7 @@ async function writeStep(ctx: AgentContext, lead: LeadRow, step: PlanStep, index
     `<lead>\n${JSON.stringify(research)}\n</lead>`,
     history.length ? `<earlier_messages>\n${history.join("\n")}\n</earlier_messages>` : "",
   ].join("\n");
-  const out = await extract(written, SYSTEM, input, 3000);
+  const out = await extract(written, SYSTEM, input, 3000, ctx.aiObservability);
   if (step.channel !== "email") return { ...base, subject: null, body: out.body.trim(), notes: out.notes };
   const a = out.subject || subject;
   const b = out.alt_subject.trim();

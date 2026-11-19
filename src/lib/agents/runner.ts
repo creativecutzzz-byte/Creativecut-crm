@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { isAiConfigured } from "@/lib/ai/claude";
+import { createAiObservabilityContext, isAiConfigured } from "@/lib/ai/claude";
 import { AGENTS, getAgentDefinition } from "./registry";
 import type { AgentDefinition } from "./types";
 
@@ -58,6 +58,11 @@ export async function runAgent(supabase: SupabaseClient, orgId: string, key: str
   let error: string | null = null;
   let nextState = state;
 
+  const aiObservability = createAiObservabilityContext(
+    startedBy ?? (owner?.user_id as string | undefined),
+    run?.id ? `agent-run:${run.id as string}` : undefined,
+  );
+
   const missing = missingRequirements(def);
   if (missing.length > 0) {
     outcome = { key, status: "skipped", summary: `Missing server settings: ${missing.join(", ")}` };
@@ -65,7 +70,7 @@ export async function runAgent(supabase: SupabaseClient, orgId: string, key: str
     outcome = { key, status: "skipped", summary: process.env.ANTHROPIC_API_KEY ? "AI is switched off (AI_ENABLED=false)" : "Needs ANTHROPIC_API_KEY" };
   } else {
     try {
-      const result = await def.run({ supabase, orgId, ownerId: (owner?.user_id as string | undefined) ?? null, state }, config);
+      const result = await def.run({ supabase, orgId, ownerId: (owner?.user_id as string | undefined) ?? null, state, aiObservability }, config);
       created = result.created;
       updated = result.updated;
       nextState = result.state ?? state;

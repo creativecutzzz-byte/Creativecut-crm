@@ -1,6 +1,7 @@
 "use server";
 
 import { firstIssue, requireWorkspace, type ActionState } from "@/lib/actions";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { startSequence, stopSequences } from "@/lib/automation";
 import { SEQUENCES, type SequenceKey } from "@/lib/sequences";
 import { revalidatePath } from "next/cache";
@@ -27,10 +28,14 @@ export async function startLeadSequence(_: ActionState, formData: FormData): Pro
   const result = await startSequence(supabase, viewer, lead, parsed.data.sequence);
   if ("error" in result) return { error: result.error };
 
+  const steps = SEQUENCES[parsed.data.sequence].steps.length;
+  await captureServerEvent(viewer.userId, "lead_sequence_started", {
+    sequence: parsed.data.sequence,
+    step_count: steps,
+  });
   revalidatePath(`/leads/${lead.id}`);
   revalidatePath("/tasks");
   revalidatePath("/dashboard");
-  const steps = SEQUENCES[parsed.data.sequence].steps.length;
   return { ok: true, message: `${steps} follow-up tasks scheduled` };
 }
 

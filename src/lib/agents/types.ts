@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { AiObservabilityContext } from "@/lib/ai/claude";
 import type { z } from "zod";
 
 export type Department = "brain" | "lead_generation" | "outreach" | "sales_calling" | "crm_operations";
@@ -10,6 +11,8 @@ export interface AgentContext {
   ownerId: string | null;
   /** Small cursor the agent keeps between runs (e.g. the next Apollo page). */
   state: Record<string, unknown>;
+  /** One session and trace shared by all model calls in this agent run. */
+  aiObservability: AiObservabilityContext;
 }
 
 export interface AgentResult {

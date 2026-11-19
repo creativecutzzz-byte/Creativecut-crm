@@ -4,7 +4,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Menu, Search, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import posthog from "posthog-js";
 import type { MemberRole } from "@/lib/types";
 import type { BadgeKey } from "./nav-items";
 import { SidebarContent } from "./sidebar";
@@ -13,6 +14,7 @@ export function Topbar({
   orgName,
   userName,
   email,
+  userId,
   mode,
   signOut,
   openTasks = 0,
@@ -23,6 +25,7 @@ export function Topbar({
   orgName: string;
   userName: string;
   email: string;
+  userId: string | null;
   mode: "demo" | "live";
   signOut?: () => Promise<void>;
   /** Open tasks due now or earlier for the viewer; lights the bell. */
@@ -32,6 +35,16 @@ export function Topbar({
   counts?: Partial<Record<BadgeKey, number>>;
 }) {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (mode !== "live" || !userId) return;
+
+    posthog.identify(userId, {
+      email,
+      name: userName,
+      role,
+    });
+  }, [email, mode, role, userId, userName]);
 
   return (
     <>
@@ -71,7 +84,10 @@ export function Topbar({
               <p className="text-[11px] text-subtle">{email}</p>
             </div>
             {signOut && (
-              <form action={signOut}>
+              <form
+                action={signOut}
+                onSubmit={() => posthog.reset()}
+              >
                 <button type="submit" className="ml-1 text-xs text-muted hover:text-fg">
                   Sign out
                 </button>
