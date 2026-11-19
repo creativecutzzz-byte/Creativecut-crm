@@ -1,0 +1,82 @@
+{
+ "cover-art.jpg": [
+  1024,
+  1536
+ ],
+ "stream-scene.jpg": [
+  1536,
+  864
+ ],
+ "streamer-laughing.jpg": [
+  640,
+  640
+ ],
+ "streamer-shocked.jpg": [
+  640,
+  640
+ ],
+ "streamer-amazed.jpg": [
+  640,
+  640
+ ],
+ "rooftop-view.jpg": [
+  1280,
+  853
+ ],
+ "doodle-loop.png": [
+  512,
+  333
+ ],
+ "doodle-scissors.png": [
+  385,
+  512
+ ],
+ "doodle-arrow.png": [
+  512,
+  432
+ ],
+ "doodle-tick.png": [
+  512,
+  451
+ ],
+ "doodle-cross.png": [
+  512,
+  499
+ ],
+ "doodle-loop-green.png": [
+  512,
+  333
+ ],
+ "receipt-blank.png": [
+  655,
+  1000
+ ],
+ "icon-m1.jpg": [
+  360,
+  360
+ ],
+ "icon-m2.jpg": [
+  360,
+  360
+ ],
+ "icon-m3.jpg": [
+  360,
+  360
+ ],
+ "icon-m4.jpg": [
+  360,
+  360
+ ],
+ "icon-m5.jpg": [
+  360,
+  360
+ ],
+ "icon-m6.jpg": [
+  360,
+  360
+ ],
+ "icon-m7.jpg": [
+  360,
+  360
+ ]
+}

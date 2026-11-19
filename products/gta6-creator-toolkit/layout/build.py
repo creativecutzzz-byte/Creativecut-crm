@@ -67,6 +67,10 @@ def build():
             content = markdown.markdown(
                 body, extensions=["tables", "fenced_code", "md_in_html", "attr_list", "sane_lists"])
             content = content.replace('<pre><code class="language-text">', '<pre class="sheet"><code>')
+        mm = re.fullmatch(r"m(\d)", pid)
+        if cls == "opener" and mm:
+            content = (f'<div class="micon"><img src="../assets/images/icon-m{mm.group(1)}.jpg" alt=""></div>'
+                       + content)
         pages.append((int(num), pid, cls, title, content))
 
     assert [p[0] for p in pages] == list(range(1, len(pages) + 1)), "page numbers out of order"

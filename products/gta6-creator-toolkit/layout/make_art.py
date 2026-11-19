@@ -18,6 +18,20 @@ COND = "font-family:'Barlow Condensed',sans-serif;font-weight:800"
 BODY = "font-family:'Inter',sans-serif"
 
 
+# ---------- raster artwork (from assets/images, prepared by prep_images.py) ----------
+import base64
+IMG_DIR = Path(__file__).resolve().parent.parent / "assets" / "images"
+_img_cache = {}
+
+
+def img(name, x, y, w, h, par="xMidYMid slice", extra=""):
+    if name not in _img_cache:
+        mime = "image/png" if name.endswith(".png") else "image/jpeg"
+        _img_cache[name] = f"data:{mime};base64," + base64.b64encode((IMG_DIR / name).read_bytes()).decode()
+    return (f'<image href="{_img_cache[name]}" x="{x}" y="{y}" width="{w}" height="{h}" '
+            f'preserveAspectRatio="{par}" {extra}/>')
+
+
 # ---------- helpers ----------
 def wob(points, amp=2.0, seed=1, closed=False):
     """Hand-drawn looking path through points (adds jitter + smoothing)."""
@@ -112,36 +126,8 @@ def skyline(y_base, w, color, seed=7, hmin=80, hmax=330, step=(40, 110)):
 
 # ---------- the fictional stream frame (1920 x 1080) ----------
 def stream_frame_body():
-    sky = (f'<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">'
-           f'<stop offset="0" stop-color="{VIOLET}"/><stop offset=".55" stop-color="{CORAL}"/>'
-           f'<stop offset="1" stop-color="{PEACH}"/></linearGradient></defs>'
-           f'<rect width="1920" height="1080" fill="url(#sky)"/>'
-           f'<circle cx="1180" cy="640" r="150" fill="#FFE3C4" opacity=".9"/>')
-    city = skyline(760, 1920, "#5B3A8A", seed=11, hmin=120, hmax=380) + skyline(800, 1920, "#3A2457", seed=4, hmin=60, hmax=220)
-    ground = f'<rect y="790" width="1920" height="290" fill="{PLUM}"/>'
-    road = (f'<path d="M0,900 L1920,860 L1920,1000 L0,1080Z" fill="#3B2B4D"/>'
-            f'<path d="M0,985 L1920,930" stroke="{PEACH}" stroke-width="8" stroke-dasharray="60 50" opacity=".7"/>')
-    palms = palm(140, 800, 1.5, "#1A1024", 2) + palm(1660, 800, 1.7, "#1A1024", 5) + palm(1820, 810, 1.2, "#1A1024", 9)
-    # fruit stand (left of car) and car
-    stand = (f'<rect x="560" y="820" width="190" height="90" rx="6" fill="#7A4E2D"/>'
-             f'<path d="M545,820 L765,820 L745,770 L565,770Z" fill="{CORAL}"/>'
-             + "".join(f'<circle cx="{585+i*26}" cy="812" r="12" fill="#FFB12B"/>' for i in range(7)))
-    car = (f'<path d="M820,930 L840,870 Q860,830 920,826 L1080,826 Q1130,830 1150,870 L1190,880 '
-           f'Q1220,890 1220,920 L1220,945 L820,945Z" fill="{PAPER}"/>'
-           f'<path d="M870,872 L895,840 L1000,838 L1000,872Z" fill="#9FD3F2"/>'
-           f'<path d="M1015,872 L1015,838 L1090,840 L1125,872Z" fill="#9FD3F2"/>'
-           f'<circle cx="900" cy="948" r="34" fill="{PLUM}"/><circle cx="900" cy="948" r="14" fill="#888"/>'
-           f'<circle cx="1135" cy="948" r="34" fill="{PLUM}"/><circle cx="1135" cy="948" r="14" fill="#888"/>')
-    # facecam bottom-left
-    cam = (f'<rect x="40" y="700" width="420" height="340" rx="22" fill="#2E2140" stroke="{PAPER}" stroke-width="6"/>'
-           f'<circle cx="250" cy="860" r="78" fill="{PEACH}"/>'
-           f'<path d="M120,1040 Q250,930 380,1040Z" fill="{VIOLET}"/>'
-           f'<path d="M168,860 Q168,760 250,760 Q332,760 332,860" fill="none" stroke="{PLUM}" stroke-width="18"/>'
-           f'<rect x="150" y="840" width="34" height="60" rx="12" fill="{PLUM}"/><rect x="316" y="840" width="34" height="60" rx="12" fill="{PLUM}"/>'
-           f'<path d="M222,880 Q250,905 278,880" stroke="{PLUM}" stroke-width="7" fill="none" stroke-linecap="round"/>'
-           f'<circle cx="225" cy="845" r="7" fill="{PLUM}"/><circle cx="275" cy="845" r="7" fill="{PLUM}"/>')
-    badge = overlay_badge(1440, 40)
-    return sky + city + ground + road + palms + stand + car + cam + badge
+    """Fictional stream: AI-made original scene (02) with the exact overlay badge drawn on top."""
+    return img("stream-scene.jpg", 0, 0, 1920, 1080) + overlay_badge(1440, 40)
 
 
 def overlay_badge(x, y, scale=1.0):
@@ -202,8 +188,7 @@ def crop_a_inner():
 
 
 def crop_b_inner():
-    face = (f'<svg x="0" y="0" width="1080" height="640" viewBox="40 700 420 340" preserveAspectRatio="xMidYMid slice">'
-            f'{stream_frame_body()}</svg>')
+    face = img("streamer-laughing.jpg", 0, 0, 1080, 640)
     game = (f'<svg x="0" y="640" width="1080" height="607.5" viewBox="0 0 1920 1080">{stream_frame_body()}</svg>')
     bottom = f'<rect y="1247.5" width="1080" height="672.5" fill="#120B1A"/>'
     return face + game + bottom + caption_block(1420, "NOT THE MANGOES!", "MANGOES", 92)
@@ -230,12 +215,11 @@ def crop_a_annotated():
     ghost = (f'<rect x="1180" y="150" width="560" height="120" rx="60" fill="none" stroke="{FAIL}" '
              f'stroke-width="6" stroke-dasharray="18 14"/>'
              f'<text x="1460" y="230" text-anchor="middle" style="{COND}" font-size="56" fill="{FAIL}" opacity=".55">LIVE · /rexalive</text>')
-    note = (f'<text x="1250" y="400" style="{HAND}" font-size="78" fill="{FAIL}">The overlay was here.</text>'
-            f'<text x="1250" y="480" style="{HAND}" font-size="78" fill="{FAIL}">The crop cut it out!</text>')
-    arr = arrow(1500, 520, 1030, 330, bend=-0.35, color=FAIL, w=9, seed=8, head=40)
-    x = (f'<path d="{wob([(1290,760),(1690,1100)],3,2)}" stroke="{FAIL}" stroke-width="16" stroke-linecap="round" fill="none"/>'
-         f'<path d="{wob([(1690,760),(1290,1100)],3,4)}" stroke="{FAIL}" stroke-width="16" stroke-linecap="round" fill="none"/>'
-         f'<text x="1490" y="1220" text-anchor="middle" style="{COND}" font-size="88" fill="{FAIL}">FAILS THE BRIEF</text>')
+    note = (f'<text x="1250" y="800" style="{HAND}" font-size="78" fill="{FAIL}">The overlay was here.</text>'
+            f'<text x="1250" y="880" style="{HAND}" font-size="78" fill="{FAIL}">The crop cut it out!</text>')
+    arr = img("doodle-arrow.png", 1011, 298, 470, 397, "none")
+    x = (img("doodle-cross.png", 1300, 960, 380, 370, "xMidYMid meet")
+         + f'<text x="1490" y="1440" text-anchor="middle" style="{COND}" font-size="88" fill="{FAIL}">FAILS THE BRIEF</text>')
     save("crop-a-annotated.svg", svg(1900, 2160, body + ghost + note + arr + x,
          "Crop A annotated: missing overlay",
          "Illustration. Crop A with a hand-drawn red arrow pointing to where the LIVE /rexalive badge would be, "
@@ -247,12 +231,12 @@ def crop_b_annotated():
     # badge in crop B: game area x0=80,y0=760 (phone offset 80,120 + 640), scale 1080/1920=.5625
     bx, by = 80 + 1440 * .5625, 120 + 640 + 40 * .5625
     lp = loop(bx + 124, by + 26, 165, 60, seed=12)
-    note = (f'<path d="{lp}" fill="none" stroke="{PASS}" stroke-width="8" stroke-linecap="round"/>'
-            f'<text x="1250" y="560" style="{HAND}" font-size="78" fill="{PASS}">Overlay kept,</text>'
+    note = (img("doodle-loop-green.png", bx + 124 - 200, by + 26 - 80, 400, 160, "none")
+            + f'<text x="1250" y="560" style="{HAND}" font-size="78" fill="{PASS}">Overlay kept,</text>'
             f'<text x="1250" y="640" style="{HAND}" font-size="78" fill="{PASS}">unchanged.</text>'
             + arrow(1330, 680, 1120, 830, bend=0.3, color=PASS, w=9, seed=3, head=40)
-            + f'<path d="{wob([(1300,1000),(1420,1120),(1660,860)],3,6)}" stroke="{PASS}" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
-            f'<text x="1480" y="1250" text-anchor="middle" style="{COND}" font-size="88" fill="{PASS}">PASSES</text>')
+            + img("doodle-tick.png", 1290, 870, 400, 352, "xMidYMid meet")
+            + f'<text x="1490" y="1330" text-anchor="middle" style="{COND}" font-size="88" fill="{PASS}">PASSES</text>')
     save("crop-b-annotated.svg", svg(1900, 2160, body + note,
          "Crop B annotated: overlay kept",
          "Illustration. Crop B with a green pencil loop around the LIVE /rexalive badge in the gameplay area and a "
@@ -271,7 +255,7 @@ def doodle_timestamp():
         y = 100 + i * 92
         body += (f'<text x="60" y="{y}" style="{BODY};font-weight:700" font-size="36" fill="{VIOLET}">{t}</text>'
                  f'<text x="250" y="{y}" style="{BODY}" font-size="34" fill="{PLUM}">{s}</text>')
-    body += f'<path d="{loop(130, 180, 115, 44, seed=21)}" fill="none" stroke="{CORAL}" stroke-width="6" stroke-linecap="round"/>'
+    body += img("doodle-loop.png", 10, 120, 250, 110, "none")
     body += f'<text x="70" y="635" style="{HAND}" font-size="60" fill="{CORAL}">the hook starts here, so the cut starts here</text>'
     body += arrow(52, 610, 34, 232, bend=-0.1, color=CORAL, w=5, seed=2, head=24)
     save("doodle-timestamp-loop.svg", svg(1200, 660, body, "Pencil loop around a timestamp",
@@ -298,10 +282,10 @@ def doodle_scissors():
         body += f'<rect x="{x}" y="{300-h/2:.1f}" width="4" height="{h:.1f}" rx="2" fill="{VIOLET}" opacity=".75"/>'
     for x, lab in ((380, "IN 01:12:08"), (1020, "OUT 01:12:31")):
         body += f'<path d="{wob([(x,190),(x,410)],2,int(x))}" stroke="{CORAL}" stroke-width="6" stroke-dasharray="14 10" fill="none"/>'
-        body += scissors(x, 140, 1.1, CORAL, 180)
+        body += img("doodle-scissors.png", x - 48, 92, 96, 128, "xMidYMid meet")
         body += f'<text x="{x}" y="470" text-anchor="middle" style="{BODY};font-weight:700" font-size="34" fill="{PLUM}">{lab}</text>'
     body += f'<text x="780" y="215" text-anchor="middle" style="{HAND}" font-size="46" fill="{PLUM}">crash ↓ keep loud</text>'
-    body += f'<text x="700" y="80" text-anchor="middle" style="{HAND}" font-size="54" fill="{CORAL}">cut here — and here</text>'
+    body += f'<text x="700" y="70" text-anchor="middle" style="{HAND}" font-size="54" fill="{CORAL}">cut here — and here</text>'
     save("doodle-scissors.svg", svg(1400, 520, body, "Scissors at the cut points",
          "A timeline with an audio waveform. Coral scissors mark the in point 01:12:08 and out point 01:12:31; "
          "the kept 23 seconds are highlighted peach. A note marks the crash spike: keep loud."))
@@ -312,19 +296,19 @@ def doodle_receipt():
             ("Min $3 · Max $150", "OK"), ("Fee 10%", "− $4.86")]
     W, H = 760, 1000
     zig = " ".join(f"L{x},{H-40 + (22 if i % 2 else 0)}" for i, x in enumerate(range(W - 40, 39, -30)))
-    body = (f'<path d="M40,40 L{W-40},40 {zig} L40,{H-40} Z" fill="#FFFFFF" stroke="{PLUM}" stroke-width="4"/>'
-            f'<text x="{W/2}" y="120" text-anchor="middle" style="{COND}" font-size="64" fill="{PLUM}">CLIP RECEIPT</text>'
+    body = (img("receipt-blank.png", 10, 0, 740, 1000, "none")
+            + f'<text x="{W/2}" y="120" text-anchor="middle" style="{COND}" font-size="64" fill="{PLUM}">CLIP RECEIPT</text>'
             f'<text x="{W/2}" y="170" text-anchor="middle" style="{BODY}" font-size="28" fill="{VIOLET}">Fictional example · Rexa Live</text>'
-            f'<path d="M80,200 L{W-80},200" stroke="{PLUM}" stroke-width="3" stroke-dasharray="10 8"/>')
+            f'<path d="M80,200 L{W-105},200" stroke="{PLUM}" stroke-width="3" stroke-dasharray="10 8"/>')
     for i, (k, v) in enumerate(rows):
         y = 270 + i * 90
         body += (f'<text x="80" y="{y}" style="{BODY}" font-size="44" fill="{PLUM}">{k}</text>'
-                 f'<text x="{W-80}" y="{y}" text-anchor="end" style="{BODY};font-weight:700" font-size="44" fill="{PLUM}">{v}</text>')
-    body += (f'<path d="M80,{720} L{W-80},{720}" stroke="{PLUM}" stroke-width="3"/>'
+                 f'<text x="{W-115}" y="{y}" text-anchor="end" style="{BODY};font-weight:700" font-size="44" fill="{PLUM}">{v}</text>')
+    body += (f'<path d="M80,{720} L{W-105},{720}" stroke="{PLUM}" stroke-width="3"/>'
              f'<text x="90" y="800" style="{COND}" font-size="60" fill="{PLUM}">NET</text>'
-             f'<text x="{W-90}" y="800" text-anchor="end" style="{COND}" font-size="72" fill="{VIOLET}">$43.74</text>'
+             f'<text x="{W-125}" y="800" text-anchor="end" style="{COND}" font-size="72" fill="{VIOLET}">$43.74</text>'
              f'<text x="{W/2}" y="880" text-anchor="middle" style="{BODY}" font-size="26" fill="{PLUM}">before any withdrawal fees</text>'
-             f'<path d="{loop(W-170, 775, 130, 55, seed=31)}" fill="none" stroke="{CORAL}" stroke-width="6"/>')
+             + img("doodle-loop.png", W - 365, 700, 300, 130, "none"))
     save("doodle-receipt.svg", svg(W, H, body, "CPM receipt",
          "A paper receipt for the fictional clip: 48,600 verified views at $1.00 per 1,000 equals $48.60, within the "
          "$3 minimum and $150 maximum, minus a 10% fee of $4.86, net $43.74 before withdrawal fees."))
@@ -433,63 +417,31 @@ def safe_zone():
 
 # ---------- cover (1480 x 2100, A5 ratio) ----------
 def cover():
+    """Cover = AI-made original key art (01) + exact title text drawn in code."""
     W, H = 1480, 2100
-    defs = (f'<defs><linearGradient id="cv-sky" x1="0" y1="0" x2="0" y2="1">'
-            f'<stop offset="0" stop-color="{PLUM}"/><stop offset=".28" stop-color="{VIOLET}"/>'
-            f'<stop offset=".62" stop-color="{CORAL}"/><stop offset=".9" stop-color="{PEACH}"/></linearGradient>'
-            f'<linearGradient id="cv-scr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{VIOLET}"/>'
-            f'<stop offset=".6" stop-color="{CORAL}"/><stop offset="1" stop-color="{PEACH}"/></linearGradient>'
+    defs = (f'<defs><filter id="cv-sh" x="-10%" y="-10%" width="120%" height="130%">'
+            f'<feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="{PLUM}" flood-opacity=".55"/></filter>'
             f'<clipPath id="cv-clip"><rect x="0" y="0" width="{W}" height="{H}"/></clipPath></defs>')
-    bg = f'<rect width="{W}" height="{H}" fill="url(#cv-sky)"/>'
-    sun = f'<circle cx="1060" cy="1560" r="250" fill="#FFE3C4" opacity=".55"/><circle cx="1060" cy="1560" r="170" fill="#FFE9D1" opacity=".8"/>'
-    city = (skyline(1760, W, "#6A3F8F", seed=21, hmin=160, hmax=520, step=(50, 120))
-            + skyline(1830, W, "#3A2457", seed=8, hmin=80, hmax=300, step=(40, 100)))
-    ground = f'<rect y="1820" width="{W}" height="280" fill="{PLUM}"/>'
-    palms = palm(90, 1860, 2.6, "#170D21", 3) + palm(1360, 1870, 2.9, "#170D21", 6) + palm(1250, 1880, 1.8, "#170D21", 11)
-    # crop-frame corner brackets around the title block
+    bg = img("cover-art.jpg", 0, 0, W, H, "xMidYMin slice")
+
     def corners(x, y, w, h, L=70, c=PAPER, sw=10):
         return "".join(f'<path d="{d}" stroke="{c}" stroke-width="{sw}" fill="none" stroke-linecap="square"/>' for d in (
             f"M{x},{y+L} L{x},{y} L{x+L},{y}", f"M{x+w-L},{y} L{x+w},{y} L{x+w},{y+L}",
             f"M{x},{y+h-L} L{x},{y+h} L{x+L},{y+h}", f"M{x+w-L},{y+h} L{x+w},{y+h} L{x+w},{y+h-L}"))
-    title = (corners(70, 90, 1340, 640)
-             + f'<text x="740" y="330" text-anchor="middle" style="{COND}" font-size="250" fill="{PAPER}" letter-spacing="4">GTA 6</text>'
-             + f'<text x="740" y="520" text-anchor="middle" style="{COND}" font-size="178" fill="{PEACH}">CREATOR</text>'
-             + f'<text x="740" y="690" text-anchor="middle" style="{COND}" font-size="178" fill="{PEACH}">TOOLKIT</text>')
-    sub = (f'<text x="740" y="840" text-anchor="middle" style="{BODY};font-weight:700" font-size="64" fill="{PAPER}">Make your first GTA 6 Short.</text>'
-           f'<rect x="400" y="885" width="680" height="120" rx="60" fill="{PAPER}"/>'
-           f'<text x="740" y="967" text-anchor="middle" style="{COND}" font-size="92" fill="{PLUM}">JUST YOUR PHONE.</text>')
-    # phone with vertical editing timeline
-    px, py, pw, ph = 470, 1080, 540, 960
-    scr = (f'<g transform="rotate(-6 {px+pw/2} {py+ph/2})">'
-           f'<rect x="{px-26}" y="{py-26}" width="{pw+52}" height="{ph+52}" rx="70" fill="#120B1A" stroke="{PAPER}" stroke-width="6"/>'
-           f'<rect x="{px}" y="{py}" width="{pw}" height="{ph}" rx="46" fill="#1C1328"/>'
-           # preview window 9:16-ish
-           f'<rect x="{px+120}" y="{py+40}" width="300" height="440" rx="14" fill="url(#cv-scr)"/>'
-           + f'<svg x="{px+120}" y="{py+40}" width="300" height="440" viewBox="0 0 300 440"><g>'
-           + skyline(400, 300, "#3A2457", seed=5, hmin=60, hmax=190, step=(20, 46))
-           + f'<rect y="398" width="300" height="42" fill="{PLUM}"/>' + palm(40, 410, .7, "#170D21", 4) + '</g></svg>'
-           + corners(px+100, py+20, 340, 480, L=40, c=PAPER, sw=7)
-           # caption on preview
-           + f'<rect x="{px+150}" y="{py+372}" width="240" height="46" rx="8" fill="{PLUM}" opacity=".8"/>'
-           + f'<text x="{px+270}" y="{py+406}" text-anchor="middle" style="{COND}" font-size="34" fill="{PAPER}">HOOK IN 2s</text>'
-           # timeline tracks
-           + f'<rect x="{px+30}" y="{py+530}" width="{pw-60}" height="300" rx="16" fill="#271B36"/>'
-           + "".join(f'<rect x="{px+50+i*96}" y="{py+560}" width="88" height="86" rx="10" fill="{c}"/>'
-                     for i, c in enumerate([VIOLET, CORAL, PEACH, VIOLET, CORAL]))
-           + f'<rect x="{px+50}" y="{py+665}" width="300" height="40" rx="10" fill="{PEACH}" opacity=".9"/>'
-           + f'<rect x="{px+50}" y="{py+720}" width="440" height="40" rx="10" fill="#3E7C9E"/>'
-           + "".join(f'<rect x="{px+60+i*14}" y="{py+740-(8+(i*37)%22)/2}" width="6" height="{8+(i*37)%22}" fill="#CFE6F2"/>' for i in range(30))
-           + f'<path d="M{px+258},{py+540} L{px+258},{py+820}" stroke="{PAPER}" stroke-width="6"/>'
-           + f'<path d="M{px+244},{py+540} L{px+272},{py+540} L{px+258},{py+560}Z" fill="{PAPER}"/>'
-           + scissors(px+258, py+800, .9, PAPER, 180)
-           + f'<rect x="{px+150}" y="{py+870}" width="240" height="56" rx="28" fill="{CORAL}"/>'
-           + f'<text x="{px+270}" y="{py+910}" text-anchor="middle" style="{BODY};font-weight:800" font-size="30" fill="#fff">EXPORT 9:16</text>'
-           + '</g>')
+    title = (corners(70, 70, 1340, 620)
+             + f'<g filter="url(#cv-sh)">'
+             + f'<text x="740" y="300" text-anchor="middle" style="{COND}" font-size="250" fill="{PAPER}" letter-spacing="4">GTA 6</text>'
+             + f'<text x="740" y="480" text-anchor="middle" style="{COND}" font-size="172" fill="#FFE1C9">CREATOR</text>'
+             + f'<text x="740" y="645" text-anchor="middle" style="{COND}" font-size="172" fill="#FFE1C9">TOOLKIT</text></g>')
+    sub = (f'<text x="740" y="770" text-anchor="middle" style="{BODY};font-weight:800" font-size="62" fill="{PAPER}" '
+           f'filter="url(#cv-sh)">Make your first GTA 6 Short.</text>'
+           f'<rect x="400" y="800" width="680" height="118" rx="59" fill="{PAPER}" filter="url(#cv-sh)"/>'
+           f'<text x="740" y="881" text-anchor="middle" style="{COND}" font-size="92" fill="{PLUM}">JUST YOUR PHONE.</text>')
     detail = (f'<rect x="0" y="1990" width="{W}" height="110" fill="{PLUM}" opacity=".92"/>'
               f'<text x="740" y="2058" text-anchor="middle" style="{BODY};font-weight:600" font-size="40" fill="{PAPER}">'
               f'Free editing tools · Campaign checklist · YouTube roadmap</text>')
-    brand = (f'<text x="1400" y="1960" text-anchor="end" style="{COND}" font-size="54" fill="{PAPER}" letter-spacing="3">CREATIVE CUT</text>')
-    body = defs + f'<g clip-path="url(#cv-clip)">' + bg + sun + city + ground + palms + scr + title + sub + brand + detail + '</g>'
+    brand = (f'<text x="1410" y="1950" text-anchor="end" style="{COND}" font-size="56" fill="{PAPER}" letter-spacing="3">CREATIVE CUT</text>')
+    body = defs + f'<g clip-path="url(#cv-clip)">' + bg + title + sub + brand + detail + '</g>'
     save("cover.svg", svg(W, H, body, "GTA 6 Creator Toolkit cover",
          "Cover: GTA 6 Creator Toolkit. Make your first GTA 6 Short. Just your phone. A phone showing a vertical "
          "editing timeline over a dusk skyline with palm silhouettes and crop-frame corners. Free editing tools, "

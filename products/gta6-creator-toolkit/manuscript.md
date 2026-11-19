@@ -262,6 +262,8 @@ The payoff happens in that silence. You **must watch it**.
 02:05:45  REXA: Okay. Back to crime.
 ```
 
+<figure class="photo fig-rooftop-p10"><img src="../assets/images/rooftop-view.jpg" alt="Illustration of a rooftop view over a coastal city at sunset, the kind of spoiler-free discovery moment at 02:05:24."><figcaption>What 02:05:24 might look like. Illustration, fictional.</figcaption></figure>
+
 Write: **start**, **end**, **hook**, **context**, **payoff**, and **what you must check visually**.
 
 <div class="answer" markdown="1">
@@ -285,9 +287,9 @@ Write: **start**, **end**, **hook**, **context**, **payoff**, and **what you mus
 The same stream can give you three kinds of Short. Pick the one your moment fits.
 
 <div class="cards">
-<div class="card c1"><h4>Funny reaction</h4><p><b>Hook:</b> a bold claim. "I'm a professional driver."</p><p><b>Context:</b> what he's trying to do.</p><p><b>Payoff:</b> it goes wrong, and he reacts.</p></div>
-<div class="card c2"><h4>Unexpected moment</h4><p><b>Hook:</b> a question. "Is he following me?"</p><p><b>Context:</b> 1–2 lines of build-up.</p><p><b>Payoff:</b> the surprise, then the reaction.</p></div>
-<div class="card c3"><h4>Spoiler-free discovery</h4><p><b>Hook:</b> "Wait. Look at this."</p><p><b>Context:</b> where he is, in a few words, no story.</p><p><b>Payoff:</b> the view and his honest reaction.</p></div>
+<div class="card c1"><img class="av" src="../assets/images/streamer-laughing.jpg" alt=""><div class="ct"><h4>Funny reaction</h4><p><b>Hook:</b> a bold claim. "I'm a professional driver."</p><p><b>Context:</b> what he's trying to do.</p><p><b>Payoff:</b> it goes wrong, and he reacts.</p></div></div>
+<div class="card c2"><img class="av" src="../assets/images/streamer-shocked.jpg" alt=""><div class="ct"><h4>Unexpected moment</h4><p><b>Hook:</b> a question. "Is he following me?"</p><p><b>Context:</b> 1–2 lines of build-up.</p><p><b>Payoff:</b> the surprise, then the reaction.</p></div></div>
+<div class="card c3"><img class="av" src="../assets/images/streamer-amazed.jpg" alt=""><div class="ct"><h4>Spoiler-free discovery</h4><p><b>Hook:</b> "Wait. Look at this."</p><p><b>Context:</b> where he is, in a few words, no story.</p><p><b>Payoff:</b> the view and his honest reaction.</p></div></div>
 </div>
 
 ## Three rules for any plan
@@ -877,6 +879,8 @@ WHY WOULD A STRANGER CARE? ____________________
 HOOK TEXT (max 6 words): ______________________
 SAFE TITLE (no names, no twists): ______________
 ```
+
+<figure class="photo fig-rooftop-p33"><img src="../assets/images/rooftop-view.jpg" alt="Illustration of a rooftop sunset view: a discovery moment with no story spoilers."><figcaption>A discovery moment: a view, a reaction, no story. Illustration.</figcaption></figure>
 
 <div class="tip" markdown="1">
 

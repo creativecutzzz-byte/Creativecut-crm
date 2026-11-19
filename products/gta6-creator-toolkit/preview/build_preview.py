@@ -155,12 +155,14 @@ def ad_a():
 
 def ad_b():
     b = svg("crop-b.svg")
-    cards = [("01:12:08", "Funny reaction", "“I am a professional driver.” → crash"),
-             ("01:47:40", "Unexpected moment", "“Is he following me?” → silence → “I did NOT expect that.”"),
-             ("02:05:19", "Spoiler-free discovery", "“Wait. Stop. Look at this.” → the view")]
-    items = "".join(f'<div class="card" style="gap:6px"><div class="ts" style="font-size:34px">{t}</div>'
-                    f'<div class="step">{k}</div><div style="font-size:24px;line-height:1.3">{d}</div></div>'
-                    for t, k, d in cards)
+    cards = [("01:12:08", "Funny reaction", "“I am a professional driver.” → crash", "streamer-laughing"),
+             ("01:47:40", "Unexpected moment", "“Is he following me?” → “I did NOT expect that.”", "streamer-shocked"),
+             ("02:05:19", "Spoiler-free discovery", "“Wait. Stop. Look at this.” → the view", "streamer-amazed")]
+    items = "".join(f'<div class="card" style="flex-direction:row;gap:18px;align-items:center">'
+                    f'<img src="../assets/images/{av}.jpg" alt="" style="width:120px;height:120px;border-radius:50%;flex:none">'
+                    f'<div><div class="ts" style="font-size:34px">{t}</div>'
+                    f'<div class="step">{k}</div><div style="font-size:24px;line-height:1.3">{d}</div></div></div>'
+                    for t, k, d, av in cards)
     body = f"""<div class="ad">
 <div class="brand">CREATIVE CUT · GTA 6 CREATOR TOOLKIT</div>
 <h1>How do you get <em>three Shorts</em> from one livestream?</h1>
