@@ -1,0 +1,7 @@
+# raw third-party pages downloaded during research (not ours to redistribute)
+research/
+# intermediate render outputs
+layout/raw.pdf
+layout/book.html
+layout/overflow-report.json
+layout/review/p-*.png
