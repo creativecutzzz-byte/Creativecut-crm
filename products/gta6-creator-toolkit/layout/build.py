@@ -60,7 +60,9 @@ def build():
         end = marks[i + 1].start() if i + 1 < len(marks) else len(src)
         body = src[m.end():end].strip()
         if body.strip() == "{{cover}}":
-            content = inline_svg("cover.svg", "cover-art")
+            content = ('<img class="cover-img" src="../assets/images/cover-front.png" alt="Cover: How to Earn from GTA 6 Content. '
+                       'A beginner\'s guide to making Shorts on your phone. Paid clipping campaigns, YouTube monetization, '
+                       'streamer editing. Creative Cut. Illustration of a car on a coastal road at sunset.">')
         else:
             body = prompt_blocks(body)
             body = FIG_RE.sub(fig, body)
@@ -68,9 +70,15 @@ def build():
                 body, extensions=["tables", "fenced_code", "md_in_html", "attr_list", "sane_lists"])
             content = content.replace('<pre><code class="language-text">', '<pre class="sheet"><code>')
         mm = re.fullmatch(r"m(\d)", pid)
-        if cls == "opener" and mm:
-            content = (f'<div class="micon"><img src="../assets/images/icon-m{mm.group(1)}.jpg" alt=""></div>'
-                       + content)
+        if cls == "opener":
+            # one continuous gradient band: kicker + headline + mission icon
+            icon = (f'<div class="micon"><img src="../assets/images/icon-m{mm.group(1)}.jpg" alt=""></div>' if mm else "")
+            content = re.sub(r'\A\s*(<p class="kicker">.*?</p>)\s*(<h1[^>]*>.*?</h1>)',
+                             lambda x: f'<header class="band"><div class="btxt">{x.group(1)}{x.group(2)}</div>{icon}</header>',
+                             content, count=1, flags=re.S)
+        elif cls != "cover":
+            # same highlight on every page's main headline
+            content = re.sub(r'<(h[12])([^>]*)>(.*?)</\1>', r'<\1\2><span class="hl">\3</span></\1>', content, count=1, flags=re.S)
         pages.append((int(num), pid, cls, title, content))
 
     assert [p[0] for p in pages] == list(range(1, len(pages) + 1)), "page numbers out of order"

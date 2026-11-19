@@ -45,13 +45,18 @@ blockquote p { margin: 0; }
 .kicker { font-size: 8.5pt; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--violet);
           margin: 0 0 1.4mm; }
 
-/* ---------- mission opener band ---------- */
+/* ---------- mission opener band (one continuous gradient) ---------- */
 .opener .inner { padding-top: 0; }
-.opener .kicker, .opener h1 { margin-left: -10.5mm; margin-right: -10.5mm; padding-left: 10.5mm; padding-right: 10.5mm;
-  background: linear-gradient(120deg, var(--violet) 0%, var(--coral) 70%, var(--peach) 100%); color: var(--paper); }
-.opener .kicker { padding-top: 9mm; margin-bottom: 0; color: #FFE9D8; }
-.opener h1 { padding-bottom: 5mm; margin-bottom: 4mm; font-size: 33pt; }
+.band { display: flex; align-items: center; gap: 5mm; margin: 0 -10.5mm 4mm; padding: 6.5mm 8mm 5mm 10.5mm; min-height: 33mm;
+        background: linear-gradient(120deg, var(--violet) 0%, var(--coral) 70%, var(--peach) 100%); color: var(--paper); }
+.band .btxt { flex: 1; min-width: 0; }
+.band .kicker { color: #FFE9D8; margin: 0 0 1.6mm; }
+.band h1 { margin: 0; font-size: 31pt; color: var(--paper); }
 .challenge .inner { background: linear-gradient(180deg, var(--peach-soft), var(--paper) 40%); }
+
+/* ---------- main headline highlight (same on every page) ---------- */
+.hl { background: linear-gradient(transparent 62%, rgba(255,181,131,.6) 62%, rgba(255,181,131,.6) 92%, transparent 92%);
+      -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 .6mm; }
 
 /* ---------- tables ---------- */
 table { width: 100%; border-collapse: collapse; font-size: 9.6pt; line-height: 1.3; margin: 0 0 3mm; }
@@ -103,7 +108,7 @@ figcaption { font-size: 8.8pt; color: var(--ink-2); margin-top: 1.2mm; line-heig
 
 /* ---------- cover ---------- */
 .cover .inner { padding: 0; }
-.cover-art { display: block; width: 148mm; height: 210mm; }
+.cover-art, .cover-img { display: block; width: 148mm; height: 210mm; object-fit: cover; }
 
 /* ---------- front & lists ---------- */
 .toc ul { list-style: none; padding: 0; margin: 0 0 4mm; }
@@ -160,14 +165,16 @@ ul.srcs li { margin-bottom: 1.1mm; }
 .end pre.sheet { font-size: 9pt; }
 
 /* ---------- AI artwork additions ---------- */
-.opener .inner { position: relative; }
-.micon { position: absolute; top: 5.5mm; right: 7mm; width: 21mm; height: 21mm; border-radius: 50%; overflow: hidden;
-         background: #fff; border: .9mm solid var(--paper); box-shadow: 0 1mm 3mm rgba(33,21,46,.35); z-index: 2; }
+.micon { flex: none; width: 22mm; height: 22mm; border-radius: 50%; overflow: hidden; background: #fff;
+         border: .9mm solid var(--paper); }
 .micon img { width: 100%; height: 100%; display: block; }
-.opener .kicker, .opener h1 { padding-right: 33mm; }
 .card { display: flex; gap: 3mm; align-items: center; }
 .card .av { width: 15mm; height: 15mm; border-radius: 50%; flex: none; object-fit: cover; border: .6mm solid #fff; }
 .card .ct { flex: 1; }
 figure.photo img { display: block; margin: 0 auto; border-radius: 3mm; max-width: 100%; }
 .fig-rooftop-p10 img { max-height: 36mm; }
 .fig-rooftop-p33 img { max-height: 48mm; }
+
+/* keep short status / time cells on one line */
+#m1-example td:last-child, #m1-example th:last-child,
+#m3-example td:first-child, #m3-example td:nth-child(2) { white-space: nowrap; }

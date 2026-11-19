@@ -43,18 +43,9 @@ const BOOK = 'file://' + path.join(ROOT, 'layout', 'book.html');
   });
   console.log('wrote layout/raw.pdf');
 
-  // Standalone cover PNG at A5 300 dpi (1748 x 2480).
-  const svg = fs.readFileSync(path.join(ROOT, 'assets', 'illustrations', 'cover.svg'), 'utf8');
-  const fonts = path.join(ROOT, 'assets', 'fonts');
-  const cov = await browser.newPage({ viewport: { width: 1480, height: 2100 }, deviceScaleFactor: 1748 / 1480 });
-  await cov.setContent(`<style>
-    @font-face{font-family:'Barlow Condensed';font-weight:800;src:url(file://${fonts}/BarlowCondensed-ExtraBold.ttf)}
-    @font-face{font-family:Inter;font-weight:100 900;src:url(file://${fonts}/Inter.ttf)}
-    html,body{margin:0}svg{display:block;width:1480px;height:2100px}</style>${svg}`);
-  await cov.evaluate(() => document.fonts.ready);
-  await cov.waitForTimeout(300);
-  await cov.screenshot({ path: path.join(ROOT, 'GTA_6_Creator_Toolkit_Cover.png'), clip: { x: 0, y: 0, width: 1480, height: 2100 } });
-  console.log('wrote GTA_6_Creator_Toolkit_Cover.png');
+  // Standalone cover PNG = the supplied front cover artwork.
+  fs.copyFileSync(path.join(ROOT, 'assets', 'images', 'cover-front.png'), path.join(ROOT, 'GTA_6_Creator_Toolkit_Cover.png'));
+  console.log('wrote GTA_6_Creator_Toolkit_Cover.png (supplied artwork)');
 
   await browser.close();
   if (bad.length) { console.log(`OVERFLOW on ${bad.length} page(s)`); process.exitCode = 2; }
