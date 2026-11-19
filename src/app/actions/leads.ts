@@ -3,6 +3,8 @@
 import { scoreLead } from "@/lib/ai/lead-scoring";
 import { createOnboardingTasks, hasOpenSequence, startSequence, stopSequences } from "@/lib/automation";
 import { firstIssue, optionalDateTime, optionalEmail, optionalText, optionalUuid, requireWorkspace, type ActionState } from "@/lib/actions";
+import { logPostHogInfo } from "@/lib/posthog-logger";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { LEAD_SOURCES, LEAD_STAGES } from "@/lib/constants";
 import type { ActivityType, LeadSource, LeadStage } from "@/lib/types";
 import { revalidatePath } from "next/cache";
@@ -71,6 +73,17 @@ export async function createLead(_: ActionState, formData: FormData): Promise<Ac
   if (error) return { error: error.message };
 
   await supabase.from("activities").insert({ org_id: viewer.orgId, lead_id: data.id, actor_id: viewer.userId, type: "system", body: "Lead created" });
+  await captureServerEvent(viewer.userId, "lead_created", {
+    source: lead.source,
+    estimated_value: lead.estimated_value,
+    service_count: lead.service_interest.length,
+    has_assigned_owner: Boolean(lead.owner_id),
+  });
+  logPostHogInfo("Lead created", {
+    source: lead.source,
+    service_count: lead.service_interest.length,
+    has_assigned_owner: Boolean(lead.owner_id),
+  });
 
   revalidateLeads();
   return { ok: true, message: "Lead created" };
@@ -147,6 +160,10 @@ export async function updateLeadStage(_: ActionState, formData: FormData): Promi
     await stopSequences(supabase, parsed.data.id);
   }
 
+  await captureServerEvent(viewer.userId, "lead_stage_updated", {
+    stage: parsed.data.stage,
+    proposal_sequence_started: message.includes("proposal follow-ups scheduled"),
+  });
   revalidateLeads(parsed.data.id);
   revalidatePath("/tasks");
   return { ok: true, message };
@@ -234,6 +251,11 @@ export async function convertLead(_: ActionState, formData: FormData): Promise<A
     { org_id: viewer.orgId, lead_id: lead.id, actor_id: viewer.userId, type: "stage_change", body: "Won — converted to client" },
     { org_id: viewer.orgId, client_id: client.id, actor_id: viewer.userId, type: "system", body: `Client created from lead ${lead.company ?? lead.name}` },
   ]);
+  await captureServerEvent(viewer.userId, "lead_converted", {
+    monthly_retainer: parsed.data.monthly_retainer,
+    service_count: lead.service_interest.length,
+    has_industry: Boolean(parsed.data.industry),
+  });
 
   revalidateLeads(lead.id);
   revalidatePath("/clients");

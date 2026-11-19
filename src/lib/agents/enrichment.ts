@@ -88,7 +88,7 @@ export const enrichmentAgent = defineAgent<Config>({
         notes: lead.ai_summary,
         tags: lead.tags,
       };
-      const a = await extract(assessment, SYSTEM, `<lead>\n${JSON.stringify(record)}\n</lead>\n<website url="${lead.website}">\n${site}\n</website>`);
+      const a = await extract(assessment, SYSTEM, `<lead>\n${JSON.stringify(record)}\n</lead>\n<website url="${lead.website}">\n${site}\n</website>`, 4000, ctx.aiObservability);
       const score = Math.max(0, Math.min(100, Math.round(a.fit_score)));
 
       await ctx.supabase

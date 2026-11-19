@@ -1,6 +1,7 @@
 "use server";
 
 import { requireWorkspace, type ActionState } from "@/lib/actions";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { getAgentDefinition } from "@/lib/agents/registry";
 import { runAgent } from "@/lib/agents/runner";
 import { revalidatePath } from "next/cache";
@@ -50,6 +51,7 @@ export async function runAgentNow(key: string): Promise<ActionState> {
   if (!getAgentDefinition(key)) return { error: "Unknown agent" };
   const ws = await requireWorkspace([...ADMIN]);
   if ("error" in ws) return ws;
+  await captureServerEvent(ws.viewer.userId, "agent_run_started", { agent_key: key });
   const outcome = await runAgent(ws.supabase, ws.viewer.orgId, key, "manual", ws.viewer.userId);
   revalidatePath("/agents");
   revalidatePath("/leads");

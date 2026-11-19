@@ -2,6 +2,7 @@
 
 import { requireWorkspace, type ActionState } from "@/lib/actions";
 import { DEFAULT_WRITER_CONFIG, startAutopilotForLead, type WriterConfig } from "@/lib/agents/outreach-writer";
+import { createAiObservabilityContext } from "@/lib/ai/claude";
 import { getAgentDefinition } from "@/lib/agents/registry";
 import { resolveConfig } from "@/lib/agents/runner";
 import type { SequenceKey } from "@/lib/sequences";
@@ -56,7 +57,7 @@ export async function setMeetingOutcome(id: string, outcome: "held" | "no_show" 
     const { data: row } = await supabase.from("agents").select("config").eq("org_id", viewer.orgId).eq("key", "outreach_writer").maybeSingle();
     const cfg = { ...DEFAULT_WRITER_CONFIG, ...resolveConfig(def, row?.config as Record<string, unknown> | null), sequence: f.sequence } as WriterConfig;
     try {
-      await startAutopilotForLead({ supabase, orgId: viewer.orgId, ownerId: viewer.userId, state: {} }, cfg, leadId);
+      await startAutopilotForLead({ supabase, orgId: viewer.orgId, ownerId: viewer.userId, state: {}, aiObservability: createAiObservabilityContext(viewer.userId) }, cfg, leadId);
     } catch (err) {
       message += ` (Autopilot not started: ${err instanceof Error ? err.message : "error"})`;
     }

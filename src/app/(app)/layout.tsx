@@ -28,6 +28,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           orgName={viewer.orgName}
           userName={viewer.fullName}
           email={viewer.email}
+          userId={viewer.userId}
           mode={viewer.mode}
           signOut={viewer.mode === "live" ? signOut : undefined}
           openTasks={dueTasks}

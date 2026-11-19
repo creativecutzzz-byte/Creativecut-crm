@@ -80,7 +80,7 @@ export const fundingNewsAgent = defineAgent<Config>({
 
     if (isAiConfigured()) {
       const input = funding.map((item, index) => `<item index="${index}">\n<title>${item.title}</title>\n<summary>${item.description.slice(0, 600)}</summary>\n</item>`).join("\n");
-      const { items: parsed } = await extract(extraction, SYSTEM, input, 8000);
+      const { items: parsed } = await extract(extraction, SYSTEM, input, 8000, ctx.aiObservability);
       for (const p of parsed) {
         const item = funding[p.index];
         if (!item || !p.is_funding_round || !p.company.trim()) continue;

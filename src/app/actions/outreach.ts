@@ -1,6 +1,8 @@
 "use server";
 
 import { requireWorkspace, type ActionState } from "@/lib/actions";
+import { createAiObservabilityContext } from "@/lib/ai/claude";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { DEFAULT_WRITER_CONFIG, startAutopilotForLead, type WriterConfig } from "@/lib/agents/outreach-writer";
 import { getAgentDefinition } from "@/lib/agents/registry";
 import { resolveConfig, runAgent } from "@/lib/agents/runner";
@@ -46,6 +48,9 @@ export async function approveDraft(_: ActionState, formData: FormData): Promise<
   const outcome = await sendDraft(ws.supabase, draft.id, { actorId: ws.viewer.userId, settings });
   refresh(draft.lead_id as string);
   if (outcome.status === "failed" || outcome.status === "blocked") return { error: outcome.message };
+  await captureServerEvent(ws.viewer.userId, "outreach_draft_approved", {
+    delivery_status: outcome.status,
+  });
   return { ok: true, message: outcome.message };
 }
 
@@ -102,7 +107,7 @@ export async function startAutopilot(leadId: string): Promise<ActionState> {
   const { data: row } = await ws.supabase.from("agents").select("config").eq("org_id", ws.viewer.orgId).eq("key", "outreach_writer").maybeSingle();
   const cfg = { ...DEFAULT_WRITER_CONFIG, ...resolveConfig(def, row?.config as Record<string, unknown> | null) } as WriterConfig;
   try {
-    const { drafted } = await startAutopilotForLead({ supabase: ws.supabase, orgId: ws.viewer.orgId, ownerId: ws.viewer.userId, state: {} }, cfg, leadId);
+    const { drafted } = await startAutopilotForLead({ supabase: ws.supabase, orgId: ws.viewer.orgId, ownerId: ws.viewer.userId, state: {}, aiObservability: createAiObservabilityContext(ws.viewer.userId) }, cfg, leadId);
     refresh(leadId);
     return { ok: true, message: drafted ? `Autopilot on — ${drafted} message${drafted === 1 ? "" : "s"} waiting in the approval queue` : "Autopilot on — the first step will be written on the next run" };
   } catch (err) {

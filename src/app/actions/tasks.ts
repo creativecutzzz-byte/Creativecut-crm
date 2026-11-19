@@ -1,6 +1,7 @@
 "use server";
 
 import { firstIssue, optionalDateTime, optionalText, optionalUuid, requireWorkspace, type ActionState } from "@/lib/actions";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -36,6 +37,11 @@ export async function createTask(_: ActionState, formData: FormData): Promise<Ac
   });
   if (error) return { error: error.message };
 
+  await captureServerEvent(viewer.userId, "task_created", {
+    priority: parsed.data.priority,
+    has_due_date: Boolean(parsed.data.due_at),
+    linked_record: parsed.data.lead_id ? "lead" : parsed.data.client_id ? "client" : "none",
+  });
   revalidateTasks(parsed.data.lead_id, parsed.data.client_id);
   return { ok: true, message: "Task added" };
 }
@@ -59,6 +65,9 @@ export async function setTaskStatus(formData: FormData) {
       type: "task",
       body: `Completed task: ${task.title}`,
     });
+  }
+  if (task) {
+    await captureServerEvent(viewer.userId, "task_status_changed", { status: parsed.data.status });
   }
   revalidateTasks(task?.lead_id, task?.client_id);
 }

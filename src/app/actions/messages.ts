@@ -6,6 +6,7 @@ import { isSupabaseConfigured } from "@/lib/env";
 import { instagram, renderTemplate, whatsapp } from "@/lib/integrations";
 import type { SendResult } from "@/lib/integrations/safety";
 import { createClient } from "@/lib/supabase/server";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -125,6 +126,13 @@ export async function sendMessage(_: SendState, formData: FormData): Promise<Sen
     }
     revalidatePath(`/${channel}`);
     revalidatePath(`/leads/${lead_id}`);
+  }
+  if (result.status === "sent" && viewer.userId) {
+    await captureServerEvent(viewer.userId, "message_sent", {
+      channel,
+      delivery_mode: live ? "live" : "preview",
+      used_template: Boolean(templateId),
+    });
   }
 
   return { preview: result.preview, status: result.status, note, at: result.at };
