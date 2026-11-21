@@ -18,7 +18,7 @@ DASHBOARD = [
     ["Metric", "Value", "How it's counted"],
     ["New leads", "=COUNTIF(Leads!C2:C,\"NEW\")", "Leads with Status NEW"],
     ["Qualified", "=COUNTIF(Leads!C2:C,\"QUALIFIED\")+COUNTIF(Leads!C2:C,\"READY\")", "Leads that passed intent, recency and exclusion rules"],
-    ["Ready to send", "=COUNTIF('Outreach Queue'!K2:K,\"READY\")", "Outreach rows eligible for sending"],
+    ["Waiting for approval or ready", "=COUNTIF('Outreach Queue'!K2:K,\"AWAITING_APPROVAL\")+COUNTIF('Outreach Queue'!K2:K,\"APPROVED\")+COUNTIF('Outreach Queue'!K2:K,\"READY\")", "Drafts waiting for you (Review & Approve), approved, or ready (Auto)"],
     ["Needs review", "=COUNTIF('Outreach Queue'!K2:K,\"NEEDS_REVIEW\")+COUNTIF(Leads!C2:C,\"NEEDS_REVIEW\")", "Missing sample, contact, date or sourced detail"],
     ["Sent", "=COUNTIF('Outreach Queue'!M2:M,\"?*\")", "Rows with a Sent At time"],
     ["Sent today (IST)", "=COUNTIF('Outreach Queue'!M2:M,TEXT(TODAY(),\"yyyy-mm-dd\")&\"*\")", "Counts against DAILY_SEND_CAP"],

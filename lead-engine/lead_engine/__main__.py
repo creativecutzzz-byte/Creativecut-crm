@@ -58,7 +58,11 @@ def main(argv=None):
 
     if a.cmd == "run":
         offline = json.load(open(a.replay)) if a.replay else None
-        stats = Pipeline(make_store(env), make_ledger(env), env, gmail=make_gmail(env), trigger=a.trigger, offline_items=offline).run()
+        from .senders import load_senders
+
+        store = make_store(env)
+        senders = load_senders(store.settings(), env)
+        stats = Pipeline(store, make_ledger(env), env, trigger=a.trigger, offline_items=offline, senders=senders).run()
         print(json.dumps(stats.__dict__, indent=1, default=str))
         return 0
 
@@ -81,15 +85,18 @@ def main(argv=None):
     if a.cmd == "selftest-gmail":
         store = make_store(env)
         s = store.settings()
-        gm = make_gmail(env)
+        from .senders import load_senders
+
+        slots = [x for x in load_senders(s, env) if x.gmail is not None]
+        gm = slots[0].gmail if slots else make_gmail(env)
         if not gm:
             sys.exit("Gmail OAuth is not configured")
-        rows = [q for q in store.read("Outreach Queue") if (not a.attempt or q["Attempt ID"] == a.attempt) and q.get("Status") in ("READY", "NEEDS_REVIEW", "DRAFT")]
+        rows = [q for q in store.read("Outreach Queue") if (not a.attempt or q["Attempt ID"] == a.attempt) and q.get("Status") in ("READY", "NEEDS_REVIEW", "DRAFT", "AWAITING_APPROVAL", "APPROVED")]
         if not rows:
             sys.exit("no draft to preview")
         q = rows[0]
         html = Pipeline._html_from_preview(q)
-        raw, rfc = build_mime(s["SENDER_EMAIL"], s.get("SENDER_NAME", "Hemant, Creative Cut"), s["TEST_RECIPIENT"], f"[SELF-TEST] {q['Subject']}",
+        raw, rfc = build_mime(slots[0].email if slots else s["SENDER_EMAIL"], s.get("SENDER_NAME", "Hemant, Creative Cut"), s["TEST_RECIPIENT"], f"[SELF-TEST] {q['Subject']}",
                               q["Email Preview"], html, f"SELFTEST-{q['Attempt ID']}")
         res = gm.send(raw)
         found = gm.find_sent(rfc)

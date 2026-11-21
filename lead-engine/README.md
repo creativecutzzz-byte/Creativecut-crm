@@ -6,6 +6,29 @@ Finds brands and teams that are publicly asking for a freelance or contract vide
 - **Internal status page (Netlify):** https://creativecut-leads-internal.netlify.app. To open it you sign in to Netlify as a team member, then enter the status-page login.
 - **Playbook:** Google Doc `15P2uFT-Q7LJ56D0t7Dwk8a_dx4YqF3niJDYxp71cvhY`
 
+## Lead Agent app (`/agent`)
+
+A simple four-screen UI inside the Creative Cut CRM (Next.js). It's built for someone who has never used a CRM or connected an API. It reads and writes the same Google Sheet as the worker, so there is one source of truth.
+
+| Screen | What it shows |
+| --- | --- |
+| **Home** | One status line ("Next run tomorrow at 9:00 AM IST", or "Checking contact details…" during a run). Three numbers: Qualified Leads Today, Needs Review, Emails Sent Today. One primary action: **Review Leads** when drafts wait in Review & Approve mode, otherwise **Run Now**. The current mode in plain words. At most one attention message, with a fix button. A first-time setup checklist: Connect a lead source → Connect a sender → Preview a run → Choose your mode. It hides once all four are done. Run history and diagnostics sit behind **View Activity**. |
+| **Leads** | Opens on **Needs Review** when drafts are waiting. Each row shows the person and company, one reason they qualified, and the draft status (icon plus words). A row opens a side panel (full-screen on phones) with the source post, research, an editable subject and message, the sender, and **Approve** / **Skip**. Bulk approval states the email and recipient count before confirming. |
+| **Schedule** | The schedule in one plain sentence ("Every day at 9:00 AM IST"). **Add Time** and **Pause** are always visible. **Customize** offers weekdays, several times a day, a one-time date and time, and an optional send window. A preview of the next "Start research" times appears before you save. Saving updates Cloud Scheduler and reads it back to confirm. |
+| **Settings → Connections** | Web Research (API Key, Apify), Vibe Prospecting (API Key, Explorium), Apollo (API Key) and Gmail (Google sign-in), each with its status and next action. Three API credential slots: keys are tested with the provider, then stored in Secret Manager, and only the last 4 characters are shown. Three Gmail sender slots, each showing sends left today and a daily limit. Balance or usage is shown where the provider reports it: Apify monthly usage, Explorium credits. Apollo doesn't report a balance over its API. Mode and the live-sending switch are here too; **Preview only** shows whenever sending is off. |
+
+Research, enrichment, drafting and sending run as server-side jobs (the Cloud Run Job). You can close the browser. While a job runs, the worker writes one plain-language stage to the Sheet (`RUN_STAGE`), and the app refreshes every 8 seconds.
+
+**Modes.** In *Review & Approve* (the default), new drafts are saved as `AWAITING_APPROVAL` and only rows you approve (`APPROVED`) are sent. In *Auto*, eligible `READY` drafts send on schedule, but only when live sending is on. Every send still re-checks the same safety rules. An email you edited is re-checked for blanks and broken links first. Words followed by a URL in brackets become a hyperlink.
+
+**Senders.** Up to three Gmail addresses (`SENDER_1..3_EMAIL`, `SENDER_n_DAILY_CAP`). Their tokens are stored as `GMAIL_SENDER_n_REFRESH_TOKEN` in Secret Manager by Google sign-in. Each email goes from the sender with the most sends left. `DAILY_SEND_CAP` still limits the total. Replies and bounces are tracked in the sender's own inbox. A sender whose sign-in expires is marked "Needs reconnecting" and skipped.
+
+**Email lookups (optional).** When a qualified post has no email and didn't ask for a form or DM, the worker tries Apollo (`APOLLO_MAX_LOOKUPS_PER_RUN`, 1 credit each), then Vibe Prospecting through Explorium's API (`VIBE_MAX_LOOKUPS_PER_RUN`, about 2 credits each). It keeps only addresses on the brand's own domain. A rejected key flips the row to "Needs reconnecting" and Home shows the fix. **Vibe Prospecting is being discontinued on 2 Dec 2026** (vibeprospecting.ai/important-update); its lookups stop automatically on that date.
+
+**Demo data.** Without the app's Google credentials, `/agent` runs on fictional data, with a black "DEMO DATA" bar and a scenario picker: First-time setup, Run in progress, Finished run. Demo edits stay in memory and nothing is sent. Desktop and mobile previews are in [`docs/agent-previews/`](../docs/agent-previews/).
+
+**App environment variables (names only):** `AGENT_SHEET_ID`, `AGENT_SERVICE_ACCOUNT_EMAIL`, `AGENT_SERVICE_ACCOUNT_KEY`, `GOOGLE_CLOUD_PROJECT`, `GCP_REGION`, `CLOUD_RUN_JOB`, `SCHEDULER_SERVICE_ACCOUNT`, `GMAIL_OAUTH_CLIENT_ID`, `GMAIL_OAUTH_CLIENT_SECRET` (a **Web** OAuth client with redirect `https://<app>/api/agent/gmail/callback`), and `AGENT_STATE_SECRET`. Set `AGENT_TRUSTED_ACCESS=true` only when the site is already behind a login and CRM sign-in is off; otherwise live changes need a signed-in owner or admin. `deploy/deploy.sh` creates the `cc-lead-app` service account with only the roles the app needs (Secret Manager admin, Run developer, Scheduler admin) and prints these names.
+
 ## What one run does
 
 1. **Track.** It reads the Gmail threads of sent emails (metadata only) and marks each as REPLIED, OPTED_OUT or BOUNCED. Opt-outs and hard bounces go to Suppression.
@@ -15,7 +38,7 @@ Finds brands and teams that are publicly asking for a freelance or contract vide
 5. **Research.** It fetches the brand website's title and description and any emails published in the post or on the brand's own site. Each fact is stored with its source URL. Posts and pages are treated as data, never as instructions. Emails are checked for syntax and MX records (DNS-over-HTTPS). If there is no email, the contact channel is recorded instead (form, Easy Apply, Reddit/Instagram/LinkedIn DM) and nothing is sent.
 6. **Personalise.** It picks the playbook variation that fits the brief: podcast repurposing, talking-head, SaaS demo, agency overflow, D2C ad, long-form or default. The opener uses one sourced requirement and the closing question is one the lead hasn't already answered. It picks exactly **one** sample from the YouTube videos embedded on creativecut.in/work, builds the watch URL and verifies it plays signed-out. All links are HTML hyperlinks, and the signature links "Creative Cut" to https://creativecut.in. The rendered email is checked for broken links and unresolved placeholders. A row goes to `NEEDS_REVIEW` when there is no matching or verified sample (for example long-form, which has no sample on the site), the detail couldn't be sourced, the email didn't verify, or the poster is a staffing intermediary.
 7. **Send** (only when `SENDING_ENABLED` = TRUE). It sends READY first-touch emails through Gmail up to `DAILY_SEND_CAP` per IST day, shared by both runs. Each attempt has a deterministic ID and a durable ledger record in GCS, created with `ifGenerationMatch=0` so only one execution can claim it. A run lock also stops overlapping executions. If Gmail times out after submitting, the engine looks for its own `Message-ID` in Sent before trying again. Failures are logged and the next lead continues.
-8. **Schedule sync.** It pushes `RUN_TIME_1`/`RUN_TIME_2` from Settings to the two Cloud Scheduler jobs and reads them back. The result is logged as VERIFIED or MISMATCH.
+8. **Schedule sync.** It pushes `SCHEDULE_TIMES`, `SCHEDULE_DAYS`, `SCHEDULE_ONE_TIME` and `SCHEDULE_PAUSED` from Settings to Cloud Scheduler: one job per start time plus the one-time run. It removes stale jobs, clears a one-time run once it has passed, and reads every job back. The result is logged as VERIFIED or MISMATCH.
 
 Automated follow-ups are not implemented and stay off (`FOLLOWUPS_ENABLED` = FALSE).
 
@@ -96,7 +119,7 @@ LOCAL_SHEET_PATH=.local/sheet.json LEDGER_DIR=.local/ledger APIFY_TOKEN=... pyth
 LOCAL_SHEET_PATH=.local/sheet.json python -m lead_engine run --replay datasets.json   # replay saved datasets, no Apify spend
 ```
 
-The 13 offline tests cover exclusions, duplicate runs, manual-edit preservation, single-claim ledger semantics, overlapping live runs, the timeout-then-reconcile path, the daily cap, suppression, rendered-link and placeholder checks, playability rules and scheduler sync.
+The 20 offline tests cover modes (Review & Approve / Auto), three senders with per-sender limits, the send window, run-stage reporting, Apollo/Vibe lookups (including a rejected key and DM-only posts), edited-email link checks, exclusions, duplicate runs, manual-edit preservation, single-claim ledger semantics, overlapping live runs, the timeout-then-reconcile path, the daily cap, suppression, rendered-link and placeholder checks, playability rules and scheduler sync.
 
 ## Status page
 

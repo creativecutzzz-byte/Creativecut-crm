@@ -84,10 +84,11 @@ def offline(monkeypatch):
     monkeypatch.setattr(P.Pipeline, "_url_verified", lambda self, url: True)
 
 
-def make(tmp_path, live=False, cap=10, gmail=None):
+def make(tmp_path, live=False, cap=10, gmail=None, mode="AUTO", extra=None):
     store = LocalStore(str(tmp_path / "sheet.json"))
     store.data["Settings"] = [{"Key": "SENDING_ENABLED", "Value": "TRUE" if live else "FALSE"}, {"Key": "DAILY_SEND_CAP", "Value": str(cap)},
-                              {"Key": "ACTIVE_SOURCES", "Value": "linkedin_posts"}, {"Key": "MIN_QUALIFIED_BEFORE_EXTEND", "Value": "0"}]
+                              {"Key": "ACTIVE_SOURCES", "Value": "linkedin_posts"}, {"Key": "MIN_QUALIFIED_BEFORE_EXTEND", "Value": "0"},
+                              {"Key": "AGENT_MODE", "Value": mode}, {"Key": "SENDER_1_DAILY_CAP", "Value": str(cap)}] + [{"Key": k, "Value": v} for k, v in (extra or {}).items()]
     store.save()
     return store, LocalLedger(str(tmp_path / "ledger"))
 
@@ -242,10 +243,7 @@ def test_playability_generic_antibot_is_inconclusive_not_failure(monkeypatch):
         assert REAL_VERIFY("abcdefghijk")[0] is ok, reason
 
 
-def test_schedule_sync_creates_patches_and_verifies():
-    from lead_engine.config import Settings
-    from lead_engine.scheduler import sync
-
+def _fake_scheduler():
     class Resp:
         def __init__(self, code, j=None):
             self.status_code, self._j = code, j or {}
@@ -260,28 +258,179 @@ def test_schedule_sync_creates_patches_and_verifies():
         def __init__(self):
             self.jobs, self.calls = {}, []
 
-        def get(self, url, **k):
+        def get(self, url, params=None, **k):
             name = url.split("/v1/", 1)[1]
+            if name.endswith("/jobs"):
+                return Resp(200, {"jobs": list(self.jobs.values())})
             return Resp(200, self.jobs[name]) if name in self.jobs else Resp(404)
 
         def post(self, url, json=None, **k):
+            name = url.split("/v1/", 1)[1]
+            if name.endswith(":pause") or name.endswith(":resume"):
+                job = name.rsplit(":", 1)[0]
+                self.jobs[job]["state"] = "PAUSED" if name.endswith(":pause") else "ENABLED"
+                self.calls.append(name.rsplit(":", 1)[1])
+                return Resp(200, self.jobs[job])
             self.calls.append("create")
-            self.jobs[json["name"]] = json
+            self.jobs[json["name"]] = {**json, "state": "ENABLED"}
             return Resp(200, json)
 
         def patch(self, url, json=None, **k):
             self.calls.append("patch")
-            self.jobs[url.split("/v1/", 1)[1]] = json
+            name = url.split("/v1/", 1)[1]
+            self.jobs[name] = {**self.jobs[name], **json}
             return Resp(200, json)
 
+        def delete(self, url, **k):
+            self.calls.append("delete")
+            self.jobs.pop(url.split("/v1/", 1)[1], None)
+            return Resp(200)
+
+    return FakeScheduler()
+
+
+def test_schedule_sync_multi_times_days_one_time_and_pause():
+    from lead_engine.config import Settings
+    from lead_engine.scheduler import sync
+
     env = Env(gcp_project="p", gcp_region="asia-south1", scheduler_sa="s@p.iam.gserviceaccount.com")
-    fake = FakeScheduler()
+    fake = _fake_scheduler()
     s = Settings.defaults()
     rep = sync(s, env, session=fake)
-    assert fake.calls == ["create", "create"] and all("VERIFIED" in r for r in rep)
-    assert {j["schedule"] for j in fake.jobs.values()} == {"0 9 * * *", "0 16 * * *"}
+    assert sorted(j["schedule"] for j in fake.jobs.values()) == ["0 16 * * *", "0 9 * * *"] and all("VERIFIED" in r for r in rep)
     assert {j["timeZone"] for j in fake.jobs.values()} == {"Asia/Kolkata"}
-    s["RUN_TIME_2"] = "17:30"  # edited in the Sheet
+    # Weekdays only, three times, plus a one-time run; old 16:00 job removed.
+    s.update({"SCHEDULE_TIMES": "09:00,13:30,18:00", "SCHEDULE_DAYS": "Mon,Tue,Wed,Thu,Fri", "SCHEDULE_ONE_TIME": "2026-11-25 10:15"})
     rep = sync(s, env, session=fake)
-    assert fake.calls[-1] == "patch" and any("30 17 * * *" in r and "VERIFIED" in r for r in rep)
-    assert any("unchanged" in r for r in rep)
+    crons = sorted(j["schedule"] for j in fake.jobs.values())
+    assert crons == ["0 18 * * 1,2,3,4,5", "0 9 * * 1,2,3,4,5", "15 10 25 11 *", "30 13 * * 1,2,3,4,5"], crons
+    assert any("removed" in r for r in rep)
+    # Pause: every job is paused and verified.
+    s["SCHEDULE_PAUSED"] = "TRUE"
+    rep = sync(s, env, session=fake)
+    assert {j["state"] for j in fake.jobs.values()} == {"PAUSED"} and all("VERIFIED" in r or "unchanged" in r for r in rep)
+
+
+def test_review_mode_drafts_wait_and_only_approved_send(tmp_path):
+    store, ledger = make(tmp_path, live=True, mode="REVIEW")
+    gm = FakeGmail()
+    run(store, ledger, gmail=gm)
+    q = store.read("Outreach Queue")
+    assert {r["Status"] for r in q} == {"AWAITING_APPROVAL"} and gm.sent == []
+    # A person approves one draft in the app.
+    approved = q[0]["Attempt ID"]
+    for row in store.data["Outreach Queue"]:
+        if row["Attempt ID"] == approved:
+            row["Status"] = "APPROVED"
+    store.save()
+    st = run(store, ledger, gmail=gm, now=NOW + timedelta(hours=1))
+    assert st.sent == 1 and len(gm.sent) == 1
+    after = {r["Attempt ID"]: r["Status"] for r in store.read("Outreach Queue")}
+    assert after[approved] == "SENT" and list(after.values()).count("AWAITING_APPROVAL") == 1
+
+
+def test_three_senders_split_by_per_sender_limit(tmp_path):
+    from lead_engine.senders import SenderSlot
+
+    store, ledger = make(tmp_path, live=True, cap=10)
+    a, b = FakeGmail(), FakeGmail()
+    senders = [SenderSlot(1, "one@x.com", 1, a), SenderSlot(2, "two@x.com", 1, b), SenderSlot(3, "three@x.com", 5, None, "setup_required")]
+    st = P.Pipeline(store, ledger, Env(), trigger="test", now=NOW, offline_items=ITEMS, senders=senders).run()
+    assert st.sent == 2 and len(a.sent) == 1 and len(b.sent) == 1
+    assert {r["Sender"] for r in store.read("Outreach Queue")} == {"one@x.com", "two@x.com"}
+
+
+def test_send_window_holds_emails(tmp_path):
+    # NOW is 17:30 IST; window 09:00-12:00 keeps drafts waiting.
+    store, ledger = make(tmp_path, live=True, extra={"SEND_WINDOW": "09:00-12:00"})
+    gm = FakeGmail()
+    st = run(store, ledger, gmail=gm)
+    assert st.sent == 0 and gm.sent == [] and any("send window" in n for n in st.notes)
+    assert {r["Status"] for r in store.read("Outreach Queue")} == {"READY"}
+
+
+def test_edited_email_links_and_placeholder_check(tmp_path):
+    store, ledger = make(tmp_path, live=False)
+    run(store, ledger)
+    row = store.read("Outreach Queue")[0]
+    row["Email Preview"] = "Hey Asha,\n\nLoved the launch. Here's our reel list (https://www.creativecut.in/work).\n\nHemant\nCreative Cut (https://creativecut.in)"
+    html = P.Pipeline._html_from_preview(row)
+    assert '<a href="https://www.creativecut.in/work">our reel list</a>' in html and '<a href="https://creativecut.in">Creative Cut</a>' in html
+    p = P.Pipeline(store, ledger, Env(), now=NOW)
+    assert p._edit_problems(row) == []
+    row["Email Preview"] += "\n[your name]"
+    assert any("placeholder" in x for x in p._edit_problems(row))
+
+
+def test_run_stage_is_written_and_reset(tmp_path):
+    store, ledger = make(tmp_path)
+    stages = []
+    orig = P.Pipeline._set
+
+    def spy(self, values):
+        if "RUN_STAGE" in values:
+            stages.append(values["RUN_STAGE"])
+        orig(self, values)
+
+    P.Pipeline._set = spy
+    try:
+        run(store, ledger)
+    finally:
+        P.Pipeline._set = orig
+    assert "Checking contact details" in stages and "Writing drafts" in stages and stages[-1] == ""
+    s = {r["Key"]: r["Value"] for r in store.read("Settings")}
+    assert s["RUN_STATE"] == "IDLE"
+
+
+NO_EMAIL = {"linkedin_posts": [li_post("50", "We're hiring a freelance video editor for Instagram Reels for our D2C skincare brand Glowco. Paid per video.")]}
+
+
+def test_enrichment_finds_email_and_marks_bad_key(tmp_path, monkeypatch):
+    from lead_engine import enrich
+    from lead_engine.research import Research
+
+    monkeypatch.setattr(R, "research", lambda o: Research(website="https://glowco.in", channel="LinkedIn DM / comment" if "DM" in o.text else "See source", sources=[o.url]))
+    monkeypatch.setattr(P, "get_secret", lambda name, project="": "key-123")
+    calls = []
+
+    def fake_apollo(key, company, domain):
+        calls.append(("apollo", domain))
+        return enrich.Found("hello@glowco.in", "Asha Rao", "Apollo (people/match)")
+
+    monkeypatch.setattr(P, "apollo_lookup", fake_apollo)
+    store, ledger = make(tmp_path, extra={"APOLLO_MAX_LOOKUPS_PER_RUN": "3", "API_APOLLO_HINT": "••••1234"})
+    p = P.Pipeline(store, ledger, Env(), now=NOW, offline_items=NO_EMAIL)
+    p.offline = None  # enrichment is skipped for replayed datasets; allow it here
+    p.discover = lambda: [o for it in NO_EMAIL["linkedin_posts"] for o in normalize("linkedin_posts", it)]
+    p.run()
+    q = store.read("Outreach Queue")
+    assert calls == [("apollo", "glowco.in")] and q[0]["Recipient"] == "hello@glowco.in"
+    lead = store.read("Leads")[0]
+    assert lead["Email Source"].startswith("Apollo")
+
+    # A rejected key flips Apollo to "needs reconnecting" for the app.
+    def bad(key, company, domain):
+        raise enrich.AuthError("Apollo rejected the saved key (HTTP 401).")
+
+    monkeypatch.setattr(P, "apollo_lookup", bad)
+    store2, ledger2 = make(tmp_path / "b", extra={"APOLLO_MAX_LOOKUPS_PER_RUN": "3", "API_APOLLO_HINT": "••••1234", "VIBE_MAX_LOOKUPS_PER_RUN": "0"})
+    p2 = P.Pipeline(store2, ledger2, Env(), now=NOW, offline_items=NO_EMAIL)
+    p2.offline = None
+    p2.discover = p.discover
+    p2.run()
+    s2 = {r["Key"]: r["Value"] for r in store2.read("Settings")}
+    assert s2["API_APOLLO_STATUS"] == "needs_reconnect" and "401" in s2["API_APOLLO_ERROR"]
+
+
+def test_enrichment_never_runs_for_dm_only_posts(tmp_path, monkeypatch):
+    from lead_engine.research import Research
+
+    monkeypatch.setattr(R, "research", lambda o: Research(website="https://glowco.in", channel="Instagram DM", sources=[o.url]))
+    monkeypatch.setattr(P, "get_secret", lambda name, project="": "key-123")
+    monkeypatch.setattr(P, "apollo_lookup", lambda *a: (_ for _ in ()).throw(AssertionError("must not be called")))
+    store, ledger = make(tmp_path, extra={"APOLLO_MAX_LOOKUPS_PER_RUN": "3"})
+    p = P.Pipeline(store, ledger, Env(), now=NOW, offline_items=NO_EMAIL)
+    p.offline = None
+    p.discover = lambda: [o for it in NO_EMAIL["linkedin_posts"] for o in normalize("linkedin_posts", it)]
+    p.run()
+    assert store.read("Outreach Queue") == []

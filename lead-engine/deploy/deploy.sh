@@ -14,6 +14,7 @@ REGION="${REGION:-asia-south1}"
 JOB="${JOB:-creativecut-lead-engine}"
 BUCKET="${BUCKET:-${PROJECT}-cc-lead-ledger}"
 RUN_SA="cc-lead-engine@${PROJECT}.iam.gserviceaccount.com"
+APP_SA="cc-lead-app@${PROJECT}.iam.gserviceaccount.com"
 SCHED_SA="cc-lead-scheduler@${PROJECT}.iam.gserviceaccount.com"
 G="gcloud --project ${PROJECT} --quiet"
 
@@ -24,6 +25,7 @@ $G services enable run.googleapis.com cloudscheduler.googleapis.com secretmanage
 echo "== Service accounts"
 $G iam service-accounts describe "$RUN_SA" >/dev/null 2>&1 || $G iam service-accounts create cc-lead-engine --display-name "Creative Cut lead engine (runtime)"
 $G iam service-accounts describe "$SCHED_SA" >/dev/null 2>&1 || $G iam service-accounts create cc-lead-scheduler --display-name "Creative Cut lead engine (scheduler invoker)"
+$G iam service-accounts describe "$APP_SA" >/dev/null 2>&1 || $G iam service-accounts create cc-lead-app --display-name "Creative Cut Lead Agent app (/agent)"
 
 echo "== Secrets (values are never echoed)"
 ensure_secret() {
@@ -47,7 +49,16 @@ echo "== Ledger bucket (durable send records + run lock)"
 gsutil ls -p "$PROJECT" "gs://${BUCKET}" >/dev/null 2>&1 || gsutil mb -p "$PROJECT" -l "$REGION" -b on "gs://${BUCKET}"
 gsutil iam ch "serviceAccount:${RUN_SA}:roles/storage.objectAdmin" "gs://${BUCKET}"
 
-echo "== Runtime SA may manage the two scheduler jobs (Settings tab is the source of truth)"
+echo "== Worker reads keys the app stores later (Apollo, Explorium, Gmail senders 1-3)"
+$G projects add-iam-policy-binding "$PROJECT" --member "serviceAccount:${RUN_SA}" --role roles/secretmanager.secretAccessor --condition=None >/dev/null
+
+echo "== Lead Agent app: store keys, start runs, edit the schedule"
+for role in roles/secretmanager.admin roles/run.developer roles/cloudscheduler.admin; do
+  $G projects add-iam-policy-binding "$PROJECT" --member "serviceAccount:${APP_SA}" --role "$role" --condition=None >/dev/null
+done
+$G iam service-accounts add-iam-policy-binding "$SCHED_SA" --member "serviceAccount:${APP_SA}" --role roles/iam.serviceAccountUser >/dev/null
+
+echo "== Runtime SA may manage the scheduler jobs (Settings tab is the source of truth)"
 $G projects add-iam-policy-binding "$PROJECT" --member "serviceAccount:${RUN_SA}" --role roles/cloudscheduler.admin --condition=None >/dev/null
 $G iam service-accounts add-iam-policy-binding "$SCHED_SA" --member "serviceAccount:${RUN_SA}" --role roles/iam.serviceAccountUser >/dev/null
 
@@ -63,7 +74,7 @@ $G run jobs deploy "$JOB" --source . --region "$REGION" --service-account "$RUN_
 $G run jobs add-iam-policy-binding "$JOB" --region "$REGION" --member "serviceAccount:${SCHED_SA}" --role roles/run.invoker >/dev/null
 
 echo
-echo ">> Share the Google Sheet with ${RUN_SA} as Editor (Share button), then press Enter."
+echo ">> Share the Google Sheet with ${RUN_SA} AND ${APP_SA} as Editor (Share button), then press Enter."
 read -r _
 
 echo "== Push RUN_TIME_1/RUN_TIME_2 from the Settings tab to Cloud Scheduler and verify"
@@ -71,4 +82,12 @@ $G run jobs execute "$JOB" --region "$REGION" --args "sync-schedule" --wait
 for i in 1 2; do
   $G scheduler jobs describe "creativecut-leads-run-$i" --location "$REGION" --format 'value(name,schedule,timeZone,state)'
 done
-echo "Done. Sending stays off until Settings → SENDING_ENABLED = TRUE."
+echo
+echo "== Lead Agent app credentials"
+echo "Create a key for ${APP_SA} and paste it into your app host's environment (never commit it):"
+echo "  gcloud iam service-accounts keys create app-key.json --iam-account ${APP_SA} --project ${PROJECT}"
+echo "App environment variables (names only):"
+echo "  AGENT_SHEET_ID=${SHEET_ID}  AGENT_SERVICE_ACCOUNT_EMAIL=${APP_SA}  AGENT_SERVICE_ACCOUNT_KEY=<private_key from app-key.json>"
+echo "  GOOGLE_CLOUD_PROJECT=${PROJECT}  GCP_REGION=${REGION}  CLOUD_RUN_JOB=${JOB}  SCHEDULER_SERVICE_ACCOUNT=${SCHED_SA}"
+echo "  GMAIL_OAUTH_CLIENT_ID / GMAIL_OAUTH_CLIENT_SECRET (Web client, redirect https://<app>/api/agent/gmail/callback)  AGENT_STATE_SECRET=<random>"
+echo "Done. Sending stays off until Settings → SENDING_ENABLED = TRUE (or the app's 'Turn on live sending')."

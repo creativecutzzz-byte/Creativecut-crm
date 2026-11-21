@@ -21,6 +21,28 @@
   --color-accent-soft: rgb(200 245 60 / 0.12);
   --color-forest: #1d4228;
   --color-ink: #0a0a0c;
+
+  /* Lead Agent (/agent): light, plain, high-contrast. Primary actions use the
+     Creative Cut forest green; status always pairs an icon with text. */
+  --color-ag-paper: #f7f6f1;
+  --color-ag-card: #ffffff;
+  --color-ag-text: #16181a;
+  --color-ag-text-2: #4b5149;
+  --color-ag-text-3: #6b7068;
+  --color-ag-rule: #e2e1da;
+  --color-ag-rule-2: #cfcec6;
+  --color-ag-brand: #1d4228;
+  --color-ag-brand-hover: #153220;
+  --color-ag-brand-soft: #e6efe5;
+  --color-ag-lime: #c8f53c;
+  --color-ag-ok: #1f6b3a;
+  --color-ag-ok-soft: #e4f2e7;
+  --color-ag-warn: #8a5300;
+  --color-ag-warn-soft: #fbf0dc;
+  --color-ag-bad: #a5281b;
+  --color-ag-bad-soft: #fbe6e3;
+  --color-ag-info: #1f4f8a;
+  --color-ag-info-soft: #e5eef9;
 }
 
 :root {
@@ -52,4 +74,15 @@ body {
   background: linear-gradient(180deg, rgb(255 255 255 / 0.025), transparent 40%), var(--color-surface);
   border: 1px solid var(--color-line);
   border-radius: 1rem;
+}
+
+/* Lead Agent shell: light colour scheme regardless of the CRM's dark theme. */
+.agent-app {
+  color-scheme: light;
+  background: var(--color-ag-paper);
+  color: var(--color-ag-text);
+}
+.agent-app ::selection {
+  background: var(--color-ag-brand);
+  color: #fff;
 }

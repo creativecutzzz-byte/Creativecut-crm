@@ -16,7 +16,7 @@ PLAYBOOK_URL = f"https://docs.google.com/document/d/{PLAYBOOK_DOC_ID}/edit"
 
 # ---------------------------------------------------------------- sheet schema
 LEAD_STATUSES = ["NEW", "QUALIFIED", "READY", "NEEDS_REVIEW", "SENT", "REPLIED", "BOUNCED", "SKIPPED", "FAILED", "CLOSED"]
-QUEUE_STATUSES = ["DRAFT", "READY", "NEEDS_REVIEW", "SENDING", "SENT", "REPLIED", "BOUNCED", "OPTED_OUT", "SKIPPED", "FAILED"]
+QUEUE_STATUSES = ["DRAFT", "AWAITING_APPROVAL", "APPROVED", "READY", "NEEDS_REVIEW", "SENDING", "SENT", "REPLIED", "BOUNCED", "OPTED_OUT", "SKIPPED", "FAILED"]
 VERIFY_STATUSES = ["MX_OK", "NO_MX", "INVALID", "NOT_FOUND", "MANUAL_OK"]
 SUPPRESSION_TYPES = ["OPT_OUT", "HARD_BOUNCE", "DO_NOT_CONTACT", "COMPANY"]
 
@@ -32,7 +32,7 @@ TABS: dict[str, list[str]] = {
     "Outreach Queue": [
         "Attempt ID", "Lead ID", "Touch", "Recipient", "Subject", "Email Preview", "Variation",
         "Sample Title", "Sample URL", "Personalisation Sources", "Status", "Planned Send", "Sent At",
-        "Gmail Message ID", "Gmail Thread ID", "RFC Message-ID", "Last Error", "Notes", "System Status",
+        "Gmail Message ID", "Gmail Thread ID", "RFC Message-ID", "Last Error", "Notes", "System Status", "Sender",
     ],
     "Suppression": ["Value", "Type", "Company", "Reason", "Source", "Added At", "Added By"],
     "Run Log": [
@@ -75,6 +75,25 @@ DEFAULT_SETTINGS: list[tuple[str, str, str]] = [
     ("SOURCE_reddit_threads_MAX_USD", "0.05", "Reddit thread details: spend cap per run."),
     ("PLAYBOOK_SOURCE", PLAYBOOK_URL, "Creative Cut Personalised Outreach Playbook (source of truth)."),
     ("SAMPLE_SITE", "https://www.creativecut.in/work", "Portfolio page whose embedded YouTube videos form the sample bank."),
+    # --- Lead Agent app (/agent) settings
+    ("AGENT_MODE", "REVIEW", "REVIEW = drafts wait for approval in the app. AUTO = eligible drafts send on schedule (when SENDING_ENABLED)."),
+    ("MODE_CHOSEN", "FALSE", "Set when the mode is picked in the app's setup checklist."),
+    ("SCHEDULE_TIMES", "09:00,16:00", "Start research times (HH:MM, IST), comma separated. Managed on the app's Schedule page."),
+    ("SCHEDULE_DAYS", "Mon,Tue,Wed,Thu,Fri,Sat,Sun", "Days the times apply to."),
+    ("SCHEDULE_ONE_TIME", "", "Optional extra run, 'YYYY-MM-DD HH:MM' IST."),
+    ("SEND_WINDOW", "", "Optional 'HH:MM-HH:MM' IST: emails only go out inside this window."),
+    ("SCHEDULE_PAUSED", "FALSE", "TRUE pauses the scheduled runs (Run Now still works)."),
+    ("SENDER_1_EMAIL", "creativecutzzz@gmail.com", "Gmail sender slot 1 (connected with Google sign-in in the app)."),
+    ("SENDER_1_DAILY_CAP", "10", "First emails per day from sender 1."),
+    ("SENDER_2_EMAIL", "", "Gmail sender slot 2."),
+    ("SENDER_2_DAILY_CAP", "10", "First emails per day from sender 2."),
+    ("SENDER_3_EMAIL", "", "Gmail sender slot 3."),
+    ("SENDER_3_DAILY_CAP", "10", "First emails per day from sender 3."),
+    ("APOLLO_MAX_LOOKUPS_PER_RUN", "3", "Apollo email lookups per run (1 Apollo credit each)."),
+    ("VIBE_MAX_LOOKUPS_PER_RUN", "2", "Vibe Prospecting / Explorium email lookups per run (about 2 credits each)."),
+    ("RUN_STATE", "IDLE", "Written by the worker: IDLE or RUNNING."),
+    ("RUN_STAGE", "", "Written by the worker: the current step in plain words."),
+    ("RUN_STARTED", "", "Written by the worker."),
 ]
 
 

@@ -34,6 +34,11 @@ def human_edited_status(row: dict) -> bool:
 
 
 def merge_row(tab: str, existing: dict | None, new: dict) -> dict:
+    """`_force_status` marks an outcome the worker actually caused (sent, replied,
+    bounced, re-checked after an edit): it replaces a human status edit, which
+    has then been acted on."""
+    new = dict(new)
+    force = bool(new.pop("_force_status", False))
     if not existing:
         out = dict(new)
         if "Status" in out:
@@ -50,7 +55,7 @@ def merge_row(tab: str, existing: dict | None, new: dict) -> dict:
             continue  # never blank out data we had
         out[k] = v
     if "Status" in new:
-        if human_edited_status(existing):
+        if human_edited_status(existing) and not force:
             pass  # keep the human's Status and the old System Status
         else:
             out["Status"] = new["Status"]
