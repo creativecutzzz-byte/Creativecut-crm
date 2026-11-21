@@ -1,7 +1,7 @@
 // Basic-Auth gate for the internal status page.
 // Set STATUS_USER and STATUS_PASSWORD in Netlify → Site configuration → Environment variables.
 // If either is missing, every request is refused (safe default).
-export default async (request: Request, context: { next: () => Promise<Response> }) => {
+const auth = async (request: Request, context: { next: () => Promise<Response> }) => {
   const user = Netlify.env.get("STATUS_USER");
   const pass = Netlify.env.get("STATUS_PASSWORD");
   const deny = () =>
@@ -25,5 +25,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
   res.headers.set("X-Robots-Tag", "noindex, nofollow");
   return res;
 };
+
+export default auth;
 
 export const config = { path: "/*" };
