@@ -1,5 +1,7 @@
 # Creative Cut CRM
 
+> **Lead engine:** [`lead-engine/README.md`](lead-engine/README.md) finds hiring-intent leads with Apify, fills the Google Sheet and sends playbook emails via Gmail.
+
 > **Start here:** [`playbook/00-start-here.md`](playbook/00-start-here.md) is the go-to-market plan this CRM runs: niche, offer and pricing, prospects, outreach sequences, sales script, proposal, landing page, content and ads, onboarding, retention and KPIs.
 
 A premium, dark-themed AI CRM for the Creative Cut agency, built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4** and **Supabase**.

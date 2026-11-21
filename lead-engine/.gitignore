@@ -1,0 +1,8 @@
+
+# generated status page (contains lead data)
+netlify/site/index.html
+.ledger/
+.gmail_refresh_token
+__pycache__/
+*.pyc
+.pytest_cache/
