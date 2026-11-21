@@ -352,7 +352,7 @@ class Pipeline:
         local = self.now.astimezone(IST)
         for day in (0, 1):
             for t in (t1, t2):
-                h, m = (int(x) for x in t.split(":"))
+                h, m = (int(x) for x in str(t).split(":")[:2])
                 slot = (local + timedelta(days=day)).replace(hour=h, minute=m, second=0, microsecond=0)
                 if slot > local:
                     return slot.strftime("%Y-%m-%d %H:%M")

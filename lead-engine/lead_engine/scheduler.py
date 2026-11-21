@@ -16,7 +16,8 @@ API = "https://cloudscheduler.googleapis.com/v1"
 
 
 def cron_for(hhmm: str) -> str:
-    m = re.fullmatch(r"\s*([01]?\d|2[0-3]):([0-5]\d)\s*", hhmm or "")
+    # Accept "09:00", "9:00" and "9:00:00" (how Sheets formats a time cell).
+    m = re.fullmatch(r"\s*([01]?\d|2[0-3]):([0-5]\d)(:[0-5]\d)?\s*", str(hhmm or ""))
     if not m:
         raise ValueError(f"invalid run time '{hhmm}', use HH:MM")
     return f"{int(m.group(2))} {int(m.group(1))} * * *"
