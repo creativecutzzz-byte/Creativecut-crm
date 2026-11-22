@@ -23,3 +23,6 @@ npm-debug.log*
 
 # Lead Agent real-data snapshot (contains lead contact data)
 src/lib/agent/snapshot-data.json
+
+# graphify cache (rebuildable)
+graphify-out/cache/
