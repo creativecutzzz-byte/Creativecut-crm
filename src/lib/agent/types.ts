@@ -57,6 +57,8 @@ export interface Lead {
   niche: string;
   source: string;
   sourceUrl: string;
+  /** Brand website, used for the logo (logoapi.sh) when known. */
+  website?: string | null;
   postDate: string | null;
   excerpt: string;
   research: string;

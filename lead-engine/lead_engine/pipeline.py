@@ -234,6 +234,20 @@ class Pipeline:
                                                   "Notes": f"actor {spec.actor_id}; cap ${cap:.2f}; requested {expected}"}])
         return opps
 
+    def _run_free(self, name: str) -> list[Opportunity]:
+        """Free public job APIs (no Apify, no key); logged in the Run Log like an Actor run."""
+        from .free_sources import FREE
+
+        row = {"Run ID": f"{self.run_id}/{name}", "Started": iso(now_utc()), "Trigger": self.trigger, "Mode": self.mode, "Source": SPECS[name].label}
+        try:
+            opps = FREE[name](int(self.settings.num(f"SOURCE_{name}_MAX_ITEMS", 30)))
+        except Exception as e:  # noqa: BLE001
+            self.stats.errors.append(f"{name}: {e}")
+            self.store.upsert("Run Log", "Run ID", [{**row, "Finished": iso(now_utc()), "Apify Status": "FAILED", "Errors": "1", "Notes": str(e)[:300]}])
+            return []
+        self.store.upsert("Run Log", "Run ID", [{**row, "Finished": iso(now_utc()), "Apify Status": "SUCCEEDED", "Rows Found": str(len(opps)), "Cost USD": "0.0000", "Notes": "free public API"}])
+        return opps
+
     def resume_pending(self) -> list[Opportunity]:
         """Finish Apify runs a previous execution started but never fetched (same run ID)."""
         out = []
@@ -260,6 +274,9 @@ class Pipeline:
         for name in ("linkedin_posts", "linkedin_jobs", "google_hiring"):
             if name in active:
                 opps += self._run_source(name, window)
+        for name in ("remoteok", "arbeitnow"):
+            if name in active and self.offline is None:
+                opps += self._run_free(name)
         if "reddit_threads" in active:
             known = {r.get("Opportunity Key") for r in self.store.read("Leads")}
             urls = [u for u in reddit_urls_from(opps) if canonical_url(u) not in known]

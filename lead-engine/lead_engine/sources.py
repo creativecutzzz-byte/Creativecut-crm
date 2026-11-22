@@ -54,6 +54,9 @@ SPECS = {
     "linkedin_jobs": SourceSpec("linkedin_jobs", "curious_coder/linkedin-jobs-scraper", 0.002, 0.00005, "LinkedIn jobs"),
     "google_hiring": SourceSpec("google_hiring", "apify/google-search-scraper", 0.0045, 0.00005, "Google (Reddit + hiring pages)"),
     "reddit_threads": SourceSpec("reddit_threads", "trudax/reddit-scraper-lite", 0.0018, 0.0216, "Reddit threads"),
+    # Free sources (direct public APIs, no Apify spend): see free_sources.py
+    "remoteok": SourceSpec("remoteok", "", 0.0, 0.0, "RemoteOK (free)"),
+    "arbeitnow": SourceSpec("arbeitnow", "", 0.0, 0.0, "Arbeitnow (free)"),
 }
 
 LINKEDIN_POST_QUERIES = [

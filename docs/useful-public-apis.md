@@ -58,8 +58,8 @@ API below is a separate service with its own terms, limits and (for some) paid p
 | UGCdrop | No | Search real UGC clips (hooks, b-roll) for D2C ad edits |
 
 ## Best first picks
-1. **Logoapi** (no key) — brand logos in the Lead Agent.
-2. **Kickbox / LifeStep** (no key) — second email check before sending, fewer bounces.
+1. **Logoapi** (no key) — brand logos in the Lead Agent. ✅ Installed.
+2. **Kickbox** (no key) ✅ Installed (disposable-domain check) — — second email check before sending, fewer bounces.
 3. **AGPC / MailSenpai** (no key) — check creativecut.in SPF/DKIM/DMARC once.
-4. **RemoteOK + Arbeitnow** (no key) — two free lead sources next to Apify.
+4. **RemoteOK + Arbeitnow** (no key) ✅ Installed as free sources — — two free lead sources next to Apify.
 5. **Funding Signals** — freshly funded startups for SaaS explainer pitches.

@@ -532,3 +532,41 @@ def test_protected_region_review_skip_and_postal_address(tmp_path):
     store3, ledger3 = make(tmp_path / "allow", extra={"PROTECTED_REGIONS_POLICY": "ALLOW"})
     P.Pipeline(store3, ledger3, Env(), now=NOW, offline_items=eu).run()
     assert store3.read("Outreach Queue")[0]["Status"] == "READY"
+
+
+def test_free_sources_keep_only_editing_roles(monkeypatch):
+    from lead_engine import free_sources as F
+
+    class R:
+        def __init__(self, j):
+            self._j = j
+
+        def json(self):
+            return self._j
+
+        def raise_for_status(self):
+            pass
+
+    data = {"remoteok": [{"legal": "x"}, {"id": 1, "position": "Freelance Video Editor", "company": "Glow", "date": NOW.isoformat(), "url": "https://remoteok.com/1", "description": "Part-time reels"},
+                         {"id": 2, "position": "Backend Engineer", "company": "X", "date": NOW.isoformat(), "url": "https://remoteok.com/2"}],
+            "arbeitnow": {"data": [{"slug": "motion-1", "title": "Motion Designer (Freelance)", "company_name": "Studio", "url": "https://arbeitnow.com/m1", "created_at": int(NOW.timestamp()), "job_types": ["freelance"]}]}}
+
+    class H:
+        def get(self, url, **k):
+            return R(data["remoteok"] if "remoteok" in url else data["arbeitnow"])
+
+    monkeypatch.setattr(F, "http", lambda: H())
+    ro, an = F.remoteok(), F.arbeitnow()
+    assert [o.title for o in ro] == ["Freelance Video Editor"] and ro[0].key == "remoteok:1"
+    assert an[0].company == "Studio" and an[0].posted_at is not None
+
+
+def test_disposable_domains_fail_verification(monkeypatch):
+    import lead_engine.research as RR
+
+    import importlib
+
+    real = importlib.reload(RR)  # undo the fixture's stub
+    real._mx_cache.update({"tempbox.io": True, "brand.in": True})
+    monkeypatch.setattr(real, "is_disposable", lambda d: d == "tempbox.io")
+    assert real.verify_email("x@tempbox.io") == "INVALID" and real.verify_email("hi@brand.in") == "MX_OK"

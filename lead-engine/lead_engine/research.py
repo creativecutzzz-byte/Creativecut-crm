@@ -171,7 +171,22 @@ def verify_email(email: str) -> str:
             _mx_cache[d] = any(a.get("type") == 15 for a in j.get("Answer", []) or [])
         except Exception:  # noqa: BLE001
             return "NOT_FOUND"
-    return "MX_OK" if _mx_cache[d] else "NO_MX"
+    if not _mx_cache[d]:
+        return "NO_MX"
+    return "INVALID" if is_disposable(d) else "MX_OK"
+
+
+_disp_cache: dict[str, bool] = {}
+
+
+def is_disposable(domain: str) -> bool:
+    """Kickbox Open (https://open.kickbox.com, free, no key): is this a throwaway-email domain?"""
+    if domain not in _disp_cache:
+        try:
+            _disp_cache[domain] = bool(http().get(f"https://open.kickbox.com/v1/disposable/{domain}", timeout=8).json().get("disposable"))
+        except Exception:  # noqa: BLE001  unreachable == not known to be disposable
+            _disp_cache[domain] = False
+    return _disp_cache[domain]
 
 
 def is_relevant_business_email(email: str, source_url: str, post_url: str, website: str) -> bool:

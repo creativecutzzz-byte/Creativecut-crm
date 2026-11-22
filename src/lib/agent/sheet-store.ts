@@ -146,7 +146,7 @@ export function snapshotFromTabs(t: { settingsRows: Rows; leadRows: Rows; queueR
       : null;
     return {
       id: l["Lead ID"]!, person: l["Contact Name"] || "", company: l.Company || "", reason: reasonFrom(l), market: l.Market || "", niche: l.Niche || "",
-      source: l.Source || "", sourceUrl: l["Source URL"] || "", postDate: l["Post Date"] || null, excerpt: l["Post Excerpt"] || "", research: l["Brand Research Notes"] || "",
+      source: l.Source || "", sourceUrl: l["Source URL"] || "", website: l.Website || null, postDate: l["Post Date"] || null, excerpt: l["Post Excerpt"] || "", research: l["Brand Research Notes"] || "",
       contactChannel: l["Contact Channel"] || "", draft: draft ?? null, foundAt: l["First Seen"] || "",
     };
   });

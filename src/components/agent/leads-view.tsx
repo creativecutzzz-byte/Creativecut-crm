@@ -33,6 +33,23 @@ function initials(s: string) {
   return s.replace(/\(demo\)/i, "").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?";
 }
 
+/** Company logo from logoapi.sh (free, no key) when the brand's website is known; initials otherwise. */
+function LeadAvatar({ website, name }: { website: string | null; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const domain = website ? website.replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0] : "";
+  if (domain && !failed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={`https://logoapi.sh/${domain}.svg`} alt="" aria-hidden width={44} height={44} onError={() => setFailed(true)} className="size-11 shrink-0 rounded-full border border-ag-rule bg-white object-contain p-1.5" />
+    );
+  }
+  return (
+    <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-ag-brand-soft text-[14px] font-bold text-ag-brand">
+      {initials(name)}
+    </span>
+  );
+}
+
 export function LeadsView({ leads, senders, mode, sendingLive }: { leads: Lead[]; senders: Sender[]; mode: Mode; sendingLive: boolean }) {
   const router = useRouter();
   const path = usePathname();
@@ -147,9 +164,7 @@ export function LeadsView({ leads, senders, mode, sendingLive }: { leads: Lead[]
                   </label>
                 ) : null}
                 <button type="button" onClick={() => go({ lead: l.id })} className="flex min-w-0 flex-1 items-center gap-4 p-4 text-left">
-                  <span aria-hidden className="grid size-11 shrink-0 place-items-center rounded-full bg-ag-brand-soft text-[14px] font-bold text-ag-brand">
-                    {initials(w.title)}
-                  </span>
+                  <LeadAvatar website={l.website ?? null} name={w.title} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">
                       {w.title} <span className="font-normal text-ag-text-3">· {w.sub}</span>

@@ -48,7 +48,7 @@ MANUAL_COLUMNS = {
     "Outreach Queue": {"Notes"},
 }
 
-SOURCES = ["linkedin_posts", "linkedin_jobs", "google_hiring", "reddit_threads"]
+SOURCES = ["linkedin_posts", "linkedin_jobs", "google_hiring", "reddit_threads", "remoteok", "arbeitnow"]
 
 DEFAULT_SETTINGS: list[tuple[str, str, str]] = [
     ("SENDER_EMAIL", "creativecutzzz@gmail.com", "Authorised Creative Cut Gmail inbox used for sending."),
@@ -60,7 +60,7 @@ DEFAULT_SETTINGS: list[tuple[str, str, str]] = [
     ("RUN_TIME_1", "09:00", "First daily run (HH:MM, Asia/Kolkata). `sync-schedule` pushes it to Cloud Scheduler."),
     ("RUN_TIME_2", "16:00", "Second daily run (HH:MM, Asia/Kolkata)."),
     ("TIMEZONE", "Asia/Kolkata", "Scheduler time zone."),
-    ("ACTIVE_SOURCES", "linkedin_posts,linkedin_jobs,google_hiring,reddit_threads", "Comma list of enabled sources."),
+    ("ACTIVE_SOURCES", "linkedin_posts,linkedin_jobs,google_hiring,reddit_threads,remoteok,arbeitnow", "Comma list of enabled sources."),
     ("SEARCH_WINDOW_DAYS", "14", "Preferred recency window."),
     ("EXTENDED_WINDOW_DAYS", "30", "Fallback window when too few qualified leads are found."),
     ("MIN_QUALIFIED_BEFORE_EXTEND", "3", "Extend to the 30-day window when fewer qualified leads than this."),
