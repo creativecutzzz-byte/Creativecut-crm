@@ -144,7 +144,9 @@ export interface SetupProgress {
 }
 
 export interface AgentSnapshot {
-  backend: "sheet" | "demo";
+  backend: "sheet" | "demo" | "snapshot";
+  /** When backend is "snapshot": when the real data was captured. */
+  snapshotAt?: string | null;
   demo: { scenario: DemoScenario; label: string } | null;
   mode: Mode;
   sendingLive: boolean;

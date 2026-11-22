@@ -8,6 +8,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // The Lead Agent reads a real-data snapshot from disk when Google Cloud is not connected.
+  outputFileTracingIncludes: { "/agent/**": ["./src/lib/agent/snapshot-data.json"] },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: supabaseAnonKey,

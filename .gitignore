@@ -20,3 +20,6 @@ npm-debug.log*
 /supabase/.temp
 /supabase/.branches
 .vercel
+
+# Lead Agent real-data snapshot (contains lead contact data)
+src/lib/agent/snapshot-data.json

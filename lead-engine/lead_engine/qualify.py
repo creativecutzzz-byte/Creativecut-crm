@@ -21,13 +21,13 @@ SELLING = re.compile(
     r"(\[for\s*hire\]|\bfor\s+hire\b|i\s*('?m| am)\s+(a|an)\s+(freelance\s+)?(video\s*editor|editor|motion)|available\s+for\s+(work|projects|hire)|"
     r"my\s+(editing\s+)?services|hire\s+me|dm\s+me\s+for\s+(edits|editing)|offering\s+(video|editing)|i\s+edit\s+videos|check\s+out\s+my\s+portfolio|"
     r"showreel\s+might\s+be|tips\s+for\s+(video\s+)?editors|how\s+to\s+become|"
-    r"if\s+you('| a)re\s+looking\s+for\s+an?\s+(video\s+)?editor|my\s+dms?\s+(are\s+)?open|i\s+help\s+(brands|creators|businesses)|open\s+to\s+(new\s+)?(projects|clients|work)|let'?s\s+work\s+together|looking\s+for\s+(new\s+|more\s+)?clients)",
+    r"if\s+you('| a)re\s+looking\s+for\s+an?\s+(video\s+)?editor|my\s+dms?\s+(are\s+)?open|i\s+help\s+(brands|creators|businesses)|open\s+to\s+(new\s+)?(projects|clients|work)|let'?s\s+work\s+together|looking\s+for\s+(new\s+|more\s+)?clients|open\s+for\s+work|feel\s+free\s+to\s+connect\s+with\s+me|let'?s\s+bring\s+your|i\s+can\s+help\s+you\s+with|brands\s+need\s+high)",
     re.I,
 )
 UNPAID = re.compile(r"(unpaid|for\s+exposure|no\s+budget|free\s+of\s+cost|volunteer|revenue[- ]share\s+only|equity\s+only|for\s+free\b)", re.I)
 CLOSED = re.compile(r"(position\s+(is\s+)?filled|no\s+longer\s+accepting|role\s+(is\s+)?closed|hiring\s+closed|\bclosed\b[^.\n]{0,20}(applications|role|position)|found\s+(an|our)\s+editor|update:\s*hired)", re.I)
-FLEX = re.compile(r"(freelanc|contract|part[- ]?time|project[- ]basis|per\s+(video|project|reel|minute|clip)|ongoing\s+work|long[- ]term\s+(editor|work|collab)|remote|as[- ]needed|batch|retainer|outsourc)", re.I)
-FULLTIME = re.compile(r"(full[- ]?time|work\s+from\s+office|in[- ]house|wfo\b|on[- ]?site\s+only|permanent\s+role)", re.I)
+FLEX = re.compile(r"(freelanc|contract|part[- ]?time|project[- ]basis|per\s+(video|project|reel|minute|clip)|ongoing\s+work|long[- ]term\s+(editor|work|collab)|as[- ]needed|batch|retainer|outsourc)", re.I)
+FULLTIME = re.compile(r"(job\s+type:?\s*full[- ]?time|full[- ]?time|work\s+from\s+office|in[- ]house|wfo\b|on[- ]?site\s+only|permanent\s+role)", re.I)
 INTERN = re.compile(r"\bintern(ship)?s?\b", re.I)
 MASS_SPAM = re.compile(r"(multiple\s+global\s+job\s+openings|send\s+me\s+connection|we('| a)re\s+urgently\s+sourcing|across\s+various\s+industries)", re.I)
 
@@ -98,7 +98,7 @@ def assess(o: Opportunity, window_days: int, now: datetime | None = None) -> Ass
         a.reasons_excluded.append("mass recruitment spam")
     flex = bool(FLEX.search(text))
     ft = bool(FULLTIME.search(text)) or o.employment_type.lower() == "full-time"
-    if ft and not flex:
+    if (ft and not flex) or re.search(r"job\s*type:?\s*full[- ]?time", text, re.I):
         a.reasons_excluded.append("full-time only")
     if INTERN.search(o.title or "") or (o.employment_type.lower() == "internship" and not flex):
         a.reasons_excluded.append("internship")

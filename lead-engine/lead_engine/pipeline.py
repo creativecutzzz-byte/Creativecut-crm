@@ -27,7 +27,7 @@ from .util import IST, canonical_url, domain_of, http, iso, now_utc, short_hash
 
 log = logging.getLogger("lead_engine")
 SEND_TERMINAL = {"SENT", "REPLIED", "BOUNCED", "OPTED_OUT"}
-INTERMEDIARY = re.compile(r"(our\s+client|on\s+behalf\s+of|for\s+an?\s+[\w-]+[- ]based\s+(company|client|brand|agency)|for\s+a\s+boutique|client\s+of\s+ours|staffing\s+partner)", re.I)
+INTERMEDIARY = re.compile(r"(our\s+client|on\s+behalf\s+of|for\s+an?\s+[\w-]+[- ]based\s+(company|client|brand|agency)|for\s+a\s+boutique|client\s+of\s+ours|staffing\s+partner|talent\s+pool|client\s+requirement|a\s+leading\s+[\w\s-]{0,40}(organization|company|brand)\s+is\s+looking)", re.I)
 
 
 @dataclass
@@ -296,6 +296,14 @@ class Pipeline:
             if k in uniq or k in leads_existing or canonical_url(o.url) in by_url:
                 continue
             uniq[k] = o
+        # Same job cross-posted on several boards: keep one per normalised title.
+        seen_titles = {re.sub(r"[^a-z0-9]", "", (r.get("Exact Need") or "").split(" — ")[0].lower().split(" at ")[0]) for r in leads_existing.values()} - {""}
+        for k, o in list(uniq.items()):
+            t = re.sub(r"[^a-z0-9]", "", (o.title or "").lower().split(" at ")[0])
+            if len(t) > 12 and t in seen_titles:
+                uniq.pop(k)
+            elif len(t) > 12:
+                seen_titles.add(t)
         dup = len(opps) - len(uniq)
         self.stats.found += len(opps)
         # 2. qualify (14 days), extend to 30 days only when too few
@@ -375,6 +383,9 @@ class Pipeline:
             "Business Email": email, "Email Source": email_src, "Email Verification": verify if email else "NOT_FOUND",
             "Opportunity Open": open_state, "First Seen": iso(self.now), "Last Checked": iso(self.now), "Notes": "",
         }
+        if INTERMEDIARY.search(f"{o.title} {o.text}") and lead_status == "QUALIFIED":
+            lead_status = lead["Status"] = "NEEDS_REVIEW"
+            lead["Notes"] = "Posted by a staffing intermediary for an unnamed client"
         if not email or lead_status != "QUALIFIED":
             return lead, None
         # ---- outreach draft

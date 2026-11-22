@@ -5,18 +5,30 @@ import { cache } from "react";
 import { buildConnections } from "./connections";
 import { demoSnapshot } from "./demo";
 import { sheetConfigured } from "./google-cloud";
-import { sheetSnapshot } from "./sheet-store";
+import { sheetSnapshot, snapshotFromTabs } from "./sheet-store";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { AgentSnapshot, DemoScenario, Draft, Mode, Schedule } from "./types";
 
 export const DEMO_COOKIE = "agent_demo";
 const SCENARIOS: DemoScenario[] = ["setup", "running", "finished"];
 
 /** Which data the UI shows: the live Sheet, or a labelled demo scenario. */
-export async function currentSource(): Promise<{ backend: "sheet" | "demo"; scenario: DemoScenario }> {
+/** Real data captured from a live run, used read-only when the app has no Google credentials. */
+export function liveSnapshot(): { takenAt: string; sheetUrl: string | null; tabs: Parameters<typeof snapshotFromTabs>[0] } | null {
+  try {
+    return JSON.parse(readFileSync(join(process.cwd(), "src/lib/agent/snapshot-data.json"), "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+export async function currentSource(): Promise<{ backend: "sheet" | "demo" | "snapshot"; scenario: DemoScenario }> {
   const jar = await cookies();
   const v = jar.get(DEMO_COOKIE)?.value as DemoScenario | undefined;
   if (v && SCENARIOS.includes(v)) return { backend: "demo", scenario: v };
-  return sheetConfigured() ? { backend: "sheet", scenario: "finished" } : { backend: "demo", scenario: "finished" };
+  if (sheetConfigured()) return { backend: "sheet", scenario: "finished" };
+  return liveSnapshot() ? { backend: "snapshot", scenario: "finished" } : { backend: "demo", scenario: "finished" };
 }
 
 // ---- demo overlay: edits made while exploring demo data (kept in memory only)
@@ -44,6 +56,10 @@ async function loadSnapshot(): Promise<AgentSnapshot> {
   const now = new Date();
   const src = await currentSource();
   if (src.backend === "sheet") return sheetSnapshot(now);
+  if (src.backend === "snapshot") {
+    const snap = liveSnapshot()!;
+    return { ...snapshotFromTabs(snap.tabs, now, snap.sheetUrl), backend: "snapshot", snapshotAt: snap.takenAt };
+  }
   const snap = demoSnapshot(src.scenario, now);
   const o = demoOverlay(src.scenario);
   for (const lead of snap.leads) {

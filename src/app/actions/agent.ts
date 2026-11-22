@@ -24,6 +24,7 @@ const fail = (message: string): ActionResult => ({ ok: false, message });
 async function guard(): Promise<{ demo: DemoScenario | null; error?: ActionResult }> {
   const src = await currentSource();
   if (src.backend === "demo") return { demo: src.scenario };
+  if (src.backend === "snapshot") return { demo: null, error: fail("This is a read-only snapshot of real leads. Connect Google Cloud (lead-engine/README.md) to approve, edit and run from here.") };
   const access = await canChangeLive();
   return access.ok ? { demo: null } : { demo: null, error: fail(access.reason!) };
 }

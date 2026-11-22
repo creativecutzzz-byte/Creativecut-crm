@@ -24,6 +24,7 @@ export function AgentShell({
   needsReview,
   previewOnly,
   demo,
+  snapshotAt = null,
   canUseLive,
   running,
 }: {
@@ -31,6 +32,7 @@ export function AgentShell({
   needsReview: number;
   previewOnly: boolean;
   demo: { scenario: DemoScenario; label: string } | null;
+  snapshotAt?: string | null;
   canUseLive: boolean;
   running: boolean;
 }) {
@@ -47,9 +49,16 @@ export function AgentShell({
   return (
     <div className="agent-app min-h-dvh">
       {demo ? <DemoBar demo={demo} canUseLive={canUseLive} /> : null}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-ag-rule bg-ag-paper px-4 py-6 lg:flex" style={demo ? { top: 48 } : undefined}>
+      {snapshotAt ? (
+        <p className="sticky top-0 z-40 flex min-h-12 items-center gap-2 bg-ag-brand px-4 py-2 text-[13px] text-white">
+          <span className="font-bold text-ag-lime">REAL LEADS · SNAPSHOT</span>
+          <span className="text-white/85">From the live run on {new Date(snapshotAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })} IST. Read-only until Google Cloud is connected.</span>
+        </p>
+      ) : null}
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-ag-rule bg-ag-paper px-4 py-6 lg:flex" style={demo || snapshotAt ? { top: 48 } : undefined}>
         <Link href="/agent" className="mb-8 flex items-center gap-2.5 px-2">
-          <span aria-hidden className="grid size-9 place-items-center rounded-lg bg-ag-brand text-sm font-bold text-ag-lime">CC</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/mark.png" alt="Creative Cut" width={36} height={36} className="size-9 rounded-lg object-contain" />
           <span className="leading-tight">
             <span className="block text-[15px] font-bold">Creative Cut</span>
             <span className="block text-[13px] text-ag-text-3">Lead Agent</span>

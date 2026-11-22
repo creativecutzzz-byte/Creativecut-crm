@@ -22,7 +22,7 @@ export default async function AgentLayout({ children }: { children: React.ReactN
     );
   }
   return (
-    <AgentShell needsReview={snap.today.needsReview} previewOnly={!snap.sendingLive} demo={snap.demo} canUseLive={sheetConfigured()} running={snap.run.running}>
+    <AgentShell needsReview={snap.today.needsReview} previewOnly={!snap.sendingLive} demo={snap.demo} snapshotAt={snap.backend === "snapshot" ? (snap.snapshotAt ?? null) : null} canUseLive={sheetConfigured()} running={snap.run.running}>
       {children}
     </AgentShell>
   );
