@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import math
 import re
 from dataclasses import dataclass, field
 from datetime import timedelta
@@ -13,7 +14,7 @@ from .compose import check_rendered, choose_variation, compose
 from .config import Env, Settings
 from .facts import extract_facts
 from .gmail import Gmail, GmailError, GmailTimeout, build_mime
-from .enrich import AuthError, apollo_lookup, vibe_lookup
+from .enrich import AuthError, OutOfCredits, apollo_lookup, bettercontact_lookup, vibe_lookup
 from .scheduler import one_time_passed, schedule_from
 from .secrets import get_secret
 from .senders import SenderSlot, load_senders
@@ -39,6 +40,23 @@ class RunStats:
     errors: list[str] = field(default_factory=list)
     cost: float = 0.0
     notes: list[str] = field(default_factory=list)
+
+
+_PROTECTED = re.compile(
+    r"\b(EU|EEA|European Union|United Kingdom|UK|England|Scotland|Wales|London|Ireland|Dublin|Germany|Deutschland|Berlin|Munich|München|Hamburg|"
+    r"France|Paris|Spain|Madrid|Barcelona|Italy|Milan|Rome|Netherlands|Amsterdam|Belgium|Brussels|Austria|Vienna|Wien|Portugal|Lisbon|"
+    r"Poland|Warsaw|Sweden|Stockholm|Denmark|Copenhagen|Finland|Helsinki|Norway|Oslo|Iceland|Liechtenstein|Switzerland|Zurich|Zürich|Geneva|"
+    r"Luxembourg|Czech|Prague|Slovakia|Hungary|Budapest|Romania|Bucharest|Bulgaria|Greece|Athens|Croatia|Slovenia|Estonia|Latvia|Lithuania|"
+    r"Cyprus|Malta|w/m/d|m/w/d|m/f/d)\b")
+_REGION_NAME = {"w/m/d": "the EU (German-language post)", "m/w/d": "the EU (German-language post)", "m/f/d": "the EU (German-language post)"}
+
+
+def protected_region(text: str) -> str:
+    """EU/EEA, UK or Switzerland (the regions OpenOutreach treats as protected), or ''."""
+    m = _PROTECTED.search(text or "")
+    if not m:
+        return ""
+    return _REGION_NAME.get(m.group(1), m.group(1))
 
 
 def lead_id_for(key: str) -> str:
@@ -368,6 +386,14 @@ class Pipeline:
         mail = compose(facts, variation, sample, label)
         problems = check_rendered(mail, self._url_verified)
         aid = attempt_id(lid, email)
+        region = protected_region(f"{o.location} {o.title} {o.text}")
+        policy = str(self.settings.get("PROTECTED_REGIONS_POLICY", "REVIEW")).upper()
+        if region and policy != "ALLOW":
+            problems.append(f"lead appears to be in {region} (GDPR): confirm a lawful basis before emailing")
+        postal = str(self.settings.get("SENDER_POSTAL_ADDRESS", "")).strip()
+        if postal:
+            mail.text += f"\n{postal}"
+            mail.html += f'\n<p style="color:#888;font-size:12px">{postal.replace("<", "&lt;")}</p>'
         if INTERMEDIARY.search(f"{o.title} {o.text}"):
             problems.append("posted by a staffing intermediary for an unnamed client; email may not reach the hiring brand")
         status = "READY"
@@ -389,6 +415,8 @@ class Pipeline:
             if same_rcpt and q.get("Status") in SEND_TERMINAL | {"READY", "SENDING", "AWAITING_APPROVAL", "APPROVED"}:
                 status, problems = "SKIPPED", [f"duplicate recipient (already in {q.get('Attempt ID')})"]
                 break
+        if region and policy == "SKIP" and status != "SKIPPED":
+            status, problems = "SKIPPED", [f"lead in {region}: skipped by PROTECTED_REGIONS_POLICY"]
         if status == "READY" and self.agent_mode == "REVIEW":
             status = "AWAITING_APPROVAL"  # Review & Approve: waits for a person in the app
         if status == "SKIPPED":
@@ -417,14 +445,19 @@ class Pipeline:
         domain = domain_of(res.website) if res.website else ""
         if not company and not domain:
             return None
-        for provider, secret, lookup, cap_key in (
-            ("apollo", "APOLLO_API_KEY", lambda k: apollo_lookup(k, company, domain), "APOLLO_MAX_LOOKUPS_PER_RUN"),
-            ("vibe", "EXPLORIUM_API_KEY", lambda k: vibe_lookup(k, company, domain, self.now.astimezone(IST).date()), "VIBE_MAX_LOOKUPS_PER_RUN"),
-        ):
+        person = "" if o.author_is_company else o.author_name
+        profile = o.raw_meta.get("author_profile", "") if "linkedin.com/in/" in o.raw_meta.get("author_profile", "") else ""
+        slot3 = str(self.settings.get("API_SLOT3_PROVIDER", "vibe")).lower()
+        chain = [("apollo", "APOLLO_API_KEY", lambda k: apollo_lookup(k, company, domain), "APOLLO_MAX_LOOKUPS_PER_RUN")]
+        if slot3 == "bettercontact":
+            chain.append(("bettercontact", "BETTERCONTACT_API_KEY", lambda k: bettercontact_lookup(k, person, company, domain, profile), "BETTERCONTACT_MAX_LOOKUPS_PER_RUN"))
+        else:
+            chain.append(("vibe", "EXPLORIUM_API_KEY", lambda k: vibe_lookup(k, company, domain, self.now.astimezone(IST).date()), "VIBE_MAX_LOOKUPS_PER_RUN"))
+        for provider, secret, lookup, cap_key in chain:
             P = "API_" + provider.upper()
             if str(self.settings.get(f"{P}_STATUS", "")).lower() in ("needs_reconnect", "setup_required") and not self.settings.get(f"{P}_HINT"):
                 continue
-            if self._lookups[provider] >= int(self.settings.num(cap_key, 0)):
+            if self._lookups.setdefault(provider, 0) >= int(self.settings.num(cap_key, 0)):
                 continue
             key = get_secret(secret, self.env.gcp_project)
             if not key:
@@ -432,7 +465,7 @@ class Pipeline:
             self._lookups[provider] += 1
             try:
                 found = lookup(key)
-            except AuthError as e:
+            except (AuthError, OutOfCredits) as e:
                 self._set({f"{P}_STATUS": "needs_reconnect", f"{P}_ERROR": str(e), f"{P}_CHECKED": now_utc().isoformat()})
                 self.settings[f"{P}_STATUS"] = "needs_reconnect"
                 self.stats.errors.append(f"{provider}: {e}")
@@ -469,6 +502,39 @@ class Pipeline:
                 n += 1
         return n
 
+    # Mailbox warm-up, after OpenOutSend's warmth rules (Apache-2.0, openoutsend/emails/warmth.py):
+    # start on a floor, grow by a fixed factor only after the box sent its whole allowance with no
+    # bounces, halve when the bounce rate passes 5%. Measured from this engine's own send ledger
+    # (the Gmail scope is send + metadata, so the Sent folder is not read).
+    WARM_FLOOR, WARM_GROWTH, WARM_BOUNCE_TOLERANCE = 5, 1.25, 0.05
+
+    def _warm_allowance(self, slot: SenderSlot) -> int:
+        if not self.settings.flag("WARMUP_ENABLED"):
+            return slot.cap
+        today = self.now.astimezone(IST).date()
+        key = f"SENDER_{slot.slot}_WARM"
+        stored = str(self.settings.get(f"{key}_LIMIT", "")).strip()
+        if self.settings.get(f"{key}_DATE") == today.isoformat() and stored.isdigit():
+            return int(stored)
+        prev = int(stored) if stored.isdigit() else self.WARM_FLOOR
+        first = (self.senders[0].email if self.senders else "").lower()
+        mine = [r for r in self.ledger.all() if r.get("touch") == "FIRST" and r.get("status") == "SENT" and (r.get("sender") or first).lower() == slot.email.lower()]
+        yday = (today - timedelta(days=1)).isoformat()
+        week = {(today - timedelta(days=d)).isoformat() for d in range(1, 8)}
+        sent_yday = sum(1 for r in mine if str(r.get("day")) == yday)
+        week_rows = [r for r in mine if str(r.get("day")) in week]
+        bounced = sum(1 for r in week_rows if r.get("outcome") == "BOUNCED")
+        if len(week_rows) >= 10 and bounced / len(week_rows) > self.WARM_BOUNCE_TOLERANCE:
+            new = max(1, prev // 2)
+        elif bounced == 0 and sent_yday >= prev:
+            new = math.ceil(prev * self.WARM_GROWTH)
+        else:
+            new = prev
+        new = min(new, slot.cap) if slot.cap else new
+        self._safe(lambda: self._set({f"{key}_LIMIT": str(new), f"{key}_DATE": today.isoformat()}), "warm-up")
+        self.settings[f"{key}_LIMIT"], self.settings[f"{key}_DATE"] = str(new), today.isoformat()
+        return new
+
     def _in_send_window(self) -> bool:
         m = re.match(r"^(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})$", str(self.settings.get("SEND_WINDOW", "")).strip())
         if not m:
@@ -497,7 +563,7 @@ class Pipeline:
             return
         cap = int(self.settings.num("DAILY_SEND_CAP", 10))
         remaining = max(0, cap - self.sent_today())
-        left = {x.slot: max(0, x.cap - self.sent_today(x.email)) for x in self.senders}
+        left = {x.slot: max(0, min(x.cap, self._warm_allowance(x)) - self.sent_today(x.email)) for x in self.senders}
         name = self.settings.get("SENDER_NAME", "Hemant, Creative Cut")
         eligible = {"APPROVED"} if self.agent_mode == "REVIEW" else {"READY", "APPROVED"}
         rows = self.store.read("Outreach Queue")

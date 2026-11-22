@@ -209,6 +209,18 @@ export async function removeApiKey(provider: ApiProvider): Promise<ActionResult>
   });
 }
 
+/** Credential slot 3 can hold Vibe Prospecting (shuts down 2 Dec 2026) or BetterContact. */
+export async function setSlot3Provider(provider: "vibe" | "bettercontact"): Promise<ActionResult> {
+  return run(async () => {
+    const g = await guard();
+    if (g.error) return g.error;
+    const name = provider === "bettercontact" ? "BetterContact" : "Vibe Prospecting";
+    if (g.demo) return done(`Slot 3 now uses ${name} (demo).`);
+    await setSettings({ API_SLOT3_PROVIDER: provider });
+    return done(`Slot 3 now uses ${name}. Add its API key to turn it on.`);
+  });
+}
+
 export async function setSenderCap(slot: 1 | 2 | 3, cap: number): Promise<ActionResult> {
   return run(async () => {
     const g = await guard();

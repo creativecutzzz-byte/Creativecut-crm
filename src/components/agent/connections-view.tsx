@@ -2,15 +2,15 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
-import { ChevronDown, ExternalLink, Globe, KeyRound, LogIn, Mail, Search, Sparkles, Trash2, type LucideIcon } from "lucide-react";
-import { disconnectSender, removeApiKey, saveApiKey, setSenderCap, type ActionResult } from "@/app/actions/agent";
-import { PROVIDERS, VIBE_SHUTDOWN } from "@/lib/agent/connections";
+import { ChevronDown, ExternalLink, Flame, Globe, KeyRound, LogIn, Mail, Search, Sparkles, Trash2, type LucideIcon } from "lucide-react";
+import { disconnectSender, removeApiKey, saveApiKey, setSenderCap, setSlot3Provider, type ActionResult } from "@/app/actions/agent";
+import { PROVIDERS, VIBE_SHUTDOWN, sendsLeft, todayLimit } from "@/lib/agent/connections";
 import { cn } from "@/lib/utils";
 import type { ApiProvider, ApiSlot, Connection, Sender } from "@/lib/agent/types";
 import { Button, ButtonLink, ConnBadge, Notice } from "./ui";
 import { Result } from "./home-client";
 
-const ICON: Record<Connection["key"], LucideIcon> = { web_research: Globe, vibe: Sparkles, apollo: Search, gmail: Mail };
+const ICON: Record<Connection["key"], LucideIcon> = { web_research: Globe, vibe: Sparkles, bettercontact: Sparkles, apollo: Search, gmail: Mail };
 
 export function ConnectionsView({ connections, apiSlots, senders, demo }: { connections: Connection[]; apiSlots: ApiSlot[]; senders: Sender[]; demo: boolean }) {
   const params = useSearchParams();
@@ -79,7 +79,19 @@ function ApiKeyForm({ provider, slot }: { provider: ApiProvider; slot: ApiSlot |
   const p = PROVIDERS[provider];
   return (
     <div className="flex flex-col gap-4">
-      {provider === "vibe" ? <Notice tone="bad">{VIBE_SHUTDOWN}</Notice> : null}
+      {provider === "vibe" ? (
+        <div className="flex flex-col gap-3 rounded-xl bg-ag-bad-soft p-4 sm:flex-row sm:items-center">
+          <p className="flex-1 text-[15px] text-ag-bad">{VIBE_SHUTDOWN} BetterContact can take over this slot.</p>
+          <Button variant="primary" size="sm" disabled={pending} onClick={() => start(async () => setR(await setSlot3Provider("bettercontact")))}>
+            Use BetterContact instead
+          </Button>
+        </div>
+      ) : null}
+      {provider === "bettercontact" && new Date() < new Date("2026-12-02T00:00:00+05:30") ? (
+        <Button variant="ghost" size="sm" className="self-start" disabled={pending} onClick={() => start(async () => setR(await setSlot3Provider("vibe")))}>
+          Switch slot 3 back to Vibe Prospecting
+        </Button>
+      ) : null}
       {slot?.status === "needs_reconnect" && slot.error ? <Notice tone="bad">{slot.error}</Notice> : null}
       <div className="grid gap-1">
         <label htmlFor={`${provider}-key`} className="text-[15px] font-medium">
@@ -126,7 +138,9 @@ function Senders({ senders, demo }: { senders: Sender[]; demo: boolean }) {
       <p className="text-[15px] text-ag-text-2">Up to three Gmail addresses. Each email goes from the sender with the most sends left today. Replies stay in the same Gmail thread.</p>
       <ul className="grid gap-3 md:grid-cols-3">
         {senders.map((s) => {
-          const left = Math.max(0, s.dailyCap - s.sentToday);
+          const left = sendsLeft(s);
+          const limit = todayLimit(s);
+          const warming = s.warmLimit !== null && s.warmLimit < s.dailyCap;
           return (
             <li key={s.slot} className="flex flex-col gap-3 rounded-xl border border-ag-rule p-4">
               <div>
@@ -139,8 +153,14 @@ function Senders({ senders, demo }: { senders: Sender[]; demo: boolean }) {
               {s.email ? (
                 <>
                   <p className="text-[15px]">
-                    <b className="tabular-nums">{left}</b> of {s.dailyCap} sends left today
+                    <b className="tabular-nums">{left}</b> of {limit} sends left today
                   </p>
+                  {warming ? (
+                    <p className="flex items-start gap-1.5 text-[13px] text-ag-text-2">
+                      <Flame aria-hidden className="mt-0.5 size-3.5 shrink-0 text-ag-warn" />
+                      Warming up: {limit} a day today, rising toward {s.dailyCap} while nothing bounces.
+                    </p>
+                  ) : null}
                   <label className="flex items-center gap-2 text-[14px]">
                     Daily limit
                     <input type="number" min={1} max={50} value={caps[s.slot] ?? s.dailyCap} onChange={(e) => setCaps((c) => ({ ...c, [s.slot]: Number(e.target.value) }))} className="h-10 w-20 rounded-lg border border-ag-rule-2 bg-ag-card px-2" />

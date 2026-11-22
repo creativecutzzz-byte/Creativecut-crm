@@ -36,6 +36,13 @@ export async function checkKey(provider: ApiProvider, key: string): Promise<KeyC
     if (r.status === 200) return { ok: true, usage: null, error: null };
     return { ok: false, usage: null, error: r.status === 401 || r.status === 403 ? "Apollo rejected this key, or it doesn't have API search access." : `Couldn't reach Apollo (HTTP ${r.status}).` };
   }
+  if (provider === "bettercontact") {
+    // BetterContact: GET /api/v2/account → credits_left (a string holding a float), X-API-Key header.
+    const r = await call("https://app.bettercontact.rocks/api/v2/account", { headers: { "X-API-Key": key, "User-Agent": "CreativeCutLeadAgent/1.0 (+https://creativecut.in)" } });
+    if (r.status !== 200) return { ok: false, usage: null, error: r.status === 401 ? "BetterContact rejected this key." : `Couldn't reach BetterContact (HTTP ${r.status}).` };
+    const credits = Math.floor(Number(r.json.credits_left));
+    return { ok: true, usage: Number.isFinite(credits) ? `${credits} credits left` : null, error: null };
+  }
   // Vibe Prospecting → Explorium AgentSource API (GET /v2/credits, api_key header).
   const r = await call("https://api.explorium.ai/v2/credits", { headers: { api_key: key } });
   if (r.status !== 200) return { ok: false, usage: null, error: r.status === 401 || r.status === 403 ? "Explorium rejected this key." : `Couldn't reach Explorium (HTTP ${r.status}).` };
@@ -44,4 +51,4 @@ export async function checkKey(provider: ApiProvider, key: string): Promise<KeyC
   return { ok: true, usage: Number.isFinite(remaining) ? `${remaining} of ${Number.isFinite(allocated) ? allocated : "?"} credits left` : null, error: null };
 }
 
-export const SECRET_NAME: Record<ApiProvider, string> = { web_research: "APIFY_TOKEN", apollo: "APOLLO_API_KEY", vibe: "EXPLORIUM_API_KEY" };
+export const SECRET_NAME: Record<ApiProvider, string> = { web_research: "APIFY_TOKEN", apollo: "APOLLO_API_KEY", vibe: "EXPLORIUM_API_KEY", bettercontact: "BETTERCONTACT_API_KEY" };

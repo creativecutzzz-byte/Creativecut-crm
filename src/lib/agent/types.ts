@@ -73,9 +73,11 @@ export interface Sender {
   status: ConnectionStatus;
   dailyCap: number;
   sentToday: number;
+  /** Warm-up allowance for today (null when warm-up is off). Sends left = min(dailyCap, warmLimit) - sentToday. */
+  warmLimit: number | null;
 }
 
-export type ApiProvider = "web_research" | "apollo" | "vibe";
+export type ApiProvider = "web_research" | "apollo" | "vibe" | "bettercontact";
 
 export interface ApiSlot {
   slot: 1 | 2 | 3;

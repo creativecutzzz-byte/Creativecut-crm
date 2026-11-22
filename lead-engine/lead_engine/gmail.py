@@ -19,7 +19,13 @@ from .util import http, with_retries
 SCOPES = ["https://www.googleapis.com/auth/gmail.send", "https://www.googleapis.com/auth/gmail.metadata"]
 API = "https://gmail.googleapis.com/gmail/v1/users/me"
 OPT_OUT = re.compile(r"(unsubscribe|remove me|no thanks|not interested|stop (emailing|contacting)|don'?t (email|contact)|do not (email|contact)|take me off)", re.I)
-BOUNCE_FROM = re.compile(r"(mailer-daemon|postmaster|mail delivery (subsystem|system))", re.I)
+BOUNCE_FROM = re.compile(r"(mailer-daemon|postmaster|mail-daemon|no-reply-daemon|mail delivery (subsystem|system))", re.I)
+# Bounce and auto-reply patterns adapted from OpenOutSend (Apache-2.0, github.com/eracle/OpenOutSend,
+# openoutsend/emails/classify.py). Order matters: a bounce is auto-submitted and quotes our
+# headers, so it is checked first; an out-of-office is not a reply and must not stop anything.
+BOUNCE_SUBJECT = re.compile(r"(undeliverable|undelivered|delivery status notification|returned mail|delivery has failed|"
+                            r"mail delivery failed|failure notice|delivery incomplete)", re.I)
+AUTO_REPLY_SUBJECT = re.compile(r"(out of (the )?office|automatic reply|auto[- ]?reply|autoresponse|abwesenheit|on leave|on vacation)", re.I)
 
 
 class GmailError(RuntimeError):
@@ -96,7 +102,7 @@ class Gmail:
         return r.json()
 
     def thread(self, tid: str) -> dict:
-        r = with_retries(lambda: http().get(f"{API}/threads/{tid}", params=[("format", "metadata"), ("metadataHeaders", "From"), ("metadataHeaders", "Subject"), ("metadataHeaders", "Content-Type"), ("metadataHeaders", "Message-ID")], headers=self._auth(), timeout=30))
+        r = with_retries(lambda: http().get(f"{API}/threads/{tid}", params=[("format", "metadata"), ("metadataHeaders", "From"), ("metadataHeaders", "Subject"), ("metadataHeaders", "Content-Type"), ("metadataHeaders", "Message-ID"), ("metadataHeaders", "Auto-Submitted"), ("metadataHeaders", "X-Autoreply"), ("metadataHeaders", "X-Autorespond")], headers=self._auth(), timeout=30))
         r.raise_for_status()
         return r.json()
 
@@ -109,9 +115,13 @@ class Gmail:
             frm, ctype, snip = hdr.get("from", ""), hdr.get("content-type", ""), m.get("snippet", "")
             if sender.lower() in frm.lower():
                 continue
-            if BOUNCE_FROM.search(frm) or "report-type=delivery-status" in ctype:
+            subj = hdr.get("subject", "")
+            if BOUNCE_FROM.search(frm) or "report-type=delivery-status" in ctype or BOUNCE_SUBJECT.search(subj):
                 return "BOUNCED", snip[:200]
-            if OPT_OUT.search(snip) or OPT_OUT.search(hdr.get("subject", "")):
+            auto = hdr.get("auto-submitted", "").lower()
+            if (auto and auto != "no") or AUTO_REPLY_SUBJECT.search(subj) or hdr.get("x-autoreply") or hdr.get("x-autorespond"):
+                continue  # out-of-office / auto-reply: not a human answer
+            if OPT_OUT.search(snip) or OPT_OUT.search(subj):
                 return "OPTED_OUT", snip[:200]
             state, detail = "REPLIED", snip[:200]
         return state, detail

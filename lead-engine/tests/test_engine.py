@@ -434,3 +434,101 @@ def test_enrichment_never_runs_for_dm_only_posts(tmp_path, monkeypatch):
     p.discover = lambda: [o for it in NO_EMAIL["linkedin_posts"] for o in normalize("linkedin_posts", it)]
     p.run()
     assert store.read("Outreach Queue") == []
+
+
+# ---------------------------------------------------------------- ideas adopted from OpenOutreach
+def test_warmup_starts_at_floor_grows_when_clean_and_halves_on_bounces(tmp_path):
+    from lead_engine.senders import SenderSlot
+
+    store, ledger = make(tmp_path, live=True, cap=50, extra={"WARMUP_ENABLED": "TRUE", "SENDER_1_DAILY_CAP": "50"})
+    p = P.Pipeline(store, ledger, Env(), now=NOW)
+    p.settings = store.settings()
+    slot = SenderSlot(1, "one@x.com", 50, object())
+    p.senders = [slot]
+    assert p._warm_allowance(slot) == 5  # new mailbox: floor
+    yday = (NOW.astimezone(P.IST) - timedelta(days=1)).strftime("%Y-%m-%d")
+    for i in range(5):  # yesterday it sent its whole allowance, no bounces
+        ledger.claim(f"A-y{i}", {"touch": "FIRST", "status": "SENT", "sender": "one@x.com", "day": yday})
+    store.data["Settings"] = [r for r in store.data["Settings"] if not r["Key"].startswith("SENDER_1_WARM")] + [{"Key": "SENDER_1_WARM_LIMIT", "Value": "5"}, {"Key": "SENDER_1_WARM_DATE", "Value": yday}]
+    store.save()
+    p.settings = store.settings()
+    assert p._warm_allowance(slot) == 7  # ceil(5 * 1.25)
+    # Bounce rate above 5% over the last week halves it.
+    for i in range(10):
+        ledger.claim(f"A-b{i}", {"touch": "FIRST", "status": "SENT", "sender": "one@x.com", "day": yday, "outcome": "BOUNCED" if i < 2 else "SENT"})
+    p.settings["SENDER_1_WARM_LIMIT"], p.settings["SENDER_1_WARM_DATE"] = "8", yday
+    assert p._warm_allowance(slot) == 4
+
+
+def test_warmup_limits_sends_per_day(tmp_path):
+    from lead_engine.senders import SenderSlot
+
+    many = {"linkedin_posts": [li_post(str(100 + i), f"We're hiring a freelance video editor for Instagram Reels for our D2C brand. Paid. Email hi@brand{i}.in") for i in range(8)]}
+    store, ledger = make(tmp_path, live=True, cap=50, extra={"WARMUP_ENABLED": "TRUE"})
+    gm = FakeGmail()
+    st = P.Pipeline(store, ledger, Env(), now=NOW, offline_items=many, senders=[SenderSlot(1, "one@x.com", 50, gm)]).run()
+    assert st.sent == 5 and len(gm.sent) == 5  # warm-up floor on a fresh mailbox
+
+
+def test_bettercontact_lookup_polls_and_keeps_only_usable_brand_emails(monkeypatch):
+    from lead_engine import enrich
+
+    calls = []
+
+    class R:
+        def __init__(self, code, j):
+            self.status_code, self._j = code, j
+
+        def json(self):
+            return self._j
+
+        def raise_for_status(self):
+            assert self.status_code < 400
+
+    polls = iter([{"status": "in progress"}, {"status": "terminated", "data": [{"contact_email_address": "Riya@Glowco.in", "contact_email_address_status": "deliverable", "contact_first_name": "Riya", "contact_last_name": "Kapoor"}]}])
+
+    class H:
+        def post(self, url, json=None, headers=None, **k):
+            calls.append(("POST", url, headers["X-API-Key"], json))
+            return R(201, {"request_id": "req1"})
+
+        def get(self, url, headers=None, **k):
+            calls.append(("GET", url))
+            return R(200, next(polls))
+
+    monkeypatch.setattr(enrich, "http", lambda: H())
+    f = enrich.bettercontact_lookup("k", "Riya Kapoor", "Glowco", "glowco.in", sleep=lambda s: None)
+    assert f and f.email == "riya@glowco.in" and f.source.startswith("BetterContact")
+    assert calls[0][1].endswith("/api/v2/async") and calls[0][3]["data"][0]["first_name"] == "Riya" and calls[0][3]["enrich_email_address"] is True
+    assert calls[-1][1].endswith("/async/req1")
+    assert enrich.bettercontact_lookup("k", "Riya", "Glowco", "glowco.in") is None  # needs a full name
+
+
+def test_auto_replies_are_not_replies_and_bounce_subjects_are_bounces():
+    from lead_engine.gmail import Gmail
+
+    def thread(*msgs):
+        return {"messages": [{"payload": {"headers": [{"name": "From", "value": "me@x.com"}]}}] + [
+            {"snippet": sn, "payload": {"headers": [{"name": k, "value": v} for k, v in hdr.items()]}} for hdr, sn in msgs]}
+
+    g = Gmail.__new__(Gmail)
+    g.thread = lambda tid: thread(({"From": "Asha <asha@brand.in>", "Subject": "Automatic reply: Edits for your reels", "Auto-Submitted": "auto-replied"}, "I'm out of office until Monday"))
+    assert g.classify_thread("t", "me@x.com")[0] == "SENT"
+    g.thread = lambda tid: thread(({"From": "Mail Delivery Subsystem <x@googlemail.com>", "Subject": "Delivery Status Notification (Failure)"}, "Address not found"))
+    assert g.classify_thread("t", "me@x.com")[0] == "BOUNCED"
+    g.thread = lambda tid: thread(({"From": "Asha <asha@brand.in>", "Subject": "Re: Edits for your reels"}, "Sounds good, send rates"))
+    assert g.classify_thread("t", "me@x.com")[0] == "REPLIED"
+
+
+def test_protected_region_review_skip_and_postal_address(tmp_path):
+    eu = {"linkedin_posts": [li_post("200", "We're hiring a freelance video editor for Instagram Reels for our D2C brand in Berlin. Paid. Email hi@brandeu.de")]}
+    store, ledger = make(tmp_path, extra={"SENDER_POSTAL_ADDRESS": "Creative Cut, Noida, UP 201301, India"})
+    P.Pipeline(store, ledger, Env(), now=NOW, offline_items=eu).run()
+    q = store.read("Outreach Queue")[0]
+    assert q["Status"] == "NEEDS_REVIEW" and "GDPR" in q["Last Error"] and "Noida, UP 201301" in q["Email Preview"]
+    store2, ledger2 = make(tmp_path / "skip", extra={"PROTECTED_REGIONS_POLICY": "SKIP"})
+    P.Pipeline(store2, ledger2, Env(), now=NOW, offline_items=eu).run()
+    assert store2.read("Outreach Queue")[0]["Status"] == "SKIPPED"
+    store3, ledger3 = make(tmp_path / "allow", extra={"PROTECTED_REGIONS_POLICY": "ALLOW"})
+    P.Pipeline(store3, ledger3, Env(), now=NOW, offline_items=eu).run()
+    assert store3.read("Outreach Queue")[0]["Status"] == "READY"

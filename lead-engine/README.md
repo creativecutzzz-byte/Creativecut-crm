@@ -30,6 +30,18 @@ Research, enrichment, drafting and sending run as server-side jobs (the Cloud Ru
 
 **App environment variables (names only):** `AGENT_SHEET_ID`, `AGENT_SERVICE_ACCOUNT_EMAIL`, `AGENT_SERVICE_ACCOUNT_KEY`, `GOOGLE_CLOUD_PROJECT`, `GCP_REGION`, `CLOUD_RUN_JOB`, `SCHEDULER_SERVICE_ACCOUNT`, `GMAIL_OAUTH_CLIENT_ID`, `GMAIL_OAUTH_CLIENT_SECRET` (a **Web** OAuth client with redirect `https://<app>/api/agent/gmail/callback`), and `AGENT_STATE_SECRET`. Set `AGENT_TRUSTED_ACCESS=true` only when the site is already behind a login and CRM sign-in is off; otherwise live changes need a signed-in owner or admin. `deploy/deploy.sh` creates the `cc-lead-app` service account with only the roles the app needs (Secret Manager admin, Run developer, Scheduler admin) and prints these names.
 
+## Adopted from OpenOutreach
+
+[OpenOutreach](https://github.com/eracle/OpenOutreach) (Apache-2.0) was reviewed, and its useful ideas were rebuilt here (see `THIRD_PARTY_NOTICES.md`):
+
+- **BetterContact email finder.** It can take credential slot 3 in place of Vibe Prospecting, which ends on 2 Dec 2026. In Settings → Connections → Vibe Prospecting, choose "Use BetterContact instead", then add its key. It needs the poster's full name, and it keeps only `valid`, `deliverable` or `catch_all_safe` addresses on the brand's own domain. It is capped by `BETTERCONTACT_MAX_LOOKUPS_PER_RUN`.
+- **Mailbox warm-up** (`WARMUP_ENABLED`, on by default). Each sender starts at 5 first emails a day and grows 25% after a day in which it sent its whole allowance with no bounces. It halves if the last week's bounce rate passes 5%. It never goes above the sender's own daily limit. The app shows "Warming up: N a day today".
+- **Reply reading.** Bounces are checked first (daemon senders, delivery-status subjects). Out-of-office and other auto-replies (`Auto-Submitted`, "Automatic reply") no longer count as replies, so they don't end a conversation.
+- **Compliance.** `SENDER_POSTAL_ADDRESS` adds a postal address under the opt-out line; CAN-SPAM requires one for US recipients. `PROTECTED_REGIONS_POLICY` handles leads in the EU/EEA, UK or Switzerland: `REVIEW` (the default) holds them for a person to confirm a GDPR lawful basis, `SKIP` drops them, `ALLOW` treats them like any other lead.
+- **Agent skill.** `.claude/skills/creative-cut-lead-engine/SKILL.md` tells AI agents how to run the engine without spending money or sending email unasked.
+
+Not adopted: OpenOutreach's central contacts store, which pools the emails and profiles you find with other operators and has no opt-out outside the EU/UK/CH; its mandatory "Sent with OpenOutreach" line; its newsletter and affiliate links; and its SMTP sender.
+
 ## What one run does
 
 1. **Track.** It reads the Gmail threads of sent emails (metadata only) and marks each as REPLIED, OPTED_OUT or BOUNCED. Opt-outs and hard bounces go to Suppression.
@@ -120,7 +132,7 @@ LOCAL_SHEET_PATH=.local/sheet.json LEDGER_DIR=.local/ledger APIFY_TOKEN=... pyth
 LOCAL_SHEET_PATH=.local/sheet.json python -m lead_engine run --replay datasets.json   # replay saved datasets, no Apify spend
 ```
 
-The 20 offline tests cover modes (Review & Approve / Auto), three senders with per-sender limits, the send window, run-stage reporting, Apollo/Vibe lookups (including a rejected key and DM-only posts), edited-email link checks, exclusions, duplicate runs, manual-edit preservation, single-claim ledger semantics, overlapping live runs, the timeout-then-reconcile path, the daily cap, suppression, rendered-link and placeholder checks, playability rules and scheduler sync.
+The 25 offline tests cover warm-up, BetterContact lookups, auto-reply and bounce reading, EU/UK/CH handling and the postal address, plus modes (Review & Approve / Auto), three senders with per-sender limits, the send window, run-stage reporting, Apollo/Vibe lookups (including a rejected key and DM-only posts), edited-email link checks, exclusions, duplicate runs, manual-edit preservation, single-claim ledger semantics, overlapping live runs, the timeout-then-reconcile path, the daily cap, suppression, rendered-link and placeholder checks, playability rules and scheduler sync.
 
 ## Status page
 

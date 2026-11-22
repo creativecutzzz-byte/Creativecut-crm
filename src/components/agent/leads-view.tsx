@@ -266,7 +266,7 @@ function LeadPanel({ lead, senders, mode, sendingLive, onClose }: { lead: Lead; 
                   <option value="">Pick automatically (the sender with the most sends left)</option>
                   {connected.map((s) => (
                     <option key={s.slot} value={s.email!}>
-                      {s.email} — {Math.max(0, s.dailyCap - s.sentToday)} left today
+                      {s.email} — {Math.max(0, (s.warmLimit === null ? s.dailyCap : Math.min(s.dailyCap, s.warmLimit)) - s.sentToday)} left today
                     </option>
                   ))}
                 </select>

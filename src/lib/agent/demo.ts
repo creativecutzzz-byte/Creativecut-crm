@@ -69,11 +69,11 @@ export function demoSnapshot(scenario: DemoScenario, now: Date): AgentSnapshot {
   const setup = scenario === "setup";
   const running = scenario === "running";
   const senders: Sender[] = setup
-    ? [{ slot: 1, email: null, status: "setup_required", dailyCap: 10, sentToday: 0 }, { slot: 2, email: null, status: "setup_required", dailyCap: 10, sentToday: 0 }, { slot: 3, email: null, status: "setup_required", dailyCap: 10, sentToday: 0 }]
+    ? [{ slot: 1, email: null, status: "setup_required", dailyCap: 10, sentToday: 0, warmLimit: 5 }, { slot: 2, email: null, status: "setup_required", dailyCap: 10, sentToday: 0, warmLimit: 5 }, { slot: 3, email: null, status: "setup_required", dailyCap: 10, sentToday: 0, warmLimit: 5 }]
     : [
-        { slot: 1, email: "creativecutzzz@gmail.com", status: "connected", dailyCap: 6, sentToday: scenario === "finished" ? 1 : 0 },
-        { slot: 2, email: "hello.creativecut@gmail.com", status: "connected", dailyCap: 4, sentToday: 0 },
-        { slot: 3, email: null, status: "setup_required", dailyCap: 10, sentToday: 0 },
+        { slot: 1, email: "creativecutzzz@gmail.com", status: "connected", dailyCap: 6, sentToday: scenario === "finished" ? 1 : 0, warmLimit: 6 },
+        { slot: 2, email: "hello.creativecut@gmail.com", status: "connected", dailyCap: 10, sentToday: 0, warmLimit: 5 },
+        { slot: 3, email: null, status: "setup_required", dailyCap: 10, sentToday: 0, warmLimit: 5 },
       ];
   const apiSlots: ApiSlot[] = [
     { slot: 1, provider: "web_research", status: "connected", hint: "••••8kQ2", usage: "$0.46 of $5.00 used this month", checkedAt: now.toISOString(), error: null },

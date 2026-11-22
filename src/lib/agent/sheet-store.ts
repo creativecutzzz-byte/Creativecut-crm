@@ -68,12 +68,15 @@ function sendersFrom(s: Record<string, string>, queue: Record<string, string>[],
     const status = (s[`SENDER_${slot}_STATUS`] || (email ? "connected" : "setup_required")) as ConnectionStatus;
     const cap = Number(s[`SENDER_${slot}_DAILY_CAP`] || (slot === 1 ? s.DAILY_SEND_CAP : "") || 10);
     const sentToday = queue.filter((q) => (q.Sender || s.SENDER_EMAIL) === email && (q["Sent At"] || "").startsWith(today)).length;
-    return { slot, email: email || null, status: email ? status : "setup_required", dailyCap: cap, sentToday };
+    const warmOn = !["FALSE", "NO", "0", "OFF"].includes((s.WARMUP_ENABLED || "TRUE").toUpperCase());
+    const warm = s[`SENDER_${slot}_WARM_DATE`] === today && /^\d+$/.test(s[`SENDER_${slot}_WARM_LIMIT`] || "") ? Number(s[`SENDER_${slot}_WARM_LIMIT`]) : 5;
+    return { slot, email: email || null, status: email ? status : "setup_required", dailyCap: cap, sentToday, warmLimit: warmOn ? warm : null };
   });
 }
 
 function apiSlotsFrom(s: Record<string, string>): ApiSlot[] {
-  return (["web_research", "apollo", "vibe"] as ApiProvider[]).map((p, i) => {
+  const slot3: ApiProvider = (s.API_SLOT3_PROVIDER || "vibe").toLowerCase() === "bettercontact" ? "bettercontact" : "vibe";
+  return (["web_research", "apollo", slot3] as ApiProvider[]).map((p, i) => {
     const k = (x: string) => s[`API_${p.toUpperCase()}_${x}`] || "";
     // Web Research is wired at deploy time (APIFY_TOKEN), so it counts as connected unless a check failed.
     const status = (k("STATUS") || (p === "web_research" ? "connected" : "setup_required")) as ConnectionStatus;
@@ -105,7 +108,7 @@ function runsFrom(log: Record<string, string>[]): RunRecord[] {
 }
 
 export function attentionFrom(s: Pick<AgentSnapshot, "apiSlots" | "senders" | "runs" | "sendingLive">): Attention | null {
-  const names: Record<ApiProvider, string> = { web_research: "Web Research", apollo: "Apollo", vibe: "Vibe Prospecting" };
+  const names: Record<ApiProvider, string> = { web_research: "Web Research", apollo: "Apollo", vibe: "Vibe Prospecting", bettercontact: "BetterContact" };
   const broken = s.apiSlots.find((a) => a.status === "needs_reconnect");
   if (broken) return { message: `${names[broken.provider]} needs reconnecting`, fix: broken.error ? `${broken.error} Lookups through ${names[broken.provider]} are skipped until it's fixed.` : `Paste a fresh key to turn ${names[broken.provider]} back on.`, actionLabel: "Reconnect", href: `/agent/settings?open=${broken.provider}` };
   const sender = s.senders.find((x) => x.status === "needs_reconnect");

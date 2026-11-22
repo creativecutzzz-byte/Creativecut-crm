@@ -16,6 +16,12 @@ export const PROVIDERS: Record<ApiProvider, { name: string; purpose: string; key
     keyHelp: "Apollo → Settings → Integrations → API → Create new key",
     keyUrl: "https://app.apollo.io/#/settings/integrations/api",
   },
+  bettercontact: {
+    name: "BetterContact",
+    purpose: "Email finder that replaces Vibe Prospecting in slot 3: finds a verified work email for the person who posted (credits per email found).",
+    keyHelp: "BetterContact → Settings → API → copy your API key",
+    keyUrl: "https://app.bettercontact.rocks",
+  },
   vibe: {
     name: "Vibe Prospecting",
     purpose: "Second email lookup through Explorium's API (about 2 credits per email found).",
@@ -23,6 +29,9 @@ export const PROVIDERS: Record<ApiProvider, { name: string; purpose: string; key
     keyUrl: "https://admin.explorium.ai",
   },
 };
+
+export const todayLimit = (x: { dailyCap: number; warmLimit: number | null }) => (x.warmLimit === null ? x.dailyCap : Math.min(x.dailyCap, x.warmLimit));
+export const sendsLeft = (x: { dailyCap: number; warmLimit: number | null; sentToday: number }) => Math.max(0, todayLimit(x) - x.sentToday);
 
 export const VIBE_SHUTDOWN = "Vibe Prospecting shuts down on 2 Dec 2026 (announced by Vibe). It stops working after that date.";
 
@@ -40,7 +49,7 @@ function apiRow(slot: ApiSlot | undefined, provider: ApiProvider): Connection {
     { label: "Connection method", value: "API Key, stored in Google Secret Manager. The key never appears on this page." },
     { label: "Credential slot", value: `Slot ${slot?.slot ?? "—"}` },
     { label: "Saved key", value: slot?.hint ?? "None" },
-    { label: "Balance / usage", value: slot?.usage ?? (provider === "apollo" ? "Apollo doesn't report a balance over its API" : "Not available yet") },
+    { label: "Balance / usage", value: slot?.usage ?? (provider === "apollo" ? "Apollo doesn't report a balance over its API" : "Shown after the key is checked") },
     { label: "Where to find the key", value: p.keyHelp },
   ];
   if (provider === "web_research") details.splice(1, 0, { label: "Also uses", value: "Direct Connection: reads brand websites and creativecut.in samples directly (no key)." });
@@ -76,9 +85,10 @@ export function buildConnections(s: Pick<AgentSnapshot, "apiSlots" | "senders">)
       { label: "Connection method", value: "Google sign-in. Permissions: send email, and read message headers to spot replies and bounces. Message bodies aren't read." },
       ...s.senders.map((x) => ({
         label: `Sender ${x.slot}`,
-        value: x.email ? `${x.email} — ${Math.max(0, x.dailyCap - x.sentToday)} of ${x.dailyCap} sends left today` : "Empty slot",
+        value: x.email ? `${x.email} — ${sendsLeft(x)} of ${todayLimit(x)} sends left today${x.warmLimit !== null && x.warmLimit < x.dailyCap ? ` (warming up toward ${x.dailyCap})` : ""}` : "Empty slot",
       })),
     ],
   };
-  return [apiRow(bySlot("web_research"), "web_research"), apiRow(bySlot("vibe"), "vibe"), apiRow(bySlot("apollo"), "apollo"), gmail];
+  const slot3 = s.apiSlots.find((a) => a.slot === 3)?.provider ?? "vibe";
+  return [apiRow(bySlot("web_research"), "web_research"), apiRow(bySlot(slot3), slot3), apiRow(bySlot("apollo"), "apollo"), gmail];
 }
