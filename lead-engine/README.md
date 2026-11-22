@@ -3,6 +3,7 @@
 Finds brands and teams that are publicly asking for a freelance or contract video editor, motion designer, podcast editor or creative agency. It researches each one, writes a personalised first email from the **Creative Cut Personalised Outreach Playbook** and sends it through the Creative Cut Gmail inbox, within a daily cap. It runs twice a day as a **Cloud Run Job** triggered by **Cloud Scheduler** (Asia/Kolkata).
 
 - **Google Sheet (source of truth):** [Creative Cut | Lead Generation & Outreach](https://docs.google.com/spreadsheets/d/1wxg9TbrErNUy42lWDDZPE5T82b_GnLUs8Am7zrU3Avs/edit)
+- **Lead Agent app (Vercel, internal):** https://creative-cut-lead-agent.vercel.app/agent. Vercel login protects every URL of the project, so only members of the "creative-cut" Vercel team can open it. It runs on demo data until the app environment variables below are set in Vercel → Project → Settings → Environment Variables.
 - **Internal status page (Netlify):** https://creativecut-leads-internal.netlify.app. To open it you sign in to Netlify as a team member, then enter the status-page login.
 - **Playbook:** Google Doc `15P2uFT-Q7LJ56D0t7Dwk8a_dx4YqF3niJDYxp71cvhY`
 
